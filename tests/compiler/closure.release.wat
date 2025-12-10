@@ -1549,11 +1549,11 @@
  )
  (func $closure/testMultipleCaptures~anonymous|0 (result i32)
   global.get $$~lib/__closure_env
-  i32.load offset=2
+  i32.load offset=8
   global.get $$~lib/__closure_env
   i32.load
   global.get $$~lib/__closure_env
-  i32.load offset=1
+  i32.load offset=4
   i32.add
   i32.add
  )
@@ -1853,13 +1853,13 @@
    i32.add
    local.tee $1
    i32.const 1
-   i32.store offset=4
+   i32.store
    local.get $0
    i32.const 2
-   i32.store offset=12
+   i32.store offset=8
    local.get $0
    i32.const 10
-   i32.store offset=4
+   i32.store offset=12
    i32.const 4
    call $~lib/rt/itcms/__new
    local.tee $0

@@ -1779,6 +1779,40 @@ export class Compiler extends DiagnosticEmitter {
     // This ensures we know which locals need to be stored in the environment
     this.prescanForClosures(bodyNode, instance, flow);
 
+    // Mark captured parameters and set up environment if needed
+    let preCapturedNames = instance.preCapturedNames;
+    if (preCapturedNames && preCapturedNames.size > 0) {
+      // Check if any parameters are captured
+      let parameterTypes = instance.signature.parameterTypes;
+      for (let i = 0, k = parameterTypes.length; i < k; i++) {
+        let paramName = instance.getParameterName(i);
+        if (preCapturedNames.has(paramName)) {
+          let local = flow.lookupLocal(paramName);
+          if (local && !local.isCaptured) {
+            local.isCaptured = true;
+            // Ensure environment structures are set up
+            if (!instance.capturedLocals) {
+              instance.capturedLocals = new Map();
+            }
+            if (!instance.capturedLocals.has(local)) {
+              // Calculate proper byte offset
+              let currentOffset = 0;
+              for (let _keys = Map_keys(instance.capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
+                let existingLocal = _keys[j];
+                currentOffset += existingLocal.type.byteSize;
+              }
+              local.envSlotIndex = currentOffset;
+              instance.capturedLocals.set(local, local.envSlotIndex);
+            }
+            if (!instance.envLocal) {
+              let envLocal = flow.addScopedLocal("$env", this.options.usizeType);
+              instance.envLocal = envLocal;
+            }
+          }
+        }
+      }
+    }
+
     // compile statements
     if (bodyNode.kind == NodeKind.Block) {
       stmts = this.compileStatements((<BlockStatement>bodyNode).statements, stmts);
@@ -3239,12 +3273,12 @@ export class Compiler extends DiagnosticEmitter {
           if (!sourceFunc.capturedLocals.has(local)) {
             // Calculate proper byte offset based on current environment size
             let currentOffset = 0;
-            for (let _values = Map_values(sourceFunc.capturedLocals), i = 0, k = _values.length; i < k; ++i) {
-              let existingLocal = _values[i];
+            for (let _keys = Map_keys(sourceFunc.capturedLocals), i = 0, k = _keys.length; i < k; ++i) {
+              let existingLocal = _keys[i];
               currentOffset += existingLocal.type.byteSize;
             }
             local.envSlotIndex = currentOffset;
-            sourceFunc.capturedLocals.set(local, local);
+            sourceFunc.capturedLocals.set(local, local.envSlotIndex);
           }
           // Ensure we have an environment local
           if (!sourceFunc.envLocal) {
@@ -7507,7 +7541,13 @@ export class Compiler extends DiagnosticEmitter {
         }
         if (local && !captures.has(local)) {
           local.isCaptured = true;
-          local.envSlotIndex = captures.size;
+          // Calculate proper byte offset based on existing captures
+          let currentOffset = 0;
+          for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
+            let existingLocal = _keys[idx];
+            currentOffset += existingLocal.type.byteSize;
+          }
+          local.envSlotIndex = currentOffset;
           captures.set(local, local.envSlotIndex);
         }
         break;
@@ -7810,7 +7850,10 @@ export class Compiler extends DiagnosticEmitter {
         this.collectDeclaredVariables(forStmt.body, vars);
         break;
       }
-      // Function expressions don't add to outer scope
+      case NodeKind.FunctionDeclaration:
+      case NodeKind.Function:
+        // Function declarations and expressions don't add their variables to outer scope
+        break;
     }
   }
 
@@ -8019,6 +8062,19 @@ export class Compiler extends DiagnosticEmitter {
         let ret = <ReturnStatement>node;
         if (ret.value) {
           this.collectCapturedNames(ret.value, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        break;
+      }
+      case NodeKind.Variable: {
+        // Add declared variables to inner names so they're not considered captures
+        let varStmt = <VariableStatement>node;
+        for (let i = 0, k = varStmt.declarations.length; i < k; i++) {
+          let decl = varStmt.declarations[i];
+          innerFunctionNames.add(decl.name.text);
+          // Scan initializers for captures
+          if (decl.initializer) {
+            this.collectCapturedNames(decl.initializer, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+          }
         }
         break;
       }

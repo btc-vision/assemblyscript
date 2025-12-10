@@ -2352,28 +2352,28 @@
   global.get $$~lib/__closure_env
   i32.load
   global.get $$~lib/__closure_env
-  i32.load offset=1
+  i32.load offset=4
   i32.add
   global.get $$~lib/__closure_env
-  i32.load offset=2
+  i32.load offset=8
   i32.add
  )
  (func $closure/testMultipleCaptures (param $a i32) (param $b i32) (result i32)
-  (local $c i32)
   (local $$env i32)
+  (local $c i32)
   (local $4 i32)
   i32.const 12
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
   local.get $a
-  i32.store offset=4
+  i32.store
   local.get $$env
   local.get $b
-  i32.store offset=8
+  i32.store offset=4
   local.get $$env
   i32.const 10
-  i32.store
+  i32.store offset=8
   i32.const 8
   i32.const 4
   call $~lib/rt/itcms/__new

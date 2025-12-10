@@ -10,6 +10,7 @@
  (global $~lib/shared/runtime/Runtime.Incremental i32 (i32.const 2))
  (global $~lib/native/ASC_SHRINK_LEVEL i32 (i32.const 0))
  (global $~argumentsLength (mut i32) (i32.const 0))
+ (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/memory/__data_end i32 (i32.const 156))
  (global $~lib/memory/__stack_pointer (mut i32) (i32.const 32924))
  (global $~lib/memory/__heap_base i32 (i32.const 32924))
@@ -160,14 +161,15 @@
  (func $typealias/outer_function
   (local $alias i64)
   (local $inner_function i32)
+  (local $2 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
+  i64.const 0
+  i64.store
   i64.const 1
   local.set $alias
   i32.const 32
@@ -188,13 +190,20 @@
   i32.store
   local.get $inner_function
   drop
+  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   local.get $inner_function
+  local.tee $2
+  i32.store offset=4
+  local.get $2
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $2
   i32.load
   call_indirect (type $0)
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
