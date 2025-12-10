@@ -3628,6 +3628,12 @@ export class Local extends VariableLikeElement {
   /** Original name of the (temporary) local. */
   private originalName: string;
 
+  /** Whether this local is captured by a closure. */
+  isCaptured: bool = false;
+
+  /** Environment slot index if captured, -1 otherwise. */
+  envSlotIndex: i32 = -1;
+
   /** Constructs a new local variable. */
   constructor(
     /** Simple name. */
@@ -3784,6 +3790,28 @@ export class Function extends TypedElement {
   nextInlineId: i32 = 0;
   /** Counting id of anonymous inner functions. */
   nextAnonymousId: i32 = 0;
+
+  // Closure support
+
+  /** Set of locals from outer scopes that this function captures. Maps Local to slot index. */
+  capturedLocals: Map<Local, i32> | null = null;
+
+  /** The environment class for this function's captured locals, if any. */
+  envClass: Class | null = null;
+
+  /** The local variable holding the environment pointer in outer function. */
+  envLocal: Local | null = null;
+
+  /** The outer function whose environment this closure accesses. */
+  outerFunction: Function | null = null;
+
+  /** Pre-scanned names of captured variables (set before compilation, used to mark locals). */
+  preCapturedNames: Set<string> | null = null;
+
+  /** Whether this function requires an environment (is a closure). */
+  get needsEnvironment(): bool {
+    return this.capturedLocals != null && this.capturedLocals.size > 0;
+  }
 
   /** Constructs a new concrete function. */
   constructor(
