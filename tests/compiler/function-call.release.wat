@@ -155,7 +155,7 @@
     local.get $0
     global.set $~lib/rt/itcms/iter
    end
-   block $__inlined_func$~lib/rt/itcms/Object#unlink$115
+   block $__inlined_func$~lib/rt/itcms/Object#unlink$114
     local.get $1
     i32.load offset=4
     i32.const -4
@@ -179,7 +179,7 @@
       call $~lib/builtins/abort
       unreachable
      end
-     br $__inlined_func$~lib/rt/itcms/Object#unlink$115
+     br $__inlined_func$~lib/rt/itcms/Object#unlink$114
     end
     local.get $1
     i32.load offset=8
@@ -1469,10 +1469,13 @@
   global.set $~lib/memory/__stack_pointer
  )
  (func $~start
+  call $start:function-call
+ )
+ (func $start:function-call
   (local $0 i32)
   (local $1 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 36
   i32.sub
   global.set $~lib/memory/__stack_pointer
   block $folding-inner0
@@ -1482,13 +1485,32 @@
    br_if $folding-inner0
    global.get $~lib/memory/__stack_pointer
    i32.const 0
+   i32.const 36
+   memory.fill
+   global.get $~lib/memory/__stack_pointer
+   i32.const 1056
    i32.store
+   i32.const 1060
+   i32.load
+   drop
    i32.const 1056
    i32.load
    call_indirect (type $0)
+   global.get $~lib/memory/__stack_pointer
+   i32.const 1088
+   i32.store offset=4
+   i32.const 1092
+   i32.load
+   drop
    i32.const 1088
    i32.load
    call_indirect (type $0)
+   global.get $~lib/memory/__stack_pointer
+   i32.const 1120
+   i32.store offset=8
+   i32.const 1124
+   i32.load
+   drop
    i32.const 1
    i32.const 2
    i32.const 1120
@@ -1504,6 +1526,12 @@
     call $~lib/builtins/abort
     unreachable
    end
+   global.get $~lib/memory/__stack_pointer
+   i32.const 1216
+   i32.store offset=12
+   i32.const 1220
+   i32.load
+   drop
    i32.const 2
    i32.const 3
    i32.const 1216
@@ -1519,6 +1547,12 @@
     call $~lib/builtins/abort
     unreachable
    end
+   global.get $~lib/memory/__stack_pointer
+   i32.const 1248
+   i32.store offset=16
+   i32.const 1252
+   i32.load
+   drop
    i32.const 1
    i32.const 1248
    i32.load
@@ -1611,11 +1645,23 @@
    global.get $~lib/memory/__stack_pointer
    global.get $function-call/foo
    local.tee $0
-   i32.store
+   i32.store offset=20
+   global.get $~lib/memory/__stack_pointer
+   i32.const 1680
+   i32.store offset=24
+   i32.const 1684
+   i32.load
+   drop
    local.get $0
    i32.const 1680
    i32.load
    call_indirect (type $2)
+   global.get $~lib/memory/__stack_pointer
+   i32.const 1712
+   i32.store offset=28
+   i32.const 1716
+   i32.load
+   drop
    i32.const 1
    i32.const 1712
    i32.load
@@ -1624,7 +1670,13 @@
    global.get $~lib/memory/__stack_pointer
    global.get $function-call/foo
    local.tee $0
-   i32.store
+   i32.store offset=20
+   global.get $~lib/memory/__stack_pointer
+   i32.const 1744
+   i32.store offset=32
+   i32.const 1748
+   i32.load
+   drop
    local.get $0
    i32.const 1
    i32.const 2
@@ -1642,7 +1694,7 @@
     unreachable
    end
    global.get $~lib/memory/__stack_pointer
-   i32.const 4
+   i32.const 36
    i32.add
    global.set $~lib/memory/__stack_pointer
    return

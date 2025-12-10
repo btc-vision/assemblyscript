@@ -3805,6 +3805,10 @@ export class Function extends TypedElement {
   /** The outer function whose environment this closure accesses. */
   outerFunction: Function | null = null;
 
+  /** Local variable in a closure function that caches the environment pointer from the global.
+   *  This is needed because indirect calls can overwrite the global. */
+  closureEnvLocal: Local | null = null;
+
   /** Pre-scanned names of captured variables (set before compilation, used to mark locals). */
   preCapturedNames: Set<string> | null = null;
 

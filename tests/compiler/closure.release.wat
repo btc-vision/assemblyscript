@@ -1540,19 +1540,23 @@
   local.get $0
  )
  (func $closure/testClosureWrite~anonymous|0
+  (local $0 i32)
   global.get $$~lib/__closure_env
-  global.get $$~lib/__closure_env
+  local.tee $0
+  local.get $0
   i32.load
   i32.const 1
   i32.add
   i32.store
  )
  (func $closure/testMultipleCaptures~anonymous|0 (result i32)
+  (local $0 i32)
   global.get $$~lib/__closure_env
+  local.tee $0
   i32.load offset=8
-  global.get $$~lib/__closure_env
+  local.get $0
   i32.load
-  global.get $$~lib/__closure_env
+  local.get $0
   i32.load offset=4
   i32.add
   i32.add

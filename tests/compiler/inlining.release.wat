@@ -1544,7 +1544,7 @@
   (local $1 i32)
   (local $2 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 12
   i32.sub
   global.set $~lib/memory/__stack_pointer
   block $folding-inner0
@@ -1555,6 +1555,15 @@
    global.get $~lib/memory/__stack_pointer
    i64.const 0
    i64.store
+   global.get $~lib/memory/__stack_pointer
+   i32.const 0
+   i32.store offset=8
+   global.get $~lib/memory/__stack_pointer
+   i32.const 1104
+   i32.store
+   i32.const 1108
+   i32.load
+   drop
    i32.const 2
    i32.const 1104
    i32.load
@@ -1562,12 +1571,12 @@
    drop
    global.get $~lib/memory/__stack_pointer
    i32.const 123
-   i32.store
-   global.get $~lib/memory/__stack_pointer
-   i32.const 123
    i32.store offset=4
    global.get $~lib/memory/__stack_pointer
-   i32.const 8
+   i32.const 123
+   i32.store offset=8
+   global.get $~lib/memory/__stack_pointer
+   i32.const 12
    i32.add
    global.set $~lib/memory/__stack_pointer
    memory.size
