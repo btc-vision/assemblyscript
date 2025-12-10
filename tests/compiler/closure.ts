@@ -1,39 +1,53 @@
-function testParam($local0: i32, $local1: i32): (value: i32) => i32 {
-  return function inner(value: i32) {
-    return $local1; // closure 1
-  };
+// Test 1: Basic closure capturing parameter - read
+function testCaptureParam(x: i32): () => i32 {
+  return (): i32 => x;
 }
-testParam(1, 2);
+let fn1 = testCaptureParam(42);
+assert(fn1() == 42);
 
-function testVar(): (value: i32) => i32 {
-  var $local0 = 0;
-  return function inner(value: i32) {
-    return $local0; // closure 2
-  };
+// Test 2: Basic closure capturing var - read
+function testCaptureVar(): () => i32 {
+  var x = 100;
+  return (): i32 => x;
 }
-testVar();
+let fn2 = testCaptureVar();
+assert(fn2() == 100);
 
-function testLet(): (value: i32) => i32 {
-  let $local0 = 0;
-  return function inner(value: i32): i32 {
-    return $local0; // closure 3
-  };
+// Test 3: Basic closure capturing let - read
+function testCaptureLet(): () => i32 {
+  let x = 200;
+  return (): i32 => x;
 }
-testLet();
+let fn3 = testCaptureLet();
+assert(fn3() == 200);
 
-function testFuncParam($local0: (x: i32) => void): () => void {
-  return () => {
-    $local0(123); // closure 4
-  };
+// Test 4: Closure with write - mutation affects outer scope
+function testClosureWrite(): i32 {
+  let counter = 0;
+  let increment = (): void => { counter = counter + 1; };
+  let getCounter = (): i32 => counter;
+  increment();
+  increment();
+  increment();
+  return getCounter();
 }
-testFuncParam((x: i32) => {});
+assert(testClosureWrite() == 3);
 
-function testAssign(): (value: i32) => void {
-  let $local0 = 0;
-  return function inner(value: i32): void {
-    $local0 = 10; // closure 5
-  };
+// Test 5: Multiple captures
+function testMultipleCaptures(a: i32, b: i32): () => i32 {
+  let c = 10;
+  return (): i32 => a + b + c;
 }
-testAssign();
+let fn5 = testMultipleCaptures(1, 2);
+assert(fn5() == 13);
 
-ERROR("EOF");
+// Test 6: Two closures sharing same environment - verify reference semantics
+function testSharedEnvironment(): i32 {
+  let value = 0;
+  let setter = (x: i32): void => { value = x; };
+  let getter = (): i32 => value;
+
+  setter(50);
+  return getter();
+}
+assert(testSharedEnvironment() == 50);
