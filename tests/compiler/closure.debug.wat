@@ -57,7 +57,10 @@
  (export "memory" (memory $0))
  (start $~start)
  (func $closure/testCaptureParam~anonymous|0 (result i32)
+  (local $$closureEnv i32)
   global.get $$~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
   i32.load
  )
  (func $~lib/rt/itcms/Object#set:nextWithColor (param $this i32) (param $nextWithColor i32)
@@ -2283,7 +2286,10 @@
   return
  )
  (func $closure/testCaptureVar~anonymous|0 (result i32)
+  (local $$closureEnv i32)
   global.get $$~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
   i32.load
  )
  (func $closure/testCaptureVar (result i32)
@@ -2310,7 +2316,10 @@
   return
  )
  (func $closure/testCaptureLet~anonymous|0 (result i32)
+  (local $$closureEnv i32)
   global.get $$~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
   i32.load
  )
  (func $closure/testCaptureLet (result i32)
@@ -2337,24 +2346,33 @@
   return
  )
  (func $closure/testClosureWrite~anonymous|0
+  (local $$closureEnv i32)
   global.get $$~lib/__closure_env
-  global.get $$~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  local.get $$closureEnv
   i32.load
   i32.const 1
   i32.add
   i32.store
  )
  (func $closure/testClosureWrite~anonymous|1 (result i32)
+  (local $$closureEnv i32)
   global.get $$~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
   i32.load
  )
  (func $closure/testMultipleCaptures~anonymous|0 (result i32)
+  (local $$closureEnv i32)
   global.get $$~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
   i32.load
-  global.get $$~lib/__closure_env
+  local.get $$closureEnv
   i32.load offset=4
   i32.add
-  global.get $$~lib/__closure_env
+  local.get $$closureEnv
   i32.load offset=8
   i32.add
  )
@@ -2388,12 +2406,18 @@
   return
  )
  (func $closure/testSharedEnvironment~anonymous|0 (param $x i32)
+  (local $$closureEnv i32)
   global.get $$~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
   local.get $x
   i32.store
  )
  (func $closure/testSharedEnvironment~anonymous|1 (result i32)
+  (local $$closureEnv i32)
   global.get $$~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
   i32.load
  )
  (func $start:closure

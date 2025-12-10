@@ -9,6 +9,7 @@
  (global $~lib/shared/runtime/Runtime.Minimal i32 (i32.const 1))
  (global $~lib/shared/runtime/Runtime.Incremental i32 (i32.const 2))
  (global $~argumentsLength (mut i32) (i32.const 0))
+ (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/memory/__data_end i32 (i32.const 444))
  (global $~lib/memory/__stack_pointer (mut i32) (i32.const 33212))
  (global $~lib/memory/__heap_base i32 (i32.const 33212))
@@ -515,50 +516,6 @@
  (func $assert-nonnull/testObjFn (param $foo i32) (result i32)
   (local $1 i32)
   (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $~lib/memory/__stack_pointer
-  local.get $foo
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $assert-nonnull/Foo#get:baz
-  local.tee $1
-  i32.store offset=4
-  local.get $1
-  if (result i32)
-   local.get $1
-  else
-   i32.const 32
-   i32.const 160
-   i32.const 48
-   i32.const 10
-   call $~lib/builtins/abort
-   unreachable
-  end
-  i32.load
-  call_indirect (type $1)
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $2
-  return
- )
- (func $assert-nonnull/testObjRet (param $foo i32) (result i32)
-  (local $1 i32)
-  (local $2 i32)
   (local $3 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 12
@@ -590,18 +547,60 @@
   else
    i32.const 32
    i32.const 160
-   i32.const 52
+   i32.const 48
    i32.const 10
    call $~lib/builtins/abort
    unreachable
   end
-  i32.load
-  call_indirect (type $1)
   local.tee $2
   i32.store offset=8
   local.get $2
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $2
+  i32.load
+  call_indirect (type $1)
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $3
+  return
+ )
+ (func $assert-nonnull/testObjRet (param $foo i32) (result i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $3 i32)
+  (local $4 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 16
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store offset=8
+  global.get $~lib/memory/__stack_pointer
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  global.get $~lib/memory/__stack_pointer
+  local.get $foo
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store
+  local.get $4
+  call $assert-nonnull/Foo#get:baz
+  local.tee $1
+  i32.store offset=4
+  local.get $1
   if (result i32)
-   local.get $2
+   local.get $1
   else
    i32.const 32
    i32.const 160
@@ -610,12 +609,33 @@
    call $~lib/builtins/abort
    unreachable
   end
-  local.set $3
+  local.tee $2
+  i32.store offset=8
+  local.get $2
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $2
+  i32.load
+  call_indirect (type $1)
+  local.tee $3
+  i32.store offset=12
+  local.get $3
+  if (result i32)
+   local.get $3
+  else
+   i32.const 32
+   i32.const 160
+   i32.const 52
+   i32.const 10
+   call $~lib/builtins/abort
+   unreachable
+  end
+  local.set $4
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
+  i32.const 16
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $3
+  local.get $4
   return
  )
  (func $assert-nonnull/testVar (param $n i32) (result i32)
@@ -655,14 +675,16 @@
  (func $assert-nonnull/testFn (param $fn i32) (result i32)
   (local $1 i32)
   (local $2 i32)
+  (local $3 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   global.get $~lib/memory/__stack_pointer
@@ -680,28 +702,38 @@
    call $~lib/builtins/abort
    unreachable
   end
+  local.tee $2
+  i32.store offset=4
+  local.get $2
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $2
   i32.load
   call_indirect (type $1)
-  local.set $2
+  local.set $3
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $2
+  local.get $3
   return
  )
  (func $assert-nonnull/testFn2 (param $fn i32) (result i32)
   (local $1 i32)
   (local $fn2 i32)
   (local $3 i32)
+  (local $4 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 12
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
   global.get $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
   local.get $fn
@@ -720,31 +752,43 @@
   end
   local.tee $fn2
   i32.store offset=4
+  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   local.get $fn2
+  local.tee $3
+  i32.store offset=8
+  local.get $3
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $3
   i32.load
   call_indirect (type $1)
-  local.set $3
+  local.set $4
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 12
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $3
+  local.get $4
   return
  )
  (func $assert-nonnull/testRet (param $fn i32) (result i32)
   (local $1 i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 12
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
+  global.get $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
@@ -763,13 +807,19 @@
    call $~lib/builtins/abort
    unreachable
   end
-  i32.load
-  call_indirect (type $1)
   local.tee $2
   i32.store offset=4
   local.get $2
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $2
+  i32.load
+  call_indirect (type $1)
+  local.tee $3
+  i32.store offset=8
+  local.get $3
   if (result i32)
-   local.get $2
+   local.get $3
   else
    i32.const 32
    i32.const 160
@@ -778,12 +828,12 @@
    call $~lib/builtins/abort
    unreachable
   end
-  local.set $3
+  local.set $4
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 12
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $3
+  local.get $4
   return
  )
  (func $export:assert-nonnull/testVar (param $0 i32) (result i32)

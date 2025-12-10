@@ -43,6 +43,7 @@
  (global $resolve-ternary/f1 i32 (i32.const 3472))
  (global $resolve-ternary/f2 i32 (i32.const 3504))
  (global $~argumentsLength (mut i32) (i32.const 0))
+ (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/rt/__rtti_base i32 (i32.const 3584))
  (global $~lib/memory/__data_end i32 (i32.const 3608))
  (global $~lib/memory/__stack_pointer (mut i32) (i32.const 36376))
@@ -4396,14 +4397,20 @@
  )
  (func $start:resolve-ternary
   (local $0 i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $3 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 16
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store offset=8
   memory.size
   i32.const 16
   i32.shl
@@ -4429,11 +4436,11 @@
   end
   i32.const 10
   call $~lib/number/I32#toString
-  local.set $0
+  local.set $3
   global.get $~lib/memory/__stack_pointer
-  local.get $0
+  local.get $3
   i32.store
-  local.get $0
+  local.get $3
   i32.const 2208
   call $~lib/string/String.__eq
   i32.eqz
@@ -4453,11 +4460,11 @@
   end
   i32.const 0
   call $~lib/number/F64#toString
-  local.set $0
+  local.set $3
   global.get $~lib/memory/__stack_pointer
-  local.get $0
+  local.get $3
   i32.store
-  local.get $0
+  local.get $3
   i32.const 3440
   call $~lib/string/String.__eq
   i32.eqz
@@ -4470,6 +4477,7 @@
    unreachable
   end
   i32.const 1
+  global.get $~lib/memory/__stack_pointer
   i32.const 1
   global.set $~argumentsLength
   global.get $resolve-ternary/b
@@ -4478,6 +4486,12 @@
   else
    global.get $resolve-ternary/f2
   end
+  local.tee $0
+  i32.store offset=4
+  local.get $0
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $0
   i32.load
   call_indirect (type $0)
   i32.const 2
@@ -4492,6 +4506,7 @@
    unreachable
   end
   i32.const 1
+  global.get $~lib/memory/__stack_pointer
   i32.const 1
   global.set $~argumentsLength
   global.get $resolve-ternary/b
@@ -4500,6 +4515,12 @@
   else
    i32.const 3568
   end
+  local.tee $1
+  i32.store offset=8
+  local.get $1
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $1
   i32.load
   call_indirect (type $0)
   i32.const 4
@@ -4514,6 +4535,7 @@
    unreachable
   end
   i32.const 1
+  global.get $~lib/memory/__stack_pointer
   i32.const 1
   global.set $~argumentsLength
   global.get $resolve-ternary/b
@@ -4522,6 +4544,12 @@
   else
    i32.const 3568
   end
+  local.tee $2
+  i32.store offset=12
+  local.get $2
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $2
   i32.load
   call_indirect (type $0)
   i32.const 3
@@ -4536,7 +4564,7 @@
    unreachable
   end
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 16
   i32.add
   global.set $~lib/memory/__stack_pointer
  )

@@ -1,10 +1,11 @@
 (module
  (type $0 (func))
  (type $1 (func (result i32)))
- (type $2 (func (param i32) (result i32)))
- (type $3 (func (param i32 i32 i32 i32)))
+ (type $2 (func (param i32 i32 i32 i32)))
+ (type $3 (func (param i32) (result i32)))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (global $~argumentsLength (mut i32) (i32.const 0))
+ (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/memory/__data_end i32 (i32.const 124))
  (global $~lib/memory/__stack_pointer (mut i32) (i32.const 32892))
  (global $~lib/memory/__heap_base i32 (i32.const 32892))
@@ -17,14 +18,6 @@
  (start $~start)
  (func $class-static-function/Example.staticFunc (result i32)
   i32.const 42
-  return
- )
- (func $class-static-function/call (param $func i32) (result i32)
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $func
-  i32.load
-  call_indirect (type $1)
   return
  )
  (func $~start
@@ -75,5 +68,36 @@
   i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
+ )
+ (func $class-static-function/call (param $func i32) (result i32)
+  (local $1 i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $func
+  local.tee $1
+  i32.store
+  local.get $1
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $1
+  i32.load
+  call_indirect (type $1)
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+  return
  )
 )

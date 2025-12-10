@@ -1795,12 +1795,17 @@ export class Compiler extends DiagnosticEmitter {
               instance.capturedLocals = new Map();
             }
             if (!instance.capturedLocals.has(local)) {
-              // Calculate proper byte offset
+              // Calculate proper byte offset with alignment
               let currentOffset = 0;
               for (let _keys = Map_keys(instance.capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
                 let existingLocal = _keys[j];
-                currentOffset += existingLocal.type.byteSize;
+                let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+                if (endOfSlot > currentOffset) currentOffset = endOfSlot;
               }
+              // Align to the type's natural alignment
+              let typeSize = local.type.byteSize;
+              let align = typeSize;
+              currentOffset = (currentOffset + align - 1) & ~(align - 1);
               local.envSlotIndex = currentOffset;
               instance.capturedLocals.set(local, local.envSlotIndex);
             }
@@ -1811,6 +1816,14 @@ export class Compiler extends DiagnosticEmitter {
           }
         }
       }
+    }
+
+    // For closures (functions that capture from outer scope), create a local to cache
+    // the environment pointer. This is needed because indirect calls to other closures
+    // can overwrite the global $$~lib/__closure_env.
+    if (instance.outerFunction && !instance.closureEnvLocal) {
+      let closureEnvLocal = flow.addScopedLocal("$closureEnv", this.options.usizeType);
+      instance.closureEnvLocal = closureEnvLocal;
     }
 
     // compile statements
@@ -1849,6 +1862,27 @@ export class Compiler extends DiagnosticEmitter {
         stmts[i + 1] = stmts[i];
       }
       stmts[bodyStartIndex] = envAlloc;
+    }
+
+    // For closures (functions that capture from outer scope), emit code to cache the
+    // environment pointer in a local at function entry. This is needed because indirect
+    // calls to other closures can overwrite the global $$~lib/__closure_env.
+    if (instance.closureEnvLocal) {
+      let closureEnvLocal = instance.closureEnvLocal;
+
+      let closureEnvGlobal = this.ensureClosureEnvironmentGlobal();
+      let sizeTypeRef = this.options.sizeTypeRef;
+      let cacheEnv = module.local_set(
+        closureEnvLocal.index,
+        module.global_get(closureEnvGlobal, sizeTypeRef),
+        false // not a reference type
+      );
+
+      // Insert at the beginning of the body
+      for (let i = stmts.length - 1; i >= bodyStartIndex; --i) {
+        stmts[i + 1] = stmts[i];
+      }
+      stmts[bodyStartIndex] = cacheEnv;
     }
 
     // Make constructors return their instance pointer, and prepend a conditional
@@ -3271,12 +3305,17 @@ export class Compiler extends DiagnosticEmitter {
             sourceFunc.capturedLocals = new Map();
           }
           if (!sourceFunc.capturedLocals.has(local)) {
-            // Calculate proper byte offset based on current environment size
+            // Calculate proper byte offset based on current environment size with alignment
             let currentOffset = 0;
             for (let _keys = Map_keys(sourceFunc.capturedLocals), i = 0, k = _keys.length; i < k; ++i) {
               let existingLocal = _keys[i];
-              currentOffset += existingLocal.type.byteSize;
+              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
             }
+            // Align to the type's natural alignment
+            let typeSize = local.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
             local.envSlotIndex = currentOffset;
             sourceFunc.capturedLocals.set(local, local.envSlotIndex);
           }
@@ -6094,6 +6133,16 @@ export class Compiler extends DiagnosticEmitter {
       // In the declaring function, we need to check if environment is set up
       // In a closure, we always use the environment
       if (!isInDeclaringFunction || sourceFunc.envLocal) {
+        // Mark the local as initialized for flow analysis
+        flow.setLocalFlag(localIndex, LocalFlags.Initialized);
+        if (type.isNullableReference) {
+          if (!valueType.isNullableReference || flow.isNonnull(valueExpr, type)) flow.setLocalFlag(localIndex, LocalFlags.NonNull);
+          else flow.unsetLocalFlag(localIndex, LocalFlags.NonNull);
+        }
+        if (type.isShortIntegerValue) {
+          if (!flow.canOverflow(valueExpr, type)) flow.setLocalFlag(localIndex, LocalFlags.Wrapped);
+          else flow.unsetLocalFlag(localIndex, LocalFlags.Wrapped);
+        }
         let storeExpr = this.compileClosureStore(local, valueExpr, valueType);
         if (tee) {
           // For tee, we need to return the stored value
@@ -7541,14 +7590,26 @@ export class Compiler extends DiagnosticEmitter {
         }
         if (local && !captures.has(local)) {
           local.isCaptured = true;
-          // Calculate proper byte offset based on existing captures
-          let currentOffset = 0;
-          for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
-            let existingLocal = _keys[idx];
-            currentOffset += existingLocal.type.byteSize;
+          // If envSlotIndex is already set (from variable declaration), use it
+          if (local.envSlotIndex >= 0) {
+            captures.set(local, local.envSlotIndex);
+          } else {
+            // Calculate proper byte offset based on existing captures with alignment
+            // We need to compute the end of the last capture (including its size)
+            let currentOffset = 0;
+            for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
+              let existingLocal = _keys[idx];
+              // The slot index already accounts for alignment, add the size to get next free offset
+              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+            }
+            // Align to the type's natural alignment
+            let typeSize = local.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
+            local.envSlotIndex = currentOffset;
+            captures.set(local, local.envSlotIndex);
           }
-          local.envSlotIndex = currentOffset;
-          captures.set(local, local.envSlotIndex);
         }
         break;
       }
@@ -8102,6 +8163,64 @@ export class Compiler extends DiagnosticEmitter {
         }
         break;
       }
+      case NodeKind.ElementAccess: {
+        let elemAccess = <ElementAccessExpression>node;
+        this.collectCapturedNames(elemAccess.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(elemAccess.elementExpression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.PropertyAccess: {
+        let propAccess = <PropertyAccessExpression>node;
+        this.collectCapturedNames(propAccess.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Parenthesized: {
+        let paren = <ParenthesizedExpression>node;
+        this.collectCapturedNames(paren.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.UnaryPrefix: {
+        let unary = <UnaryPrefixExpression>node;
+        this.collectCapturedNames(unary.operand, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.UnaryPostfix: {
+        let unary = <UnaryPostfixExpression>node;
+        this.collectCapturedNames(unary.operand, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Ternary: {
+        let ternary = <TernaryExpression>node;
+        this.collectCapturedNames(ternary.condition, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(ternary.ifThen, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(ternary.ifElse, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Assertion: {
+        let assertion = <AssertionExpression>node;
+        this.collectCapturedNames(assertion.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.New: {
+        let newExpr = <NewExpression>node;
+        let args = newExpr.args;
+        for (let i = 0, k = args.length; i < k; i++) {
+          this.collectCapturedNames(args[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        break;
+      }
+      case NodeKind.InstanceOf: {
+        let instanceOf = <InstanceOfExpression>node;
+        this.collectCapturedNames(instanceOf.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Comma: {
+        let comma = <CommaExpression>node;
+        for (let i = 0, k = comma.expressions.length; i < k; i++) {
+          this.collectCapturedNames(comma.expressions[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        break;
+      }
       // Add more cases as needed for complete coverage
       default: {
         // For other nodes, recursively scan children
@@ -8112,19 +8231,17 @@ export class Compiler extends DiagnosticEmitter {
 
   /** Computes the total size needed for a closure environment. */
   private computeEnvironmentSize(captures: Map<Local, i32>): i32 {
-    let size = 0;
-    let usizeSize = this.options.usizeType.byteSize;
+    // Calculate the total size based on already-assigned slot indices
+    // The envSlotIndex values were already assigned during capture analysis
+    let maxEnd = 0;
     for (let _keys = Map_keys(captures), i = 0, k = _keys.length; i < k; i++) {
       let local = _keys[i];
-      // Align each slot to the type's natural alignment (at least pointer size)
-      let typeSize = local.type.byteSize;
-      let align = typeSize < usizeSize ? usizeSize : typeSize;
-      size = (size + align - 1) & ~(align - 1);
-      local.envSlotIndex = size; // Store the byte offset as slot index
-      size += typeSize;
+      let endOfSlot = local.envSlotIndex + local.type.byteSize;
+      if (endOfSlot > maxEnd) maxEnd = endOfSlot;
     }
     // Ensure total size is aligned to pointer size
-    size = (size + usizeSize - 1) & ~(usizeSize - 1);
+    let usizeSize = this.options.usizeType.byteSize;
+    let size = (maxEnd + usizeSize - 1) & ~(usizeSize - 1);
     return size;
   }
 
@@ -8258,9 +8375,15 @@ export class Compiler extends DiagnosticEmitter {
       return module.local_get(currentFunc.envLocal.index, sizeTypeRef);
     }
 
-    // Case 2: We're in a closure - load environment from the global
+    // Case 2: We're in a closure - use the cached local if available
     // The environment was passed via the closure's _env field and stored to global
-    // before the indirect call
+    // before the indirect call. We cache it in a local at function entry because
+    // nested indirect calls can overwrite the global.
+    if (currentFunc.closureEnvLocal) {
+      return module.local_get(currentFunc.closureEnvLocal.index, sizeTypeRef);
+    }
+
+    // Case 3: Fallback to global (shouldn't normally happen for closures)
     let closureEnvGlobal = this.ensureClosureEnvironmentGlobal();
     return module.global_get(closureEnvGlobal, sizeTypeRef);
   }
@@ -8544,7 +8667,7 @@ export class Compiler extends DiagnosticEmitter {
         // Handle closure access BEFORE initialization check
         // Captured variables are stored in the environment, not in flow locals
         if (!local.declaredByFlow(flow)) {
-          // Closure: load from environment
+          // Closure: load from environment (from inner function)
           if (local.isCaptured && local.envSlotIndex >= 0) {
             this.currentType = localType;
             return this.compileClosureLoad(local, expression);
@@ -8556,6 +8679,13 @@ export class Compiler extends DiagnosticEmitter {
             "Closures"
           );
           return module.unreachable();
+        }
+        // Also handle captured locals in the declaring function
+        // When a local is captured, its value lives in the environment
+        let sourceFunc = flow.sourceFunction;
+        if (local.isCaptured && local.envSlotIndex >= 0 && sourceFunc.envLocal) {
+          this.currentType = localType;
+          return this.compileClosureLoad(local, expression);
         }
 
         if (!flow.isLocalFlag(localIndex, LocalFlags.Initialized)) {

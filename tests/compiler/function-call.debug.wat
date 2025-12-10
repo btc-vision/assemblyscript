@@ -12,6 +12,7 @@
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (global $function-call/fnVoid (mut i32) (i32.const 32))
  (global $~argumentsLength (mut i32) (i32.const 0))
+ (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $function-call/faVoid (mut i32) (i32.const 64))
  (global $function-call/fnRet (mut i32) (i32.const 96))
  (global $function-call/faRet (mut i32) (i32.const 192))
@@ -2492,29 +2493,59 @@
  )
  (func $start:function-call
   (local $0 i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $3 i32)
+  (local $4 i32)
+  (local $5 i32)
+  (local $6 i32)
+  (local $7 i32)
+  (local $8 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 36
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
   i32.const 0
-  i32.store
+  i32.const 36
+  memory.fill
+  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   global.get $function-call/fnVoid
+  local.tee $0
+  i32.store
+  local.get $0
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $0
   i32.load
   call_indirect (type $2)
+  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   global.get $function-call/faVoid
+  local.tee $1
+  i32.store offset=4
+  local.get $1
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $1
   i32.load
   call_indirect (type $2)
   i32.const 1
   i32.const 2
+  global.get $~lib/memory/__stack_pointer
   i32.const 2
   global.set $~argumentsLength
   global.get $function-call/fnRet
+  local.tee $2
+  i32.store offset=8
+  local.get $2
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $2
   i32.load
   call_indirect (type $4)
   i32.const 3
@@ -2530,9 +2561,16 @@
   end
   i32.const 2
   i32.const 3
+  global.get $~lib/memory/__stack_pointer
   i32.const 2
   global.set $~argumentsLength
   global.get $function-call/faRet
+  local.tee $3
+  i32.store offset=12
+  local.get $3
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $3
   i32.load
   call_indirect (type $4)
   i32.const 5
@@ -2547,9 +2585,16 @@
    unreachable
   end
   i32.const 1
+  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   global.get $function-call/fnThis
+  local.tee $4
+  i32.store offset=16
+  local.get $4
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $4
   i32.load
   call_indirect (type $0)
   i32.const 1
@@ -2584,20 +2629,34 @@
   call $function-call/Foo#constructor
   global.set $function-call/foo
   global.get $function-call/foo
-  local.set $0
+  local.set $8
   global.get $~lib/memory/__stack_pointer
-  local.get $0
-  i32.store
-  local.get $0
+  local.get $8
+  i32.store offset=20
+  local.get $8
+  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   i32.const 656
+  local.tee $5
+  i32.store offset=24
+  local.get $5
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $5
   i32.load
   call_indirect (type $3)
   i32.const 1
+  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   i32.const 688
+  local.tee $6
+  i32.store offset=28
+  local.get $6
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $6
   i32.load
   call_indirect (type $0)
   i32.const 1
@@ -2612,16 +2671,23 @@
    unreachable
   end
   global.get $function-call/foo
-  local.set $0
+  local.set $8
   global.get $~lib/memory/__stack_pointer
-  local.get $0
-  i32.store
-  local.get $0
+  local.get $8
+  i32.store offset=20
+  local.get $8
   i32.const 1
   i32.const 2
+  global.get $~lib/memory/__stack_pointer
   i32.const 2
   global.set $~argumentsLength
   i32.const 720
+  local.tee $7
+  i32.store offset=32
+  local.get $7
+  i32.load offset=4
+  global.set $$~lib/__closure_env
+  local.get $7
   i32.load
   call_indirect (type $6)
   i32.const 3
@@ -2636,7 +2702,7 @@
    unreachable
   end
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 36
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
