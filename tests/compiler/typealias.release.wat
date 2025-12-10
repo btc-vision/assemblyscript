@@ -38,7 +38,7 @@
  )
  (func $~start
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
@@ -53,8 +53,8 @@
    unreachable
   end
   global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
+  i64.const 0
+  i64.store
   i32.const 1056
   i32.const 1056
   call $~lib/string/String.__eq
@@ -70,11 +70,17 @@
   global.get $~lib/memory/__stack_pointer
   i32.const 1168
   i32.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 1168
+  i32.store offset=4
+  i32.const 1172
+  i32.load
+  drop
   i32.const 1168
   i32.load
   call_indirect (type $0)
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
