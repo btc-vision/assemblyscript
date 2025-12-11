@@ -7497,6 +7497,14 @@ export class Compiler extends DiagnosticEmitter {
       // Analyze captured variables before compiling
       let captures = this.analyzeCapturedVariables(declaration, flow);
       if (captures.size > 0) {
+        // Check if closures feature is enabled
+        if (!this.options.hasFeature(Feature.Closures)) {
+          this.error(
+            DiagnosticCode.Feature_0_is_not_enabled,
+            expression.range, "closures"
+          );
+          return module.unreachable();
+        }
         instance.capturedLocals = captures;
         instance.outerFunction = sourceFunction;
         this.ensureClosureEnvironment(sourceFunction, captures, flow);
@@ -7515,6 +7523,14 @@ export class Compiler extends DiagnosticEmitter {
       // Analyze captured variables before compiling
       let captures = this.analyzeCapturedVariables(declaration, flow);
       if (captures.size > 0) {
+        // Check if closures feature is enabled
+        if (!this.options.hasFeature(Feature.Closures)) {
+          this.error(
+            DiagnosticCode.Feature_0_is_not_enabled,
+            expression.range, "closures"
+          );
+          return module.unreachable();
+        }
         instance.capturedLocals = captures;
         instance.outerFunction = sourceFunction;
         this.ensureClosureEnvironment(sourceFunction, captures, flow);
@@ -7990,6 +8006,14 @@ export class Compiler extends DiagnosticEmitter {
         let declaration = funcExpr.declaration;
         let capturedNames = this.analyzeCapturedVariablesWithDeclared(declaration, flow, instance, declaredVars);
         if (capturedNames.size > 0) {
+          // Check if closures feature is enabled
+          if (!this.options.hasFeature(Feature.Closures)) {
+            this.error(
+              DiagnosticCode.Feature_0_is_not_enabled,
+              funcExpr.range, "closures"
+            );
+            break;
+          }
           // Store captured names for later use when compiling variable declarations
           let existingNames = instance.preCapturedNames;
           if (!existingNames) {

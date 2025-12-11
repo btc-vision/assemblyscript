@@ -1086,6 +1086,8 @@ export class Program extends DiagnosticEmitter {
       i64_new(options.hasFeature(Feature.ExtendedConst) ? 1 : 0, 0));
     this.registerConstantInteger(CommonNames.ASC_FEATURE_STRINGREF, Type.bool,
       i64_new(options.hasFeature(Feature.Stringref) ? 1 : 0, 0));
+    this.registerConstantInteger(CommonNames.ASC_FEATURE_CLOSURES, Type.bool,
+      i64_new(options.hasFeature(Feature.Closures) ? 1 : 0, 0));
 
     // remember deferred elements
     let queuedImports = new Array<QueuedImport>();
