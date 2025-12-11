@@ -61,7 +61,7 @@
   global.get $$~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load
+  i32.load offset=4
  )
  (func $~lib/rt/itcms/Object#set:nextWithColor (param $this i32) (param $nextWithColor i32)
   local.get $this
@@ -2266,12 +2266,15 @@
  (func $closure/testCaptureParam (param $x i32) (result i32)
   (local $$env i32)
   (local $2 i32)
-  i32.const 4
+  i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
-  local.get $x
+  i32.const 0
   i32.store
+  local.get $$env
+  local.get $x
+  i32.store offset=4
   i32.const 8
   i32.const 4
   call $~lib/rt/itcms/__new
@@ -2290,18 +2293,21 @@
   global.get $$~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load
+  i32.load offset=4
  )
  (func $closure/testCaptureVar (result i32)
   (local $x i32)
   (local $$env i32)
   (local $2 i32)
-  i32.const 4
+  i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
-  i32.const 100
+  i32.const 0
   i32.store
+  local.get $$env
+  i32.const 100
+  i32.store offset=4
   i32.const 8
   i32.const 4
   call $~lib/rt/itcms/__new
@@ -2320,18 +2326,21 @@
   global.get $$~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load
+  i32.load offset=4
  )
  (func $closure/testCaptureLet (result i32)
   (local $x i32)
   (local $$env i32)
   (local $2 i32)
-  i32.const 4
+  i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
-  i32.const 200
+  i32.const 0
   i32.store
+  local.get $$env
+  i32.const 200
+  i32.store offset=4
   i32.const 8
   i32.const 4
   call $~lib/rt/itcms/__new
@@ -2351,47 +2360,50 @@
   local.set $$closureEnv
   local.get $$closureEnv
   local.get $$closureEnv
-  i32.load
+  i32.load offset=4
   i32.const 1
   i32.add
-  i32.store
+  i32.store offset=4
  )
  (func $closure/testClosureWrite~anonymous|1 (result i32)
   (local $$closureEnv i32)
   global.get $$~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load
+  i32.load offset=4
  )
  (func $closure/testMultipleCaptures~anonymous|0 (result i32)
   (local $$closureEnv i32)
   global.get $$~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load
-  local.get $$closureEnv
   i32.load offset=4
-  i32.add
   local.get $$closureEnv
   i32.load offset=8
+  i32.add
+  local.get $$closureEnv
+  i32.load offset=12
   i32.add
  )
  (func $closure/testMultipleCaptures (param $a i32) (param $b i32) (result i32)
   (local $$env i32)
   (local $c i32)
   (local $4 i32)
-  i32.const 12
+  i32.const 16
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
-  local.get $a
+  i32.const 0
   i32.store
   local.get $$env
-  local.get $b
+  local.get $a
   i32.store offset=4
   local.get $$env
-  i32.const 10
+  local.get $b
   i32.store offset=8
+  local.get $$env
+  i32.const 10
+  i32.store offset=12
   i32.const 8
   i32.const 4
   call $~lib/rt/itcms/__new
@@ -2411,14 +2423,14 @@
   local.set $$closureEnv
   local.get $$closureEnv
   local.get $x
-  i32.store
+  i32.store offset=4
  )
  (func $closure/testSharedEnvironment~anonymous|1 (result i32)
   (local $$closureEnv i32)
   global.get $$~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load
+  i32.load offset=4
  )
  (func $start:closure
   (local $0 i32)
@@ -2794,12 +2806,15 @@
   i32.const 0
   i32.const 24
   memory.fill
-  i32.const 4
+  i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
   i32.const 0
   i32.store
+  local.get $$env
+  i32.const 0
+  i32.store offset=4
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.const 5
@@ -2905,12 +2920,15 @@
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store offset=8
-  i32.const 4
+  i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
   i32.const 0
   i32.store
+  local.get $$env
+  i32.const 0
+  i32.store offset=4
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.const 6
