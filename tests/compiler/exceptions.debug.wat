@@ -42,10 +42,11 @@
  (global $exceptions/deepNestingOrder (mut i32) (i32.const 416))
  (global $exceptions/counter (mut i32) (i32.const 0))
  (global $exceptions/multiReturnFinallyCount (mut i32) (i32.const 0))
- (global $~lib/rt/__rtti_base i32 (i32.const 1744))
- (global $~lib/memory/__data_end i32 (i32.const 1804))
- (global $~lib/memory/__stack_pointer (mut i32) (i32.const 34572))
- (global $~lib/memory/__heap_base i32 (i32.const 34572))
+ (global $exceptions/finallyReturnSuppressedExceptionRan (mut i32) (i32.const 0))
+ (global $~lib/rt/__rtti_base i32 (i32.const 1840))
+ (global $~lib/memory/__data_end i32 (i32.const 1900))
+ (global $~lib/memory/__stack_pointer (mut i32) (i32.const 34668))
+ (global $~lib/memory/__heap_base i32 (i32.const 34668))
  (memory $0 1)
  (data $0 (i32.const 12) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e\00\00\00\00\00")
  (data $1 (i32.const 80) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
@@ -88,7 +89,9 @@
  (data $38 (i32.const 1580) "L\00\00\00\00\00\00\00\00\00\00\00\02\00\00\000\00\00\00t\001\00,\00t\002\00,\00t\003\00,\00c\003\00,\00f\003\00,\00c\002\00,\00f\002\00,\00f\001\00,\00\00\00\00\00\00\00\00\00\00\00\00\00")
  (data $39 (i32.const 1660) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\16\00\00\00m\00a\00x\00 \00r\00e\00a\00c\00h\00e\00d\00\00\00\00\00\00\00")
  (data $40 (i32.const 1708) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\08\00\00\00z\00e\00r\00o\00\00\00\00\00")
- (data $41 (i32.const 1744) "\0e\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00 \00\00\00 \00\00\00\00\00\00\00 \00\00\00\02\t\00\00\00\00\00\00 \00\00\00 \00\00\00")
+ (data $41 (i32.const 1740) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\08\00\00\00t\00e\00s\00t\00\00\00\00\00")
+ (data $42 (i32.const 1772) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00(\00\00\00s\00h\00o\00u\00l\00d\00 \00b\00e\00 \00s\00u\00p\00p\00r\00e\00s\00s\00e\00d\00\00\00\00\00")
+ (data $43 (i32.const 1840) "\0e\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00 \00\00\00 \00\00\00\00\00\00\00 \00\00\00\02\t\00\00\00\00\00\00 \00\00\00 \00\00\00")
  (table $0 1 1 funcref)
  (elem $0 (i32.const 1))
  (tag $$error (type $3) (param i32))
@@ -3024,6 +3027,72 @@
   end
   unreachable
  )
+ (func $exceptions/testReturnInFinally (result i32)
+  (local $0 i32)
+  (local $1 i32)
+  block $finally_dispatch|0
+   try $try_finally|0
+    i32.const 1
+    local.set $1
+    i32.const 1
+    local.set $0
+    br $finally_dispatch|0
+   catch_all
+    i32.const 2
+    return
+   end
+   unreachable
+  end
+  i32.const 2
+  return
+ )
+ (func $exceptions/testReturnInFinallyOverridesCatch (result i32)
+  (local $e i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $e|3 i32)
+  block $finally_dispatch|0
+   try $try_finally|0
+    try $try|1
+     i32.const 0
+     i32.const 1760
+     call $~lib/error/Error#constructor
+     throw $$error
+    catch $$error
+     
+     local.set $e|3
+     i32.const 1
+     local.set $2
+     i32.const 1
+     local.set $1
+     br $finally_dispatch|0
+    end
+    unreachable
+   catch_all
+    i32.const 2
+    return
+   end
+   unreachable
+  end
+  i32.const 2
+  return
+ )
+ (func $exceptions/testReturnInFinallySuppressesException (result i32)
+  (local $0 i32)
+  (local $1 i32)
+  try $try_finally|0
+   i32.const 0
+   i32.const 1792
+   call $~lib/error/Error#constructor
+   throw $$error
+  catch_all
+   i32.const 1
+   global.set $exceptions/finallyReturnSuppressedExceptionRan
+   i32.const 42
+   return
+  end
+  unreachable
+ )
  (func $~lib/rt/__visit_globals (param $0 i32)
   (local $1 i32)
   global.get $exceptions/calc
@@ -3211,8 +3280,8 @@
   global.get $~lib/memory/__data_end
   i32.lt_s
   if
-   i32.const 34592
-   i32.const 34640
+   i32.const 34688
+   i32.const 34736
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -5889,6 +5958,54 @@
    i32.const 0
    i32.const 480
    i32.const 463
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testReturnInFinally
+  i32.const 2
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 473
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testReturnInFinallyOverridesCatch
+  i32.const 2
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 485
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testReturnInFinallySuppressesException
+  i32.const 42
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 497
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/finallyReturnSuppressedExceptionRan
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 498
    i32.const 1
    call $~lib/builtins/abort
    unreachable

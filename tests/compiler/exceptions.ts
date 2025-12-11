@@ -461,3 +461,38 @@ assert(multiReturnFinallyCount == 3);
 
 assert(testMultipleReturnsWithFinally(200) == 100);
 assert(multiReturnFinallyCount == 4);
+
+// Return in finally overrides return in try
+function testReturnInFinally(): i32 {
+  try {
+    return 1;  // This return is overridden
+  } finally {
+    return 2;  // This return wins
+  }
+}
+assert(testReturnInFinally() == 2);
+
+// Return in finally overrides return in catch
+function testReturnInFinallyOverridesCatch(): i32 {
+  try {
+    throw new Error("test");
+  } catch (e) {
+    return 1;  // This return is overridden
+  } finally {
+    return 2;  // This return wins
+  }
+}
+assert(testReturnInFinallyOverridesCatch() == 2);
+
+// Return in finally suppresses exception
+let finallyReturnSuppressedExceptionRan = false;
+function testReturnInFinallySuppressesException(): i32 {
+  try {
+    throw new Error("should be suppressed");
+  } finally {
+    finallyReturnSuppressedExceptionRan = true;
+    return 42;  // This suppresses the exception
+  }
+}
+assert(testReturnInFinallySuppressesException() == 42);
+assert(finallyReturnSuppressedExceptionRan == true);

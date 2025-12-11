@@ -3368,6 +3368,8 @@ export class Compiler extends DiagnosticEmitter {
       let finallyStmts2 = new Array<ExpressionRef>();
       this.compileStatements(finallyStatements, finallyStmts2);
       let finallyExpr2 = module.flatten(finallyStmts2);
+      let finallyTerminates = finallyFlow2.isAny(FlowFlags.Terminates);
+      let finallyReturns = finallyFlow2.isAny(FlowFlags.Returns);
 
       this.currentFlow = outerFlow;
       outerFlow.popControlFlowLabel(label2);
@@ -3378,28 +3380,31 @@ export class Compiler extends DiagnosticEmitter {
       // Run finally code
       dispatchStmts.push(finallyExpr2);
 
-      // Dispatch based on pendingAction
-      // if (pendingAction == 1) return pendingValue;
-      if (returnType != Type.void && pendingValueLocal) {
-        dispatchStmts.push(
-          module.if(
-            module.binary(BinaryOp.EqI32,
-              module.local_get(pendingActionLocal.index, TypeRef.I32),
-              module.i32(1)
-            ),
-            module.return(module.local_get(pendingValueLocal.index, returnType.toRef()))
-          )
-        );
-      } else {
-        dispatchStmts.push(
-          module.if(
-            module.binary(BinaryOp.EqI32,
-              module.local_get(pendingActionLocal.index, TypeRef.I32),
-              module.i32(1)
-            ),
-            module.return()
-          )
-        );
+      // If finally always returns/terminates, skip dispatch logic
+      if (!finallyTerminates) {
+        // Dispatch based on pendingAction
+        // if (pendingAction == 1) return pendingValue;
+        if (returnType != Type.void && pendingValueLocal) {
+          dispatchStmts.push(
+            module.if(
+              module.binary(BinaryOp.EqI32,
+                module.local_get(pendingActionLocal.index, TypeRef.I32),
+                module.i32(1)
+              ),
+              module.return(module.local_get(pendingValueLocal.index, returnType.toRef()))
+            )
+          );
+        } else {
+          dispatchStmts.push(
+            module.if(
+              module.binary(BinaryOp.EqI32,
+                module.local_get(pendingActionLocal.index, TypeRef.I32),
+                module.i32(1)
+              ),
+              module.return()
+            )
+          );
+        }
       }
 
       // The full structure:
@@ -3418,7 +3423,8 @@ export class Compiler extends DiagnosticEmitter {
       // For functions that return a value, add unreachable at the end
       // This handles the case where normal completion didn't have a return
       // (in theory this path shouldn't be reachable if all paths return)
-      if (returnType != Type.void) {
+      // But skip if finally already terminates
+      if (returnType != Type.void && !finallyTerminates) {
         dispatchStmts.push(module.unreachable());
       }
 
@@ -3428,7 +3434,13 @@ export class Compiler extends DiagnosticEmitter {
       ]);
 
       // Merge flow states
-      if (catchFlow) {
+      // If finally always terminates, the whole construct terminates
+      if (finallyTerminates) {
+        outerFlow.set(FlowFlags.Terminates);
+        if (finallyReturns) {
+          outerFlow.set(FlowFlags.Returns);
+        }
+      } else if (catchFlow) {
         if (tryFlowTerminates && catchFlowTerminates) {
           outerFlow.set(FlowFlags.Terminates);
         } else {

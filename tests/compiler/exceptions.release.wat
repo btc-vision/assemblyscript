@@ -21,7 +21,7 @@
  (global $exceptions/tryCatchFinallyResult (mut i32) (i32.const 0))
  (global $exceptions/finallyWithExceptionRan (mut i32) (i32.const 0))
  (global $exceptions/deepNestingOrder (mut i32) (i32.const 1440))
- (global $~lib/memory/__stack_pointer (mut i32) (i32.const 35596))
+ (global $~lib/memory/__stack_pointer (mut i32) (i32.const 35692))
  (memory $0 1)
  (data $0 (i32.const 1036) "<")
  (data $0.1 (i32.const 1048) "\02\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e")
@@ -99,8 +99,12 @@
  (data $39.1 (i32.const 2696) "\02\00\00\00\16\00\00\00m\00a\00x\00 \00r\00e\00a\00c\00h\00e\00d")
  (data $40 (i32.const 2732) "\1c")
  (data $40.1 (i32.const 2744) "\02\00\00\00\08\00\00\00z\00e\00r\00o")
- (data $41 (i32.const 2768) "\0e\00\00\00 \00\00\00 \00\00\00 ")
- (data $41.1 (i32.const 2796) " \00\00\00 \00\00\00\00\00\00\00 \00\00\00\02\t\00\00\00\00\00\00 \00\00\00 ")
+ (data $41 (i32.const 2764) "\1c")
+ (data $41.1 (i32.const 2776) "\02\00\00\00\08\00\00\00t\00e\00s\00t")
+ (data $42 (i32.const 2796) "<")
+ (data $42.1 (i32.const 2808) "\02\00\00\00(\00\00\00s\00h\00o\00u\00l\00d\00 \00b\00e\00 \00s\00u\00p\00p\00r\00e\00s\00s\00e\00d")
+ (data $43 (i32.const 2864) "\0e\00\00\00 \00\00\00 \00\00\00 ")
+ (data $43.1 (i32.const 2892) " \00\00\00 \00\00\00\00\00\00\00 \00\00\00\02\t\00\00\00\00\00\00 \00\00\00 ")
  (tag $$error (type $0) (param i32))
  (export "memory" (memory $0))
  (start $~start)
@@ -180,7 +184,7 @@
    local.get $1
    global.set $~lib/rt/itcms/iter
   end
-  block $__inlined_func$~lib/rt/itcms/Object#unlink$239
+  block $__inlined_func$~lib/rt/itcms/Object#unlink$242
    local.get $0
    i32.load offset=4
    i32.const -4
@@ -192,7 +196,7 @@
     i32.load offset=8
     i32.eqz
     local.get $0
-    i32.const 35596
+    i32.const 35692
     i32.lt_u
     i32.and
     i32.eqz
@@ -204,7 +208,7 @@
      call $~lib/builtins/abort
      unreachable
     end
-    br $__inlined_func$~lib/rt/itcms/Object#unlink$239
+    br $__inlined_func$~lib/rt/itcms/Object#unlink$242
    end
    local.get $0
    i32.load offset=8
@@ -241,7 +245,7 @@
    i32.const 1
   else
    local.get $1
-   i32.const 2768
+   i32.const 2864
    i32.load
    i32.gt_u
    if
@@ -253,7 +257,7 @@
    local.get $1
    i32.const 2
    i32.shl
-   i32.const 2772
+   i32.const 2868
    i32.add
    i32.load
    i32.const 32
@@ -837,10 +841,10 @@
   if
    unreachable
   end
-  i32.const 35600
+  i32.const 35696
   i32.const 0
   i32.store
-  i32.const 37168
+  i32.const 37264
   i32.const 0
   i32.store
   loop $for-loop|0
@@ -851,7 +855,7 @@
     local.get $0
     i32.const 2
     i32.shl
-    i32.const 35600
+    i32.const 35696
     i32.add
     i32.const 0
     i32.store offset=4
@@ -869,7 +873,7 @@
       i32.add
       i32.const 2
       i32.shl
-      i32.const 35600
+      i32.const 35696
       i32.add
       i32.const 0
       i32.store offset=96
@@ -887,14 +891,14 @@
     br $for-loop|0
    end
   end
-  i32.const 35600
-  i32.const 37172
+  i32.const 35696
+  i32.const 37268
   memory.size
   i64.extend_i32_s
   i64.const 16
   i64.shl
   call $~lib/rt/tlsf/addMemory
-  i32.const 35600
+  i32.const 35696
   global.set $~lib/rt/tlsf/ROOT
  )
  (func $~lib/rt/itcms/step (result i32)
@@ -979,7 +983,7 @@
      local.set $0
      loop $while-continue|0
       local.get $0
-      i32.const 35596
+      i32.const 35692
       i32.lt_u
       if
        local.get $0
@@ -1075,7 +1079,7 @@
      unreachable
     end
     local.get $0
-    i32.const 35596
+    i32.const 35692
     i32.lt_u
     if
      local.get $0
@@ -1098,7 +1102,7 @@
      i32.const 4
      i32.add
      local.tee $0
-     i32.const 35596
+     i32.const 35692
      i32.ge_u
      if
       global.get $~lib/rt/tlsf/ROOT
@@ -1699,11 +1703,11 @@
       i32.sub
       global.set $~lib/memory/__stack_pointer
       global.get $~lib/memory/__stack_pointer
-      i32.const 2828
+      i32.const 2924
       i32.lt_s
       if
-       i32.const 35616
-       i32.const 35664
+       i32.const 35712
+       i32.const 35760
        i32.const 1
        i32.const 1
        call $~lib/builtins/abort
@@ -1749,11 +1753,11 @@
   i32.sub
   global.set $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
-  i32.const 2828
+  i32.const 2924
   i32.lt_s
   if
-   i32.const 35616
-   i32.const 35664
+   i32.const 35712
+   i32.const 35760
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -1823,11 +1827,11 @@
   i32.sub
   global.set $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
-  i32.const 2828
+  i32.const 2924
   i32.lt_s
   if
-   i32.const 35616
-   i32.const 35664
+   i32.const 35712
+   i32.const 35760
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -1839,7 +1843,7 @@
   memory.size
   i32.const 16
   i32.shl
-  i32.const 35596
+  i32.const 35692
   i32.sub
   i32.const 1
   i32.shr_u
@@ -1886,11 +1890,11 @@
   i32.sub
   global.set $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
-  i32.const 2828
+  i32.const 2924
   i32.lt_s
   if
-   i32.const 35616
-   i32.const 35664
+   i32.const 35712
+   i32.const 35760
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -1899,7 +1903,7 @@
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   i32.store
-  block $__inlined_func$exceptions/testCatchVar$230
+  block $__inlined_func$exceptions/testCatchVar$233
    try
     i32.const 0
     i32.const 1552
@@ -1918,7 +1922,7 @@
     i32.const 4
     i32.add
     global.set $~lib/memory/__stack_pointer
-    br $__inlined_func$exceptions/testCatchVar$230
+    br $__inlined_func$exceptions/testCatchVar$233
    end
    unreachable
   end
@@ -1931,11 +1935,11 @@
    i32.sub
    global.set $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
-   i32.const 2828
+   i32.const 2924
    i32.lt_s
    if
-    i32.const 35616
-    i32.const 35664
+    i32.const 35712
+    i32.const 35760
     i32.const 1
     i32.const 1
     call $~lib/builtins/abort
@@ -2162,7 +2166,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  block $__inlined_func$exceptions/testFinallyWithException$231
+  block $__inlined_func$exceptions/testFinallyWithException$234
    try
     try $try_finally|07
      i32.const 0
@@ -2182,7 +2186,7 @@
     i32.const 0
     i32.ne
     local.set $0
-    br $__inlined_func$exceptions/testFinallyWithException$231
+    br $__inlined_func$exceptions/testFinallyWithException$234
    end
    unreachable
   end
