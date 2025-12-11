@@ -3,7 +3,7 @@
 // =============================================================================
 
 // =============================================================================
-// SECTION 1: Basic Method Closures Capturing "this" via local variable
+// SECTION 1: Basic Method Closures Capturing "this" directly
 // =============================================================================
 
 class Counter {
@@ -14,9 +14,8 @@ class Counter {
   }
 
   getIncrementClosure(): () => void {
-    let self = this;
     return (): void => {
-      self.count++;
+      this.count++;
     };
   }
 
@@ -25,8 +24,7 @@ class Counter {
   }
 
   getCountClosure(): () => i32 {
-    let self = this;
-    return (): i32 => self.count;
+    return (): i32 => this.count;
   }
 }
 
@@ -74,19 +72,17 @@ class BankAccount {
   }
 
   getDepositClosure(): (amount: i32) => void {
-    let self = this;
     return (amount: i32): void => {
-      self.balance += amount;
-      self.transactionCount++;
+      this.balance += amount;
+      this.transactionCount++;
     };
   }
 
   getWithdrawClosure(): (amount: i32) => bool {
-    let self = this;
     return (amount: i32): bool => {
-      if (self.balance >= amount) {
-        self.balance -= amount;
-        self.transactionCount++;
+      if (this.balance >= amount) {
+        this.balance -= amount;
+        this.transactionCount++;
         return true;
       }
       return false;
@@ -94,13 +90,11 @@ class BankAccount {
   }
 
   getBalanceClosure(): () => i32 {
-    let self = this;
-    return (): i32 => self.balance;
+    return (): i32 => this.balance;
   }
 
   getTransactionCountClosure(): () => i32 {
-    let self = this;
-    return (): i32 => self.transactionCount;
+    return (): i32 => this.transactionCount;
   }
 }
 
@@ -138,17 +132,16 @@ class Calculator {
   result: i32 = 0;
 
   getOperationClosure(operand: i32, operation: i32): () => i32 {
-    // Captures both 'self' (this) and parameters 'operand' and 'operation'
-    let self = this;
+    // Captures both 'this' and parameters 'operand' and 'operation'
     return (): i32 => {
       if (operation == 0) {        // add
-        self.result += operand;
+        this.result += operand;
       } else if (operation == 1) { // subtract
-        self.result -= operand;
+        this.result -= operand;
       } else if (operation == 2) { // multiply
-        self.result *= operand;
+        this.result *= operand;
       }
-      return self.result;
+      return this.result;
     };
   }
 
@@ -186,14 +179,12 @@ class Inner {
   }
 
   getValueClosure(): () => i32 {
-    let self = this;
-    return (): i32 => self.value;
+    return (): i32 => this.value;
   }
 
   getSetterClosure(): (v: i32) => void {
-    let self = this;
     return (v: i32): void => {
-      self.value = v;
+      this.value = v;
     };
   }
 }
@@ -208,15 +199,13 @@ class Outer {
   }
 
   getComputeClosure(): () => i32 {
-    // Captures self, which has access to inner
-    let self = this;
-    return (): i32 => self.inner.value * self.multiplier;
+    // Captures this, which has access to inner
+    return (): i32 => this.inner.value * this.multiplier;
   }
 
   getInnerSetterClosure(): (v: i32) => void {
-    let self = this;
     return (v: i32): void => {
-      self.inner.value = v;
+      this.inner.value = v;
     };
   }
 }
@@ -250,14 +239,12 @@ class Animal {
   }
 
   getAgeClosure(): () => i32 {
-    let self = this;
-    return (): i32 => self.age;
+    return (): i32 => this.age;
   }
 
   getAgeIncrementClosure(): () => void {
-    let self = this;
     return (): void => {
-      self.age++;
+      this.age++;
     };
   }
 }
@@ -271,13 +258,11 @@ class Dog extends Animal {
   }
 
   getBreedClosure(): () => string {
-    let self = this;
-    return (): string => self.breed;
+    return (): string => this.breed;
   }
 
   getFullInfoClosure(): () => string {
-    let self = this;
-    return (): string => self.name + " (" + self.breed + ")";
+    return (): string => this.name + " (" + this.breed + ")";
   }
 }
 
@@ -327,11 +312,10 @@ class DataProcessor {
   sum: i32 = 0;
 
   getProcessorClosure(): (data: i32) => void {
-    let self = this;
     return (data: i32): void => {
-      self.processedCount++;
-      self.lastValue = data;
-      self.sum += data;
+      this.processedCount++;
+      this.lastValue = data;
+      this.sum += data;
     };
   }
 }
@@ -370,32 +354,28 @@ class QueryBuilder {
   private whereClause: string = "";
 
   getSelectClosure(): (fields: string) => void {
-    let self = this;
     return (fields: string): void => {
-      self.selectFields = fields;
+      this.selectFields = fields;
     };
   }
 
   getFromClosure(): (table: string) => void {
-    let self = this;
     return (table: string): void => {
-      self.tableName = table;
+      this.tableName = table;
     };
   }
 
   getWhereClosure(): (clause: string) => void {
-    let self = this;
     return (clause: string): void => {
-      self.whereClause = clause;
+      this.whereClause = clause;
     };
   }
 
   getBuildClosure(): () => string {
-    let self = this;
     return (): string => {
-      let query = "SELECT " + self.selectFields + " FROM " + self.tableName;
-      if (self.whereClause.length > 0) {
-        query += " WHERE " + self.whereClause;
+      let query = "SELECT " + this.selectFields + " FROM " + this.tableName;
+      if (this.whereClause.length > 0) {
+        query += " WHERE " + this.whereClause;
       }
       return query;
     };
@@ -430,10 +410,9 @@ class StateMachine {
   private state: i32 = 0; // 0=idle, 1=running, 2=paused, 3=stopped
 
   getStartClosure(): () => bool {
-    let self = this;
     return (): bool => {
-      if (self.state == 0 || self.state == 2) {
-        self.state = 1;
+      if (this.state == 0 || this.state == 2) {
+        this.state = 1;
         return true;
       }
       return false;
@@ -441,10 +420,9 @@ class StateMachine {
   }
 
   getPauseClosure(): () => bool {
-    let self = this;
     return (): bool => {
-      if (self.state == 1) {
-        self.state = 2;
+      if (this.state == 1) {
+        this.state = 2;
         return true;
       }
       return false;
@@ -452,10 +430,9 @@ class StateMachine {
   }
 
   getStopClosure(): () => bool {
-    let self = this;
     return (): bool => {
-      if (self.state == 1 || self.state == 2) {
-        self.state = 3;
+      if (this.state == 1 || this.state == 2) {
+        this.state = 3;
         return true;
       }
       return false;
@@ -463,15 +440,13 @@ class StateMachine {
   }
 
   getResetClosure(): () => void {
-    let self = this;
     return (): void => {
-      self.state = 0;
+      this.state = 0;
     };
   }
 
   getStateClosure(): () => i32 {
-    let self = this;
-    return (): i32 => self.state;
+    return (): i32 => this.state;
   }
 }
 
@@ -523,26 +498,23 @@ class Observable {
   }
 
   getSubscribeClosure(): (observer: (oldVal: i32, newVal: i32) => void) => void {
-    let self = this;
     return (observer: (oldVal: i32, newVal: i32) => void): void => {
-      self.observers.push(observer);
+      this.observers.push(observer);
     };
   }
 
   getSetClosure(): (newValue: i32) => void {
-    let self = this;
     return (newValue: i32): void => {
-      let oldValue = self.value;
-      self.value = newValue;
-      for (let i = 0; i < self.observers.length; i++) {
-        self.observers[i](oldValue, newValue);
+      let oldValue = this.value;
+      this.value = newValue;
+      for (let i = 0; i < this.observers.length; i++) {
+        this.observers[i](oldValue, newValue);
       }
     };
   }
 
   getGetClosure(): () => i32 {
-    let self = this;
-    return (): i32 => self.value;
+    return (): i32 => this.value;
   }
 }
 
@@ -552,16 +524,14 @@ class ObserverState {
   totalDiff: i32 = 0;
 
   getCountObserver(): (oldVal: i32, newVal: i32) => void {
-    let self = this;
     return (oldVal: i32, newVal: i32): void => {
-      self.changeCount++;
+      this.changeCount++;
     };
   }
 
   getDiffObserver(): (oldVal: i32, newVal: i32) => void {
-    let self = this;
     return (oldVal: i32, newVal: i32): void => {
-      self.totalDiff += newVal - oldVal;
+      this.totalDiff += newVal - oldVal;
     };
   }
 }
@@ -603,22 +573,19 @@ class Box {
   }
 
   getMapClosure(): (fn: (v: i32) => i32) => void {
-    let self = this;
     return (fn: (v: i32) => i32): void => {
-      self.value = fn(self.value);
+      this.value = fn(this.value);
     };
   }
 
   getFlatMapClosure(): (fn: (v: i32) => Box) => Box {
-    let self = this;
     return (fn: (v: i32) => Box): Box => {
-      return fn(self.value);
+      return fn(this.value);
     };
   }
 
   getValueClosure(): () => i32 {
-    let self = this;
-    return (): i32 => self.value;
+    return (): i32 => this.value;
   }
 }
 
@@ -654,28 +621,25 @@ assert(testBoxFlatMap() == 50);
 class ChainableCounter {
   count: i32 = 0;
 
-  // Returns a closure that returns self for chaining
+  // Returns a closure that returns this for chaining
   getAddClosure(amount: i32): () => ChainableCounter {
-    let self = this;
     return (): ChainableCounter => {
-      self.count += amount;
-      return self;
+      this.count += amount;
+      return this;
     };
   }
 
   getMultiplyClosure(factor: i32): () => ChainableCounter {
-    let self = this;
     return (): ChainableCounter => {
-      self.count *= factor;
-      return self;
+      this.count *= factor;
+      return this;
     };
   }
 
   getResetClosure(): () => ChainableCounter {
-    let self = this;
     return (): ChainableCounter => {
-      self.count = 0;
-      return self;
+      this.count = 0;
+      return this;
     };
   }
 }
@@ -707,23 +671,21 @@ class Task {
   private callbacks: Array<(result: i32) => void> = new Array<(result: i32) => void>();
 
   getThenClosure(): (callback: (result: i32) => void) => void {
-    let self = this;
     return (callback: (result: i32) => void): void => {
-      if (self.completed) {
-        callback(self.result);
+      if (this.completed) {
+        callback(this.result);
       } else {
-        self.callbacks.push(callback);
+        this.callbacks.push(callback);
       }
     };
   }
 
   getCompleteClosure(): (result: i32) => void {
-    let self = this;
     return (result: i32): void => {
-      self.completed = true;
-      self.result = result;
-      for (let i = 0; i < self.callbacks.length; i++) {
-        self.callbacks[i](result);
+      this.completed = true;
+      this.result = result;
+      for (let i = 0; i < this.callbacks.length; i++) {
+        this.callbacks[i](result);
       }
     };
   }
@@ -784,10 +746,9 @@ class Resource {
   private useCount: i32 = 0;
 
   getAcquireClosure(): () => bool {
-    let self = this;
     return (): bool => {
-      if (!self.acquired) {
-        self.acquired = true;
+      if (!this.acquired) {
+        this.acquired = true;
         return true;
       }
       return false;
@@ -795,10 +756,9 @@ class Resource {
   }
 
   getReleaseClosure(): () => bool {
-    let self = this;
     return (): bool => {
-      if (self.acquired) {
-        self.acquired = false;
+      if (this.acquired) {
+        this.acquired = false;
         return true;
       }
       return false;
@@ -806,10 +766,9 @@ class Resource {
   }
 
   getUseClosure(): (action: () => i32) => i32 {
-    let self = this;
     return (action: () => i32): i32 => {
-      if (self.acquired) {
-        self.useCount++;
+      if (this.acquired) {
+        this.useCount++;
         return action();
       }
       return -1; // Error: not acquired
@@ -871,11 +830,10 @@ class TreeNode {
   }
 
   getSumClosure(): () => i32 {
-    let self = this;
     return (): i32 => {
-      let sum = self.value;
-      for (let i = 0; i < self.children.length; i++) {
-        let childSum = self.children[i].getSumClosure();
+      let sum = this.value;
+      for (let i = 0; i < this.children.length; i++) {
+        let childSum = this.children[i].getSumClosure();
         sum += childSum();
       }
       return sum;
@@ -883,14 +841,13 @@ class TreeNode {
   }
 
   getDepthClosure(): () => i32 {
-    let self = this;
     return (): i32 => {
-      if (self.children.length == 0) {
+      if (this.children.length == 0) {
         return 1;
       }
       let maxChildDepth: i32 = 0;
-      for (let i = 0; i < self.children.length; i++) {
-        let childDepth = self.children[i].getDepthClosure();
+      for (let i = 0; i < this.children.length; i++) {
+        let childDepth = this.children[i].getDepthClosure();
         let d = childDepth();
         if (d > maxChildDepth) {
           maxChildDepth = d;
@@ -947,29 +904,26 @@ class Range {
   }
 
   getHasNextClosure(): () => bool {
-    let self = this;
     return (): bool => {
-      if (self.step > 0) {
-        return self.current < self.endVal;
+      if (this.step > 0) {
+        return this.current < this.endVal;
       } else {
-        return self.current > self.endVal;
+        return this.current > this.endVal;
       }
     };
   }
 
   getNextClosure(): () => i32 {
-    let self = this;
     return (): i32 => {
-      let value = self.current;
-      self.current += self.step;
+      let value = this.current;
+      this.current += this.step;
       return value;
     };
   }
 
   getResetClosure(start: i32): () => void {
-    let self = this;
     return (): void => {
-      self.current = start;
+      this.current = start;
     };
   }
 }
