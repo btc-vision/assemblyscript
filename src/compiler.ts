@@ -61,6 +61,8 @@ import {
   getConstValueInteger
 } from "./module";
 
+import * as binaryen from "./glue/binaryen";
+
 import {
   CommonFlags,
   STATIC_DELIMITER,
@@ -479,6 +481,8 @@ export class Compiler extends DiagnosticEmitter {
   hasCustomFunctionExports: bool = false;
   /** Whether the module would use the exported runtime to lift/lower. */
   desiresExportRuntime: bool = false;
+  /** Whether the exception tag has been created. */
+  exceptionTagEnsured: bool = false;
 
   /** Compiles a {@link Program} to a {@link Module} using the specified options. */
   static compile(program: Program): Module {
@@ -3107,12 +3111,27 @@ export class Compiler extends DiagnosticEmitter {
   private compileThrowStatement(
     statement: ThrowStatement
   ): ExpressionRef {
-    // TODO: requires exception-handling spec.
+    let module = this.module;
     let flow = this.currentFlow;
 
     // Remember that this branch throws
     flow.set(FlowFlags.Throws | FlowFlags.Terminates);
 
+    // If exception handling feature is enabled, use actual throw instruction
+    if (this.options.hasFeature(Feature.ExceptionHandling)) {
+      let value = statement.value;
+      // Compile the thrown value - should be Error or subclass
+      let valueExpr = this.compileExpression(value, Type.auto);
+      let valueType = this.currentType;
+
+      // Ensure exception tag exists
+      let tagName = this.ensureExceptionTag();
+
+      // Emit throw instruction with the error pointer
+      return module.throw(tagName, [valueExpr]);
+    }
+
+    // Fallback: convert throw to abort() call when exception handling is disabled
     let stmts = new Array<ExpressionRef>();
     let value = statement.value;
     let message: Expression | null = null;
@@ -3123,20 +3142,184 @@ export class Compiler extends DiagnosticEmitter {
     stmts.push(
       this.makeAbort(message, statement)
     );
-    return this.module.flatten(stmts);
+    return module.flatten(stmts);
   }
 
   private compileTryStatement(
     statement: TryStatement
   ): ExpressionRef {
-    // TODO: can't yet support something like: try { return ... } finally { ... }
-    // worthwhile to investigate lowering returns to block results (here)?
-    this.error(
-      DiagnosticCode.Not_implemented_0,
-      statement.range,
-      "Exceptions"
-    );
-    return this.module.unreachable();
+    let module = this.module;
+    let outerFlow = this.currentFlow;
+
+    // Check feature flag
+    if (!this.options.hasFeature(Feature.ExceptionHandling)) {
+      this.error(
+        DiagnosticCode.Feature_0_is_not_enabled,
+        statement.range,
+        "exception-handling"
+      );
+      return module.unreachable();
+    }
+
+    // Ensure exception tag exists
+    let tagName = this.ensureExceptionTag();
+
+    // Generate unique label for this try block
+    let label = outerFlow.pushControlFlowLabel();
+    let tryLabel = `try|${label}`;
+
+    // Compile try block body
+    let tryFlow = outerFlow.fork();
+    this.currentFlow = tryFlow;
+    let tryStmts = new Array<ExpressionRef>();
+    this.compileStatements(statement.bodyStatements, tryStmts);
+    let tryBodyExpr = module.flatten(tryStmts);
+    let tryFlowTerminates = tryFlow.isAny(FlowFlags.Terminates);
+    let tryFlowThrows = tryFlow.isAny(FlowFlags.Throws);
+
+    let catchTags: string[] = [];
+    let catchBodies: ExpressionRef[] = [];
+    let catchFlow: Flow | null = null;
+    let catchFlowTerminates = false;
+
+    // Compile catch clause if present
+    let catchStatements = statement.catchStatements;
+    let catchVariable = statement.catchVariable;
+    if (catchStatements) {
+      catchFlow = outerFlow.fork();
+      this.currentFlow = catchFlow;
+
+      let catchStmts = new Array<ExpressionRef>();
+
+      // The pop instruction MUST be the very first instruction in the catch block
+      // WebAssembly requires this - we can't wrap it in local.tee or anything else
+      let popExpr = module.pop(this.options.sizeTypeRef);
+
+      // If there's a catch variable, bind it to the popped exception value
+      if (catchVariable) {
+        let catchVarName = catchVariable.text;
+        // The exception value is a pointer to Error object
+        let errorClass = this.program.lookup(CommonNames.Error);
+        let errorType: Type;
+        if (errorClass && errorClass.kind == ElementKind.ClassPrototype) {
+          let resolved = this.resolver.resolveClass(<ClassPrototype>errorClass, null);
+          errorType = resolved ? resolved.type : this.options.usizeType;
+        } else {
+          errorType = this.options.usizeType; // Fallback to usize if Error class not found
+        }
+
+        // Create a scoped local for the catch variable
+        let catchLocal = catchFlow.addScopedLocal(catchVarName, errorType);
+        // Use direct local.set without shadow stack to ensure pop is first
+        catchStmts.push(binaryen._BinaryenLocalSet(module.ref, catchLocal.index, popExpr));
+        // Mark the catch variable as initialized
+        catchFlow.setLocalFlag(catchLocal.index, LocalFlags.Initialized);
+      } else {
+        // No catch variable, but still need to pop the exception value
+        catchStmts.push(module.drop(popExpr));
+      }
+
+      // Compile catch block statements
+      this.compileStatements(catchStatements, catchStmts);
+
+      catchTags.push(tagName);
+      catchBodies.push(module.flatten(catchStmts));
+      catchFlowTerminates = catchFlow.isAny(FlowFlags.Terminates);
+    }
+
+    // Handle finally clause if present
+    let finallyStatements = statement.finallyStatements;
+    if (finallyStatements) {
+      // Compile finally block statements (we'll use this in multiple places)
+      let finallyFlow = outerFlow.fork();
+      this.currentFlow = finallyFlow;
+      let finallyStmts = new Array<ExpressionRef>();
+      this.compileStatements(finallyStatements, finallyStmts);
+      let finallyExpr = module.flatten(finallyStmts);
+
+      outerFlow.popControlFlowLabel(label);
+      this.currentFlow = outerFlow;
+
+      // For try-finally, we need to:
+      // 1. Wrap the try (and catch if present) in an outer try with catch_all
+      // 2. In catch_all: run finally, then rethrow
+      // 3. After the try: run finally for normal completion
+
+      // Build the inner try-catch (if there's a catch clause)
+      let innerTryExpr: ExpressionRef;
+      if (catchBodies.length > 0) {
+        // We have a catch clause - wrap in try-catch
+        innerTryExpr = module.try(tryLabel, tryBodyExpr, catchTags, catchBodies, null);
+      } else {
+        // No catch clause - just the try body
+        innerTryExpr = tryBodyExpr;
+      }
+
+      // Create the outer try with catch_all for finally+rethrow
+      // In Binaryen, catch_all is signaled by having one more catchBody than catchTags
+      // i.e., catchTags=[], catchBodies=[body] creates a catch_all
+      let outerTryLabel = `try_finally|${label}`;
+      let catchAllBody = module.block(null, [
+        // Run finally code
+        finallyExpr,
+        // Rethrow the caught exception
+        module.rethrow(outerTryLabel)
+      ]);
+
+      let outerTryExpr = module.try(
+        outerTryLabel,
+        innerTryExpr,
+        [],  // No specific tags - the extra body becomes catch_all
+        [catchAllBody],  // One body without a tag = catch_all
+        null
+      );
+
+      // Merge flow states
+      if (catchFlow) {
+        if (tryFlowTerminates && catchFlowTerminates) {
+          outerFlow.set(FlowFlags.Terminates);
+        } else {
+          outerFlow.inheritAlternatives(tryFlow, catchFlow);
+        }
+      } else {
+        // Only finally, no catch - exceptions propagate after finally
+        outerFlow.mergeSideEffects(tryFlow);
+      }
+
+      // For normal completion: run the outer try, then finally
+      // We need to compile finally again for the normal path since finallyExpr was already used
+      finallyFlow = outerFlow.fork();
+      this.currentFlow = finallyFlow;
+      let finallyStmts2 = new Array<ExpressionRef>();
+      this.compileStatements(finallyStatements, finallyStmts2);
+      let finallyExpr2 = module.flatten(finallyStmts2);
+      this.currentFlow = outerFlow;
+
+      return module.block(null, [outerTryExpr, finallyExpr2]);
+    }
+
+    // No finally clause
+    outerFlow.popControlFlowLabel(label);
+    this.currentFlow = outerFlow;
+
+    // Merge flow states
+    if (catchFlow) {
+      if (tryFlowTerminates && catchFlowTerminates) {
+        outerFlow.set(FlowFlags.Terminates);
+      } else if (!catchStatements) {
+        // No catch, only try
+        outerFlow.inherit(tryFlow);
+      } else {
+        outerFlow.inheritAlternatives(tryFlow, catchFlow);
+      }
+    }
+
+    // If no catch handlers, just return the try body (exceptions propagate)
+    if (catchBodies.length == 0) {
+      return tryBodyExpr;
+    }
+
+    return module.try(tryLabel, tryBodyExpr, catchTags, catchBodies, null);
   }
 
   /** Compiles a variable statement. Returns `0` if an initializer is not necessary. */
@@ -6734,6 +6917,19 @@ export class Compiler extends DiagnosticEmitter {
       this.closureEnvironmentGlobal = module.addGlobal(name, sizeTypeRef, true, zero);
     }
     return name;
+  }
+
+  /** Ensures the exception tag for exception handling exists. */
+  ensureExceptionTag(): string {
+    let tagName = "$error";
+    if (!this.exceptionTagEnsured) {
+      let module = this.module;
+      let sizeTypeRef = this.options.sizeTypeRef;
+      // Tag with single param: pointer to Error object
+      module.addTag(tagName, sizeTypeRef, TypeRef.None);
+      this.exceptionTagEnsured = true;
+    }
+    return tagName;
   }
 
   /** Ensures compilation of the varargs stub for the specified function. */
