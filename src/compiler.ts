@@ -1796,7 +1796,9 @@ export class Compiler extends DiagnosticEmitter {
             }
             if (!instance.capturedLocals.has(local)) {
               // Calculate proper byte offset with alignment
-              let currentOffset = 0;
+              // Reserve slot 0 for parent environment pointer (4 or 8 bytes depending on wasm32/64)
+              let ptrSize = this.options.usizeType.byteSize;
+              let currentOffset = ptrSize; // Start after parent pointer slot
               for (let _keys = Map_keys(instance.capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
                 let existingLocal = _keys[j];
                 let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
@@ -1807,6 +1809,7 @@ export class Compiler extends DiagnosticEmitter {
               let align = typeSize;
               currentOffset = (currentOffset + align - 1) & ~(align - 1);
               local.envSlotIndex = currentOffset;
+              local.envOwner = instance; // Track which function owns this capture
               instance.capturedLocals.set(local, local.envSlotIndex);
             }
             if (!instance.envLocal) {
@@ -3306,7 +3309,9 @@ export class Compiler extends DiagnosticEmitter {
           }
           if (!sourceFunc.capturedLocals.has(local)) {
             // Calculate proper byte offset based on current environment size with alignment
-            let currentOffset = 0;
+            // Reserve slot 0 for parent environment pointer (4 or 8 bytes depending on wasm32/64)
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize; // Start after parent pointer slot
             for (let _keys = Map_keys(sourceFunc.capturedLocals), i = 0, k = _keys.length; i < k; ++i) {
               let existingLocal = _keys[i];
               let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
@@ -3317,6 +3322,7 @@ export class Compiler extends DiagnosticEmitter {
             let align = typeSize;
             currentOffset = (currentOffset + align - 1) & ~(align - 1);
             local.envSlotIndex = currentOffset;
+            local.envOwner = sourceFunc; // Track which function owns this capture
             sourceFunc.capturedLocals.set(local, local.envSlotIndex);
           }
           // Ensure we have an environment local
@@ -7621,13 +7627,18 @@ export class Compiler extends DiagnosticEmitter {
         }
         if (local && !captures.has(local)) {
           local.isCaptured = true;
+          // Set envOwner to track which function's environment holds this local
+          if (!local.envOwner) {
+            local.envOwner = <Function>local.parent;
+          }
           // If envSlotIndex is already set (from variable declaration), use it
           if (local.envSlotIndex >= 0) {
             captures.set(local, local.envSlotIndex);
           } else {
             // Calculate proper byte offset based on existing captures with alignment
-            // We need to compute the end of the last capture (including its size)
-            let currentOffset = 0;
+            // Reserve slot 0 for parent environment pointer (4 or 8 bytes depending on wasm32/64)
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize; // Start after parent pointer slot
             for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
               let existingLocal = _keys[idx];
               // The slot index already accounts for alignment, add the size to get next free offset
@@ -8269,6 +8280,25 @@ export class Compiler extends DiagnosticEmitter {
         }
         break;
       }
+      case NodeKind.Function: {
+        // For nested function expressions, scan their body recursively
+        // This is critical for deeply nested closures that capture from grandparent scopes
+        let funcExpr = <FunctionExpression>node;
+        let decl = funcExpr.declaration;
+        let params = decl.signature.parameters;
+        // Add the nested function's params to inner names
+        for (let i = 0, k = params.length; i < k; i++) {
+          innerFunctionNames.add(params[i].name.text);
+        }
+        if (decl.body) {
+          this.collectCapturedNames(decl.body, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        // Remove the params after scanning
+        for (let i = 0, k = params.length; i < k; i++) {
+          innerFunctionNames.delete(params[i].name.text);
+        }
+        break;
+      }
       // Add more cases as needed for complete coverage
       default: {
         // For other nodes, recursively scan children
@@ -8281,14 +8311,15 @@ export class Compiler extends DiagnosticEmitter {
   private computeEnvironmentSize(captures: Map<Local, i32>): i32 {
     // Calculate the total size based on already-assigned slot indices
     // The envSlotIndex values were already assigned during capture analysis
-    let maxEnd = 0;
+    // Slot 0 is always reserved for the parent environment pointer
+    let usizeSize = this.options.usizeType.byteSize;
+    let maxEnd = usizeSize; // Minimum size is parent pointer slot
     for (let _keys = Map_keys(captures), i = 0, k = _keys.length; i < k; i++) {
       let local = _keys[i];
       let endOfSlot = local.envSlotIndex + local.type.byteSize;
       if (endOfSlot > maxEnd) maxEnd = endOfSlot;
     }
     // Ensure total size is aligned to pointer size
-    let usizeSize = this.options.usizeType.byteSize;
     let size = (maxEnd + usizeSize - 1) & ~(usizeSize - 1);
     return size;
   }
@@ -8417,23 +8448,45 @@ export class Compiler extends DiagnosticEmitter {
     let flow = this.currentFlow;
     let currentFunc = flow.sourceFunction;
     let sizeTypeRef = this.options.sizeTypeRef;
+    let envOwner = capturedLocal.envOwner;
 
-    // Case 1: We're in the function that owns the environment
-    if (capturedLocal.parent == currentFunc && currentFunc.envLocal) {
+    // Case 1: We're in the function that owns the environment (the variable was declared here)
+    if (envOwner == currentFunc && currentFunc.envLocal) {
       return module.local_get(currentFunc.envLocal.index, sizeTypeRef);
     }
 
-    // Case 2: We're in a closure - use the cached local if available
-    // The environment was passed via the closure's _env field and stored to global
-    // before the indirect call. We cache it in a local at function entry because
-    // nested indirect calls can overwrite the global.
+    // Case 2: We're in a closure and need to access a variable from an outer scope
+    // Start from our closure's environment and traverse parent pointers
+    let envExpr: ExpressionRef;
     if (currentFunc.closureEnvLocal) {
-      return module.local_get(currentFunc.closureEnvLocal.index, sizeTypeRef);
+      envExpr = module.local_get(currentFunc.closureEnvLocal.index, sizeTypeRef);
+    } else {
+      // Fallback to global (shouldn't normally happen)
+      let closureEnvGlobal = this.ensureClosureEnvironmentGlobal();
+      envExpr = module.global_get(closureEnvGlobal, sizeTypeRef);
     }
 
-    // Case 3: Fallback to global (shouldn't normally happen for closures)
-    let closureEnvGlobal = this.ensureClosureEnvironmentGlobal();
-    return module.global_get(closureEnvGlobal, sizeTypeRef);
+    // Count how many levels up we need to go
+    // Start from current function's outer function and walk up to find envOwner
+    let func: Function | null = currentFunc.outerFunction;
+    let depth = 0;
+    while (func && func != envOwner) {
+      depth++;
+      func = func.outerFunction;
+    }
+
+    // Traverse the parent chain: load parent pointer (at offset 0) `depth` times
+    for (let i = 0; i < depth; i++) {
+      envExpr = module.load(
+        this.options.usizeType.byteSize,
+        false,  // unsigned
+        envExpr,
+        sizeTypeRef,
+        0  // Parent pointer is at offset 0
+      );
+    }
+
+    return envExpr;
   }
 
   /** Compiles loading a captured variable from the closure environment. */
@@ -8512,6 +8565,27 @@ export class Compiler extends DiagnosticEmitter {
     // envLocal = __alloc(envSize)
     stmts.push(
       module.local_set(envLocal.index, allocExpr, false)
+    );
+
+    // Store parent environment pointer at slot 0
+    // If this is a closure (has outerFunction), use closureEnvLocal as parent
+    // Otherwise, parent is null (0)
+    let parentEnvExpr: ExpressionRef;
+    if (instance.closureEnvLocal) {
+      // This is a nested closure - use the cached closure env as parent
+      parentEnvExpr = module.local_get(instance.closureEnvLocal.index, sizeTypeRef);
+    } else {
+      // This is the outermost function - no parent
+      parentEnvExpr = options.isWasm64 ? module.i64(0) : module.i32(0);
+    }
+    stmts.push(
+      module.store(
+        usizeType.byteSize,
+        module.local_get(envLocal.index, sizeTypeRef),
+        parentEnvExpr,
+        sizeTypeRef,
+        0  // Parent pointer is at offset 0
+      )
     );
 
     // Initialize captured parameters in the environment

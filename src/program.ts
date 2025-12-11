@@ -3636,6 +3636,9 @@ export class Local extends VariableLikeElement {
   /** Environment slot index if captured, -1 otherwise. */
   envSlotIndex: i32 = -1;
 
+  /** The function whose environment this local is stored in. Set when captured. */
+  envOwner: Function | null = null;
+
   /** Constructs a new local variable. */
   constructor(
     /** Simple name. */
