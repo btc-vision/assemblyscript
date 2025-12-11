@@ -8037,6 +8037,15 @@ export class Compiler extends DiagnosticEmitter {
         }
         break;
       }
+      case NodeKind.New: {
+        let newExpr = <NewExpression>node;
+        // Scan constructor arguments for function expressions
+        let args = newExpr.args;
+        for (let i = 0, k = args.length; i < k; i++) {
+          this.prescanNodeForFunctionExpressions(args[i], instance, flow, declaredVars);
+        }
+        break;
+      }
       case NodeKind.Parenthesized: {
         let paren = <ParenthesizedExpression>node;
         this.prescanNodeForFunctionExpressions(paren.expression, instance, flow, declaredVars);
