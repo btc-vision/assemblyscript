@@ -2325,9 +2325,8 @@
   i32.load
  )
  (func $closure-class/Counter#getIncrementClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2340,20 +2339,19 @@
   i32.const 8
   i32.const 5
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 1
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Counter#getCountClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2366,14 +2364,14 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 2
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/BankAccount#set:balance (param $this i32) (param $balance i32)
@@ -2395,9 +2393,8 @@
   i32.load offset=4
  )
  (func $closure-class/BankAccount#getDepositClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2410,20 +2407,19 @@
   i32.const 8
   i32.const 8
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 3
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/BankAccount#getWithdrawClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2436,20 +2432,19 @@
   i32.const 8
   i32.const 9
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 4
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/BankAccount#getBalanceClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2462,20 +2457,19 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 5
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/BankAccount#getTransactionCountClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2488,14 +2482,14 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 6
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Calculator#set:result (param $this i32) (param $result i32)
@@ -2509,8 +2503,7 @@
  )
  (func $closure-class/Calculator#getOperationClosure (param $this i32) (param $operand i32) (param $operation i32) (result i32)
   (local $$env i32)
-  (local $self i32)
-  (local $5 i32)
+  (local $4 i32)
   i32.const 16
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2529,14 +2522,14 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $5
-  local.get $5
+  local.set $4
+  local.get $4
   i32.const 7
   i32.store
-  local.get $5
+  local.get $4
   local.get $$env
   i32.store offset=4
-  local.get $5
+  local.get $4
   return
  )
  (func $closure-class/Inner#set:value (param $this i32) (param $value i32)
@@ -2639,9 +2632,8 @@
   i32.load offset=4
  )
  (func $closure-class/Outer#getComputeClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2654,20 +2646,19 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 8
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Outer#getInnerSetterClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2680,14 +2671,14 @@
   i32.const 8
   i32.const 8
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 9
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Animal#set:name (param $this i32) (param $name i32)
@@ -2718,9 +2709,8 @@
   i32.load offset=4
  )
  (func $closure-class/Animal#getAgeClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2733,20 +2723,19 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 10
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Animal#getAgeIncrementClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2759,14 +2748,14 @@
   i32.const 8
   i32.const 5
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 11
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Dog#get:breed (param $this i32) (result i32)
@@ -2774,9 +2763,8 @@
   i32.load offset=8
  )
  (func $closure-class/Dog#getBreedClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2789,14 +2777,14 @@
   i32.const 8
   i32.const 15
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 12
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $~lib/rt/common/OBJECT#get:rtSize (param $this i32) (result i32)
@@ -2973,9 +2961,8 @@
   i32.load offset=8
  )
  (func $closure-class/DataProcessor#getProcessorClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -2988,14 +2975,14 @@
   i32.const 8
   i32.const 8
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 13
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/EventEmitter#get:listeners (param $this i32) (result i32)
@@ -3100,9 +3087,8 @@
   call $~lib/rt/itcms/__link
  )
  (func $closure-class/QueryBuilder#getSelectClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3115,20 +3101,19 @@
   i32.const 8
   i32.const 20
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 14
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/QueryBuilder#getFromClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3141,20 +3126,19 @@
   i32.const 8
   i32.const 20
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 15
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/QueryBuilder#getWhereClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3167,14 +3151,14 @@
   i32.const 8
   i32.const 20
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 16
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/QueryBuilder#get:selectFields (param $this i32) (result i32)
@@ -3190,9 +3174,8 @@
   i32.load offset=8
  )
  (func $closure-class/QueryBuilder#getBuildClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3205,14 +3188,14 @@
   i32.const 8
   i32.const 15
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 17
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/StateMachine#set:state (param $this i32) (param $state i32)
@@ -3225,9 +3208,8 @@
   i32.load
  )
  (func $closure-class/StateMachine#getStartClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3240,20 +3222,19 @@
   i32.const 8
   i32.const 22
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 18
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/StateMachine#getPauseClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3266,20 +3247,19 @@
   i32.const 8
   i32.const 22
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 19
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/StateMachine#getStopClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3292,20 +3272,19 @@
   i32.const 8
   i32.const 22
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 20
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/StateMachine#getResetClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3318,20 +3297,19 @@
   i32.const 8
   i32.const 5
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 21
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/StateMachine#getStateClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3344,14 +3322,14 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 22
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Observable#set:value (param $this i32) (param $value i32)
@@ -3405,9 +3383,8 @@
   i32.load offset=4
  )
  (func $closure-class/Observable#getSubscribeClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3420,14 +3397,14 @@
   i32.const 8
   i32.const 25
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 23
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Observable#get:value (param $this i32) (result i32)
@@ -3435,9 +3412,8 @@
   i32.load
  )
  (func $closure-class/Observable#getSetClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3450,20 +3426,19 @@
   i32.const 8
   i32.const 8
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 24
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Observable#getGetClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3476,14 +3451,14 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 25
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/ObserverState#set:changeCount (param $this i32) (param $changeCount i32)
@@ -3501,9 +3476,8 @@
   i32.load
  )
  (func $closure-class/ObserverState#getCountObserver (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3516,14 +3490,14 @@
   i32.const 8
   i32.const 27
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 26
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/ObserverState#get:totalDiff (param $this i32) (result i32)
@@ -3531,9 +3505,8 @@
   i32.load offset=4
  )
  (func $closure-class/ObserverState#getDiffObserver (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3546,14 +3519,14 @@
   i32.const 8
   i32.const 27
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 27
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Box#set:value (param $this i32) (param $value i32)
@@ -3566,9 +3539,8 @@
   i32.load
  )
  (func $closure-class/Box#getMapClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3581,20 +3553,19 @@
   i32.const 8
   i32.const 29
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 28
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Box#getValueClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3607,14 +3578,14 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 29
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/testBoxMap~anonymous|0 (param $v i32) (result i32)
@@ -3633,9 +3604,8 @@
   i32.mul
  )
  (func $closure-class/Box#getFlatMapClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3648,14 +3618,14 @@
   i32.const 8
   i32.const 31
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 33
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/testBoxFlatMap~anonymous|0 (param $v i32) (result i32)
@@ -3676,8 +3646,7 @@
  )
  (func $closure-class/ChainableCounter#getAddClosure (param $this i32) (param $amount i32) (result i32)
   (local $$env i32)
-  (local $self i32)
-  (local $4 i32)
+  (local $3 i32)
   i32.const 12
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3693,20 +3662,19 @@
   i32.const 8
   i32.const 34
   call $~lib/rt/itcms/__new
-  local.set $4
-  local.get $4
+  local.set $3
+  local.get $3
   i32.const 35
   i32.store
-  local.get $4
+  local.get $3
   local.get $$env
   i32.store offset=4
-  local.get $4
+  local.get $3
   return
  )
  (func $closure-class/ChainableCounter#getMultiplyClosure (param $this i32) (param $factor i32) (result i32)
   (local $$env i32)
-  (local $self i32)
-  (local $4 i32)
+  (local $3 i32)
   i32.const 12
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3722,14 +3690,14 @@
   i32.const 8
   i32.const 34
   call $~lib/rt/itcms/__new
-  local.set $4
-  local.get $4
+  local.set $3
+  local.get $3
   i32.const 36
   i32.store
-  local.get $4
+  local.get $3
   local.get $$env
   i32.store offset=4
-  local.get $4
+  local.get $3
   return
  )
  (func $closure-class/Task#set:completed (param $this i32) (param $completed i32)
@@ -3764,9 +3732,8 @@
   i32.load offset=8
  )
  (func $closure-class/Task#getThenClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3779,20 +3746,19 @@
   i32.const 8
   i32.const 36
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 37
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Task#getCompleteClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3805,14 +3771,14 @@
   i32.const 8
   i32.const 8
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 38
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/testTaskCallbacks~anonymous|0 (param $result i32)
@@ -3848,9 +3814,8 @@
   i32.load8_u
  )
  (func $closure-class/Resource#getAcquireClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3863,20 +3828,19 @@
   i32.const 8
   i32.const 22
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 41
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Resource#getReleaseClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3889,14 +3853,14 @@
   i32.const 8
   i32.const 22
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 42
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Resource#get:useCount (param $this i32) (result i32)
@@ -3904,9 +3868,8 @@
   i32.load offset=4
  )
  (func $closure-class/Resource#getUseClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -3919,14 +3882,14 @@
   i32.const 8
   i32.const 38
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 43
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/testResourceManagement~anonymous|0 (result i32)
@@ -3999,9 +3962,8 @@
   i32.load
  )
  (func $closure-class/TreeNode#getSumClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -4014,20 +3976,19 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 49
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/TreeNode#getDepthClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -4040,14 +4001,14 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 50
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Range#set:current (param $this i32) (param $current i32)
@@ -4078,9 +4039,8 @@
   i32.load offset=4
  )
  (func $closure-class/Range#getHasNextClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -4093,20 +4053,19 @@
   i32.const 8
   i32.const 22
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 51
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $closure-class/Range#getNextClosure (param $this i32) (result i32)
-  (local $self i32)
   (local $$env i32)
-  (local $3 i32)
+  (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -4119,14 +4078,14 @@
   i32.const 8
   i32.const 6
   call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
+  local.set $2
+  local.get $2
   i32.const 52
   i32.store
-  local.get $3
+  local.get $2
   local.get $$env
   i32.store offset=4
-  local.get $3
+  local.get $2
   return
  )
  (func $start:closure-class
@@ -4154,7 +4113,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 45
+   i32.const 43
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4166,7 +4125,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 62
+   i32.const 60
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4178,7 +4137,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 131
+   i32.const 125
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4190,7 +4149,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 175
+   i32.const 168
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4202,7 +4161,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 237
+   i32.const 226
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4214,7 +4173,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 300
+   i32.const 285
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4226,7 +4185,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 361
+   i32.const 345
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4238,7 +4197,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 423
+   i32.const 403
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4250,7 +4209,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 511
+   i32.const 486
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4262,7 +4221,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 592
+   i32.const 562
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4274,7 +4233,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 637
+   i32.const 604
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4286,7 +4245,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 648
+   i32.const 615
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4298,7 +4257,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 698
+   i32.const 662
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4310,7 +4269,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 758
+   i32.const 720
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4322,7 +4281,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 776
+   i32.const 738
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4334,7 +4293,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 855
+   i32.const 814
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4346,7 +4305,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 932
+   i32.const 889
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4358,7 +4317,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 990
+   i32.const 944
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -4370,7 +4329,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 1005
+   i32.const 959
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -5679,7 +5638,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 117
+   i32.const 111
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -5705,7 +5664,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 119
+   i32.const 113
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -5728,7 +5687,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 120
+   i32.const 114
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -5754,7 +5713,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 122
+   i32.const 116
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -5777,7 +5736,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 123
+   i32.const 117
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -5800,7 +5759,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 124
+   i32.const 118
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -5839,7 +5798,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 127
+   i32.const 121
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -6411,7 +6370,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 230
+   i32.const 219
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -6447,7 +6406,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 233
+   i32.const 222
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -6873,7 +6832,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 292
+   i32.const 277
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -6901,7 +6860,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 293
+   i32.const 278
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -7759,7 +7718,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 352
+   i32.const 336
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -7777,7 +7736,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 353
+   i32.const 337
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -7795,7 +7754,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 354
+   i32.const 338
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -7813,7 +7772,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 355
+   i32.const 339
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -7831,7 +7790,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 356
+   i32.const 340
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -7849,7 +7808,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 357
+   i32.const 341
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8390,7 +8349,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 419
+   i32.const 399
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8790,7 +8749,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 488
+   i32.const 463
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8815,7 +8774,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 490
+   i32.const 465
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8838,7 +8797,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 491
+   i32.const 466
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8863,7 +8822,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 493
+   i32.const 468
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8888,7 +8847,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 495
+   i32.const 470
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8911,7 +8870,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 496
+   i32.const 471
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8936,7 +8895,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 498
+   i32.const 473
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8959,7 +8918,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 499
+   i32.const 474
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8984,7 +8943,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 501
+   i32.const 476
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -9007,7 +8966,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 502
+   i32.const 477
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -9032,7 +8991,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 504
+   i32.const 479
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -9067,7 +9026,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 507
+   i32.const 482
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -9913,7 +9872,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 586
+   i32.const 556
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -9931,7 +9890,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 587
+   i32.const 557
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -9949,7 +9908,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 588
+   i32.const 558
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -10948,7 +10907,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 749
+   i32.const 711
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -10974,7 +10933,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 753
+   i32.const 715
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -10994,7 +10953,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 754
+   i32.const 716
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11447,7 +11406,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 833
+   i32.const 792
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11472,7 +11431,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 836
+   i32.const 795
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11497,7 +11456,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 837
+   i32.const 796
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11526,7 +11485,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 840
+   i32.const 799
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11555,7 +11514,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 841
+   i32.const 800
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11584,7 +11543,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 842
+   i32.const 801
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11602,7 +11561,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 844
+   i32.const 803
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11627,7 +11586,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 847
+   i32.const 806
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11652,7 +11611,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 848
+   i32.const 807
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11681,7 +11640,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 851
+   i32.const 810
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -12489,7 +12448,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 927
+   i32.const 884
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -12512,7 +12471,7 @@
   if
    i32.const 0
    i32.const 496
-   i32.const 928
+   i32.const 885
    i32.const 3
    call $~lib/builtins/abort
    unreachable
