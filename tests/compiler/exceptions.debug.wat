@@ -1,14 +1,15 @@
 (module
- (type $0 (func (param i32 i32)))
- (type $1 (func (param i32) (result i32)))
- (type $2 (func (param i32)))
- (type $3 (func))
- (type $4 (func (result i32)))
- (type $5 (func (param i32 i32) (result i32)))
+ (type $0 (func (param i32) (result i32)))
+ (type $1 (func (param i32 i32)))
+ (type $2 (func (result i32)))
+ (type $3 (func (param i32)))
+ (type $4 (func (param i32 i32) (result i32)))
+ (type $5 (func))
  (type $6 (func (param i32 i32 i32)))
- (type $7 (func (param i32 i32 i32 i32)))
- (type $8 (func (param i32 i32 i64) (result i32)))
- (type $9 (func (param i32 i32 i32 i32 i32) (result i32)))
+ (type $7 (func (param i32 i32 i32) (result i32)))
+ (type $8 (func (param i32 i32 i32 i32)))
+ (type $9 (func (param i32 i32 i64) (result i32)))
+ (type $10 (func (param i32 i32 i32 i32 i32) (result i32)))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (global $~lib/rt/itcms/total (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/threshold (mut i32) (i32.const 0))
@@ -26,14 +27,25 @@
  (global $~lib/native/ASC_LOW_MEMORY_LIMIT i32 (i32.const 0))
  (global $~lib/native/ASC_SHRINK_LEVEL i32 (i32.const 0))
  (global $exceptions/finallyRan (mut i32) (i32.const 0))
+ (global $exceptions/returnInCatchFinallyRan (mut i32) (i32.const 0))
  (global $exceptions/tryCatchFinallyRan (mut i32) (i32.const 0))
  (global $exceptions/tryCatchFinallyResult (mut i32) (i32.const 0))
  (global $exceptions/finallyWithExceptionRan (mut i32) (i32.const 0))
  (global $exceptions/finallyNormalRan (mut i32) (i32.const 0))
- (global $~lib/rt/__rtti_base i32 (i32.const 688))
- (global $~lib/memory/__data_end i32 (i32.const 712))
- (global $~lib/memory/__stack_pointer (mut i32) (i32.const 33480))
- (global $~lib/memory/__heap_base i32 (i32.const 33480))
+ (global $exceptions/Resource.instances (mut i32) (i32.const 0))
+ (global $exceptions/Resource.disposed (mut i32) (i32.const 0))
+ (global $exceptions/calc (mut i32) (i32.const 0))
+ (global $exceptions/outer (mut i32) (i32.const 0))
+ (global $~lib/native/ASC_RUNTIME i32 (i32.const 2))
+ (global $exceptions/rethrowFinallyRan (mut i32) (i32.const 0))
+ (global $exceptions/sm (mut i32) (i32.const 0))
+ (global $exceptions/deepNestingOrder (mut i32) (i32.const 416))
+ (global $exceptions/counter (mut i32) (i32.const 0))
+ (global $exceptions/multiReturnFinallyCount (mut i32) (i32.const 0))
+ (global $~lib/rt/__rtti_base i32 (i32.const 1744))
+ (global $~lib/memory/__data_end i32 (i32.const 1804))
+ (global $~lib/memory/__stack_pointer (mut i32) (i32.const 34572))
+ (global $~lib/memory/__heap_base i32 (i32.const 34572))
  (memory $0 1)
  (data $0 (i32.const 12) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e\00\00\00\00\00")
  (data $1 (i32.const 80) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
@@ -51,10 +63,35 @@
  (data $13 (i32.const 572) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\n\00\00\00o\00u\00t\00e\00r\00\00\00")
  (data $14 (i32.const 604) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\n\00\00\00e\00r\00r\00o\00r\00\00\00")
  (data $15 (i32.const 636) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1c\00\00\00w\00i\00l\00l\00 \00p\00r\00o\00p\00a\00g\00a\00t\00e\00")
- (data $16 (i32.const 688) "\05\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00\00\00\00\00")
+ (data $16 (i32.const 684) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\0c\00\00\00c\00u\00s\00t\00o\00m\00")
+ (data $17 (i32.const 716) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\16\00\00\00w\00o\00r\00k\00 \00f\00a\00i\00l\00e\00d\00\00\00\00\00\00\00")
+ (data $18 (i32.const 764) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00 \00\00\00d\00i\00v\00i\00s\00i\00o\00n\00 \00b\00y\00 \00z\00e\00r\00o\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $19 (i32.const 828) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\16\00\00\00i\00n\00n\00e\00r\00 \00e\00r\00r\00o\00r\00\00\00\00\00\00\00")
+ (data $20 (i32.const 876) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1a\00\00\00w\00r\00a\00p\00p\00e\00d\00 \00e\00r\00r\00o\00r\00\00\00")
+ (data $21 (i32.const 924) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\14\00\00\00R\00a\00n\00g\00e\00E\00r\00r\00o\00r\00\00\00\00\00\00\00\00\00")
+ (data $22 (i32.const 972) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1c\00\00\00I\00n\00v\00a\00l\00i\00d\00 \00l\00e\00n\00g\00t\00h\00")
+ (data $23 (i32.const 1020) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\18\00\00\00s\00u\00m\00 \00e\00x\00c\00e\00e\00d\00e\00d\00\00\00\00\00")
+ (data $24 (i32.const 1068) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\10\00\00\00o\00r\00i\00g\00i\00n\00a\00l\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $25 (i32.const 1116) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\14\00\00\00r\00e\00t\00h\00r\00o\00w\00n\00:\00 \00\00\00\00\00\00\00\00\00")
+ (data $26 (i32.const 1164) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1a\00\00\00i\00n\00v\00a\00l\00i\00d\00 \00s\00t\00a\00t\00e\00\00\00")
+ (data $27 (i32.const 1212) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\06\00\00\00t\001\00,\00\00\00\00\00\00\00")
+ (data $28 (i32.const 1244) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\06\00\00\00t\002\00,\00\00\00\00\00\00\00")
+ (data $29 (i32.const 1276) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\06\00\00\00t\003\00,\00\00\00\00\00\00\00")
+ (data $30 (i32.const 1308) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\08\00\00\00d\00e\00e\00p\00\00\00\00\00")
+ (data $31 (i32.const 1340) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\06\00\00\00c\003\00,\00\00\00\00\00\00\00")
+ (data $32 (i32.const 1372) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\0e\00\00\00r\00e\00t\00h\00r\00o\00w\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $33 (i32.const 1420) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\06\00\00\00f\003\00,\00\00\00\00\00\00\00")
+ (data $34 (i32.const 1452) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\06\00\00\00c\002\00,\00\00\00\00\00\00\00")
+ (data $35 (i32.const 1484) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\06\00\00\00f\002\00,\00\00\00\00\00\00\00")
+ (data $36 (i32.const 1516) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\06\00\00\00c\001\00,\00\00\00\00\00\00\00")
+ (data $37 (i32.const 1548) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\06\00\00\00f\001\00,\00\00\00\00\00\00\00")
+ (data $38 (i32.const 1580) "L\00\00\00\00\00\00\00\00\00\00\00\02\00\00\000\00\00\00t\001\00,\00t\002\00,\00t\003\00,\00c\003\00,\00f\003\00,\00c\002\00,\00f\002\00,\00f\001\00,\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $39 (i32.const 1660) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\16\00\00\00m\00a\00x\00 \00r\00e\00a\00c\00h\00e\00d\00\00\00\00\00\00\00")
+ (data $40 (i32.const 1708) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\08\00\00\00z\00e\00r\00o\00\00\00\00\00")
+ (data $41 (i32.const 1744) "\0e\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00 \00\00\00 \00\00\00\00\00\00\00 \00\00\00\02\t\00\00\00\00\00\00 \00\00\00 \00\00\00")
  (table $0 1 1 funcref)
  (elem $0 (i32.const 1))
- (tag $$error (type $2) (param i32))
+ (tag $$error (type $3) (param i32))
  (export "memory" (memory $0))
  (start $~start)
  (func $~lib/rt/itcms/Object#set:nextWithColor (param $this i32) (param $nextWithColor i32)
@@ -2496,6 +2533,7 @@
   unreachable
  )
  (func $exceptions/testFinally
+  (local $0 i32)
   try $try_finally|0
   catch_all
    i32.const 1
@@ -2504,6 +2542,12 @@
   end
   i32.const 1
   global.set $exceptions/finallyRan
+  local.get $0
+  i32.const 1
+  i32.eq
+  if
+   return
+  end
  )
  (func $exceptions/testNested (result i32)
   (local $e i32)
@@ -2531,17 +2575,59 @@
   end
   unreachable
  )
+ (func $exceptions/testReturnInCatchFinally (result i32)
+  (local $e i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $e|3 i32)
+  block $finally_dispatch|0
+   try $try_finally|0
+    try $try|1
+     i32.const 0
+     i32.const 624
+     call $~lib/error/Error#constructor
+     throw $$error
+    catch $$error
+     
+     local.set $e|3
+     i32.const 10
+     local.set $2
+     i32.const 1
+     local.set $1
+     br $finally_dispatch|0
+    end
+    unreachable
+   catch_all
+    i32.const 1
+    global.set $exceptions/returnInCatchFinallyRan
+    rethrow $try_finally|0
+   end
+   unreachable
+  end
+  i32.const 1
+  global.set $exceptions/returnInCatchFinallyRan
+  local.get $1
+  i32.const 1
+  i32.eq
+  if
+   local.get $2
+   return
+  end
+  unreachable
+ )
  (func $exceptions/testTryCatchFinally
   (local $e i32)
+  (local $1 i32)
+  (local $e|2 i32)
   try $try_finally|0
-   try $try|0
+   try $try|1
     i32.const 0
     i32.const 624
     call $~lib/error/Error#constructor
     throw $$error
    catch $$error
     
-    local.set $e
+    local.set $e|2
     i32.const 10
     global.set $exceptions/tryCatchFinallyResult
    end
@@ -2552,8 +2638,15 @@
   end
   i32.const 1
   global.set $exceptions/tryCatchFinallyRan
+  local.get $1
+  i32.const 1
+  i32.eq
+  if
+   return
+  end
  )
  (func $exceptions/innerThrow
+  (local $0 i32)
   try $try_finally|0
    i32.const 0
    i32.const 656
@@ -2585,6 +2678,8 @@
   return
  )
  (func $exceptions/testFinallyNormalCompletion (result i32)
+  (local $0 i32)
+  (local $1 i32)
   try $try_finally|0
   catch_all
    i32.const 1
@@ -2593,17 +2688,383 @@
   end
   i32.const 1
   global.set $exceptions/finallyNormalRan
-  global.get $exceptions/finallyNormalRan
-  if (result i32)
-   i32.const 1
-  else
-   i32.const 0
+  local.get $0
+  i32.const 1
+  i32.eq
+  if
+   local.get $1
+   return
   end
+  unreachable
+ )
+ (func $exceptions/CustomError#set:code (param $this i32) (param $code i32)
+  local.get $this
+  local.get $code
+  i32.store offset=12
+ )
+ (func $exceptions/testCustomError (result i32)
+  (local $e i32)
+  try $try|0
+   i32.const 0
+   i32.const 704
+   i32.const 42
+   call $exceptions/CustomError#constructor
+   throw $$error
+  catch $$error
+   
+   local.set $e
+   i32.const 1
+   return
+  end
+  unreachable
+ )
+ (func $exceptions/Resource#set:id (param $this i32) (param $id i32)
+  local.get $this
+  local.get $id
+  i32.store
+ )
+ (func $exceptions/Resource#doWork (param $this i32)
+ )
+ (func $exceptions/Resource#dispose (param $this i32)
+  global.get $exceptions/Resource.disposed
+  i32.const 1
+  i32.add
+  global.set $exceptions/Resource.disposed
+ )
+ (func $exceptions/Resource#doWorkThatThrows (param $this i32)
+  i32.const 0
+  i32.const 736
+  call $~lib/error/Error#constructor
+  throw $$error
+ )
+ (func $exceptions/Calculator#set:value (param $this i32) (param $value i32)
+  local.get $this
+  local.get $value
+  i32.store
+ )
+ (func $exceptions/Calculator#get:value (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $exceptions/Outer#set:inner (param $this i32) (param $inner i32)
+  local.get $this
+  local.get $inner
+  i32.store
+  local.get $this
+  local.get $inner
+  i32.const 0
+  call $~lib/rt/itcms/__link
+ )
+ (func $exceptions/Outer#get:inner (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $exceptions/Inner#riskyOperation (param $this i32) (result i32)
+  (local $e i32)
+  try $try|0
+   i32.const 0
+   i32.const 848
+   call $~lib/error/Error#constructor
+   throw $$error
+  catch $$error
+   
+   local.set $e
+   i32.const 0
+   i32.const 896
+   call $~lib/error/Error#constructor
+   throw $$error
+  end
+  unreachable
+ )
+ (func $~lib/array/Array<i32>#set:buffer (param $this i32) (param $buffer i32)
+  local.get $this
+  local.get $buffer
+  i32.store
+  local.get $this
+  local.get $buffer
+  i32.const 0
+  call $~lib/rt/itcms/__link
+ )
+ (func $~lib/array/Array<i32>#set:dataStart (param $this i32) (param $dataStart i32)
+  local.get $this
+  local.get $dataStart
+  i32.store offset=4
+ )
+ (func $~lib/array/Array<i32>#set:byteLength (param $this i32) (param $byteLength i32)
+  local.get $this
+  local.get $byteLength
+  i32.store offset=8
+ )
+ (func $~lib/array/Array<i32>#set:length_ (param $this i32) (param $length_ i32)
+  local.get $this
+  local.get $length_
+  i32.store offset=12
+ )
+ (func $~lib/array/Array<i32>#get:length_ (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=12
+ )
+ (func $~lib/arraybuffer/ArrayBufferView#get:byteLength (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=8
+ )
+ (func $~lib/arraybuffer/ArrayBufferView#get:buffer (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $~lib/rt/itcms/Object#get:rtSize (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=16
+ )
+ (func $~lib/rt/itcms/__renew (param $oldPtr i32) (param $size i32) (result i32)
+  (local $oldObj i32)
+  (local $newPtr i32)
+  (local $4 i32)
+  (local $5 i32)
+  local.get $oldPtr
+  i32.const 20
+  i32.sub
+  local.set $oldObj
+  local.get $size
+  local.get $oldObj
+  call $~lib/rt/common/BLOCK#get:mmInfo
+  i32.const 3
+  i32.const -1
+  i32.xor
+  i32.and
+  i32.const 16
+  i32.sub
+  i32.le_u
+  if
+   local.get $oldObj
+   local.get $size
+   call $~lib/rt/itcms/Object#set:rtSize
+   local.get $oldPtr
+   return
+  end
+  local.get $size
+  local.get $oldObj
+  call $~lib/rt/itcms/Object#get:rtId
+  call $~lib/rt/itcms/__new
+  local.set $newPtr
+  local.get $newPtr
+  local.get $oldPtr
+  local.get $size
+  local.tee $4
+  local.get $oldObj
+  call $~lib/rt/itcms/Object#get:rtSize
+  local.tee $5
+  local.get $4
+  local.get $5
+  i32.lt_u
+  select
+  memory.copy
+  local.get $newPtr
   return
+ )
+ (func $~lib/array/Array<i32>#get:dataStart (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
+ (func $exceptions/testRethrowWithFinally (result i32)
+  (local $e i32)
+  i32.const 0
+  global.set $exceptions/rethrowFinallyRan
+  try $try|0
+   call $exceptions/innerRethrow
+  catch $$error
+   
+   local.set $e
+   global.get $exceptions/rethrowFinallyRan
+   if (result i32)
+    i32.const 1
+   else
+    i32.const 0
+   end
+   return
+  end
+  i32.const 0
+  return
+ )
+ (func $exceptions/StateMachine#set:state (param $this i32) (param $state i32)
+  local.get $this
+  local.get $state
+  i32.store
+ )
+ (func $exceptions/StateMachine#set:errorState (param $this i32) (param $errorState i32)
+  local.get $this
+  local.get $errorState
+  i32.store8 offset=4
+ )
+ (func $exceptions/StateMachine#get:state (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $exceptions/StateMachine#get:errorState (param $this i32) (result i32)
+  local.get $this
+  i32.load8_u offset=4
+ )
+ (func $exceptions/Counter#set:count (param $this i32) (param $count i32)
+  local.get $this
+  local.get $count
+  i32.store
+ )
+ (func $exceptions/Counter#get:count (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $exceptions/testReturnFromTry (result i32)
+  (local $e i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $e|3 i32)
+  block $finally_dispatch|0
+   try $try_finally|0
+    try $try|1
+     i32.const 42
+     local.set $2
+     i32.const 1
+     local.set $1
+     br $finally_dispatch|0
+    catch $$error
+     
+     local.set $e|3
+     i32.const -1
+     local.set $2
+     i32.const 1
+     local.set $1
+     br $finally_dispatch|0
+    end
+    unreachable
+   catch_all
+    rethrow $try_finally|0
+   end
+   unreachable
+  end
+  local.get $1
+  i32.const 1
+  i32.eq
+  if
+   local.get $2
+   return
+  end
+  unreachable
+ )
+ (func $exceptions/testMultipleReturnsWithFinally (param $x i32) (result i32)
+  (local $e i32)
+  (local $2 i32)
+  (local $3 i32)
+  (local $e|4 i32)
+  block $finally_dispatch|0
+   try $try_finally|0
+    try $try|1
+     local.get $x
+     i32.const 0
+     i32.lt_s
+     if
+      i32.const -1
+      local.set $3
+      i32.const 1
+      local.set $2
+      br $finally_dispatch|0
+     end
+     local.get $x
+     i32.const 0
+     i32.eq
+     if
+      i32.const 0
+      i32.const 1728
+      call $~lib/error/Error#constructor
+      throw $$error
+     end
+     local.get $x
+     i32.const 100
+     i32.gt_s
+     if
+      i32.const 100
+      local.set $3
+      i32.const 1
+      local.set $2
+      br $finally_dispatch|0
+     end
+     local.get $x
+     local.set $3
+     i32.const 1
+     local.set $2
+     br $finally_dispatch|0
+    catch $$error
+     
+     local.set $e|4
+     i32.const 0
+     local.set $3
+     i32.const 1
+     local.set $2
+     br $finally_dispatch|0
+    end
+    unreachable
+   catch_all
+    global.get $exceptions/multiReturnFinallyCount
+    i32.const 1
+    i32.add
+    global.set $exceptions/multiReturnFinallyCount
+    rethrow $try_finally|0
+   end
+   unreachable
+  end
+  global.get $exceptions/multiReturnFinallyCount
+  i32.const 1
+  i32.add
+  global.set $exceptions/multiReturnFinallyCount
+  local.get $2
+  i32.const 1
+  i32.eq
+  if
+   local.get $3
+   return
+  end
+  unreachable
  )
  (func $~lib/rt/__visit_globals (param $0 i32)
   (local $1 i32)
+  global.get $exceptions/calc
+  local.tee $1
+  if
+   local.get $1
+   local.get $0
+   call $~lib/rt/itcms/__visit
+  end
+  global.get $exceptions/outer
+  local.tee $1
+  if
+   local.get $1
+   local.get $0
+   call $~lib/rt/itcms/__visit
+  end
+  global.get $exceptions/sm
+  local.tee $1
+  if
+   local.get $1
+   local.get $0
+   call $~lib/rt/itcms/__visit
+  end
+  global.get $exceptions/deepNestingOrder
+  local.tee $1
+  if
+   local.get $1
+   local.get $0
+   call $~lib/rt/itcms/__visit
+  end
+  global.get $exceptions/counter
+  local.tee $1
+  if
+   local.get $1
+   local.get $0
+   call $~lib/rt/itcms/__visit
+  end
   i32.const 224
+  local.get $0
+  call $~lib/rt/itcms/__visit
+  i32.const 992
   local.get $0
   call $~lib/rt/itcms/__visit
   i32.const 32
@@ -2640,33 +3101,104 @@
   local.get $1
   call $~lib/rt/itcms/__visit
  )
+ (func $exceptions/CustomError~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/error/Error~visit
+ )
+ (func $exceptions/Outer~visit (param $0 i32) (param $1 i32)
+  (local $2 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  i32.load
+  local.get $1
+  call $~lib/rt/itcms/__visit
+ )
+ (func $~lib/array/Array<i32>#get:buffer (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $~lib/array/Array<i32>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/array/Array<i32>#__visit
+ )
+ (func $~lib/error/RangeError~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/error/Error~visit
+ )
  (func $~lib/rt/__visit_members (param $0 i32) (param $1 i32)
   block $invalid
-   block $~lib/error/Error
-    block $~lib/arraybuffer/ArrayBufferView
-     block $~lib/string/String
-      block $~lib/arraybuffer/ArrayBuffer
-       block $~lib/object/Object
+   block $exceptions/Counter
+    block $exceptions/StateMachine
+     block $~lib/error/RangeError
+      block $~lib/array/Array<i32>
+       block $exceptions/Inner
+        block $exceptions/Outer
+         block $exceptions/Calculator
+          block $exceptions/Resource
+           block $exceptions/CustomError
+            block $~lib/error/Error
+             block $~lib/arraybuffer/ArrayBufferView
+              block $~lib/string/String
+               block $~lib/arraybuffer/ArrayBuffer
+                block $~lib/object/Object
+                 local.get $0
+                 i32.const 8
+                 i32.sub
+                 i32.load
+                 br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $~lib/error/Error $exceptions/CustomError $exceptions/Resource $exceptions/Calculator $exceptions/Outer $exceptions/Inner $~lib/array/Array<i32> $~lib/error/RangeError $exceptions/StateMachine $exceptions/Counter $invalid
+                end
+                return
+               end
+               return
+              end
+              return
+             end
+             local.get $0
+             local.get $1
+             call $~lib/arraybuffer/ArrayBufferView~visit
+             return
+            end
+            local.get $0
+            local.get $1
+            call $~lib/error/Error~visit
+            return
+           end
+           local.get $0
+           local.get $1
+           call $exceptions/CustomError~visit
+           return
+          end
+          return
+         end
+         return
+        end
         local.get $0
-        i32.const 8
-        i32.sub
-        i32.load
-        br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $~lib/error/Error $invalid
+        local.get $1
+        call $exceptions/Outer~visit
+        return
        end
        return
       end
+      local.get $0
+      local.get $1
+      call $~lib/array/Array<i32>~visit
       return
      end
+     local.get $0
+     local.get $1
+     call $~lib/error/RangeError~visit
      return
     end
-    local.get $0
-    local.get $1
-    call $~lib/arraybuffer/ArrayBufferView~visit
     return
    end
-   local.get $0
-   local.get $1
-   call $~lib/error/Error~visit
    return
   end
   unreachable
@@ -2679,8 +3211,8 @@
   global.get $~lib/memory/__data_end
   i32.lt_s
   if
-   i32.const 33504
-   i32.const 33552
+   i32.const 34592
+   i32.const 34640
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -2879,6 +3411,1762 @@
   local.get $3
   return
  )
+ (func $exceptions/CustomError#constructor (param $this i32) (param $message i32) (param $code i32) (result i32)
+  (local $3 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 16
+   i32.const 5
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store offset=4
+  local.get $3
+  local.get $code
+  call $exceptions/CustomError#set:code
+  global.get $~lib/memory/__stack_pointer
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store offset=4
+  local.get $3
+  local.get $message
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store offset=8
+  local.get $3
+  call $~lib/error/Error#constructor
+  local.tee $this
+  i32.store
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $3
+ )
+ (func $exceptions/Resource#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.const 6
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 0
+  call $exceptions/Resource#set:id
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  global.get $exceptions/Resource.instances
+  i32.const 1
+  i32.add
+  global.set $exceptions/Resource.instances
+  global.get $exceptions/Resource.instances
+  call $exceptions/Resource#set:id
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $exceptions/testResourceCleanup (result i32)
+  (local $r i32)
+  (local $result i32)
+  (local $2 i32)
+  (local $3 i32)
+  (local $4 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  call $exceptions/Resource#constructor
+  local.tee $r
+  i32.store
+  i32.const 0
+  local.set $result
+  try $try_finally|0
+   local.get $r
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   local.get $4
+   i32.store offset=4
+   local.get $4
+   call $exceptions/Resource#doWork
+   i32.const 1
+   local.set $result
+  catch_all
+   local.get $r
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   local.get $4
+   i32.store offset=4
+   local.get $4
+   call $exceptions/Resource#dispose
+   rethrow $try_finally|0
+  end
+  local.get $r
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store offset=4
+  local.get $4
+  call $exceptions/Resource#dispose
+  local.get $2
+  i32.const 1
+  i32.eq
+  if
+   local.get $3
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $4
+   return
+  end
+  unreachable
+ )
+ (func $exceptions/testResourceCleanupWithException (result i32)
+  (local $r i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $e i32)
+  (local $4 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  i32.const 0
+  global.set $exceptions/Resource.disposed
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  call $exceptions/Resource#constructor
+  local.tee $r
+  i32.store
+  try $try|0
+   try $try_finally|1
+    local.get $r
+    local.set $4
+    global.get $~lib/memory/__stack_pointer
+    local.get $4
+    i32.store offset=4
+    local.get $4
+    call $exceptions/Resource#doWorkThatThrows
+   catch_all
+    local.get $r
+    local.set $4
+    global.get $~lib/memory/__stack_pointer
+    local.get $4
+    i32.store offset=4
+    local.get $4
+    call $exceptions/Resource#dispose
+    rethrow $try_finally|1
+   end
+   local.get $r
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   local.get $4
+   i32.store offset=4
+   local.get $4
+   call $exceptions/Resource#dispose
+   local.get $1
+   i32.const 1
+   i32.eq
+   if
+    local.get $2
+    local.set $4
+    global.get $~lib/memory/__stack_pointer
+    i32.const 8
+    i32.add
+    global.set $~lib/memory/__stack_pointer
+    local.get $4
+    return
+   end
+   unreachable
+  catch $$error
+   
+   local.set $e
+   global.get $exceptions/Resource.disposed
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $4
+   return
+  end
+  unreachable
+ )
+ (func $exceptions/Calculator#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.const 7
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  global.get $~lib/memory/__stack_pointer
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $~lib/object/Object#constructor
+  local.tee $this
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 0
+  call $exceptions/Calculator#set:value
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $exceptions/Calculator#divide (param $this i32) (param $a i32) (param $b i32) (result i32)
+  (local $e i32)
+  (local $4 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  try $try|0
+   local.get $b
+   i32.const 0
+   i32.eq
+   if
+    i32.const 0
+    i32.const 784
+    call $~lib/error/Error#constructor
+    throw $$error
+   end
+   local.get $a
+   local.get $b
+   i32.div_s
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $4
+   return
+  catch $$error
+   
+   local.set $e
+   local.get $this
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   local.get $4
+   i32.store
+   local.get $4
+   i32.const -1
+   call $exceptions/Calculator#set:value
+   i32.const 0
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $4
+   return
+  end
+  unreachable
+ )
+ (func $exceptions/Calculator#safeDivide (param $this i32) (param $a i32) (param $b i32) (result i32)
+  (local $e i32)
+  (local $4 i32)
+  (local $5 i32)
+  (local $e|6 i32)
+  (local $7 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  block $finally_dispatch|0
+   try $try_finally|0
+    try $try|1
+     local.get $b
+     i32.const 0
+     i32.eq
+     if
+      i32.const 0
+      i32.const 784
+      call $~lib/error/Error#constructor
+      throw $$error
+     end
+     local.get $this
+     local.set $7
+     global.get $~lib/memory/__stack_pointer
+     local.get $7
+     i32.store
+     local.get $7
+     local.get $a
+     local.get $b
+     i32.div_s
+     call $exceptions/Calculator#set:value
+     local.get $this
+     local.set $7
+     global.get $~lib/memory/__stack_pointer
+     local.get $7
+     i32.store
+     local.get $7
+     call $exceptions/Calculator#get:value
+     local.set $5
+     i32.const 1
+     local.set $4
+     br $finally_dispatch|0
+    catch $$error
+     
+     local.set $e|6
+     i32.const -1
+     local.set $5
+     i32.const 1
+     local.set $4
+     br $finally_dispatch|0
+    end
+    unreachable
+   catch_all
+    rethrow $try_finally|0
+   end
+   unreachable
+  end
+  local.get $4
+  i32.const 1
+  i32.eq
+  if
+   local.get $5
+   local.set $7
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $7
+   return
+  end
+  unreachable
+ )
+ (func $exceptions/Inner#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 0
+   i32.const 9
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  global.get $~lib/memory/__stack_pointer
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $~lib/object/Object#constructor
+  local.tee $this
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $exceptions/Outer#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.const 8
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 0
+  call $exceptions/Outer#set:inner
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 0
+  call $exceptions/Inner#constructor
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=8
+  local.get $1
+  call $exceptions/Outer#set:inner
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $exceptions/Outer#process (param $this i32) (result i32)
+  (local $e i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  try $try|0
+   local.get $this
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store offset=4
+   local.get $2
+   call $exceptions/Outer#get:inner
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store
+   local.get $2
+   call $exceptions/Inner#riskyOperation
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $2
+   return
+  catch $$error
+   
+   local.set $e
+   i32.const -1
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $2
+   return
+  end
+  unreachable
+ )
+ (func $~lib/error/RangeError#constructor (param $this i32) (param $message i32) (result i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 12
+   i32.const 11
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  global.get $~lib/memory/__stack_pointer
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=4
+  local.get $2
+  local.get $message
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=8
+  local.get $2
+  call $~lib/error/Error#constructor
+  local.tee $this
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=4
+  local.get $2
+  i32.const 944
+  call $~lib/error/Error#set:name
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+ )
+ (func $~lib/array/Array<i32>#constructor (param $this i32) (param $length i32) (result i32)
+  (local $2 i32)
+  (local $3 i32)
+  (local $bufferSize i32)
+  (local $buffer i32)
+  (local $6 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 16
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store offset=8
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 16
+   i32.const 10
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 0
+  call $~lib/array/Array<i32>#set:buffer
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 0
+  call $~lib/array/Array<i32>#set:dataStart
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 0
+  call $~lib/array/Array<i32>#set:byteLength
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 0
+  call $~lib/array/Array<i32>#set:length_
+  local.get $length
+  i32.const 1073741820
+  i32.const 2
+  i32.shr_u
+  i32.gt_u
+  if
+   i32.const 0
+   i32.const 992
+   call $~lib/error/RangeError#constructor
+   throw $$error
+  end
+  local.get $length
+  local.tee $2
+  i32.const 8
+  local.tee $3
+  local.get $2
+  local.get $3
+  i32.gt_u
+  select
+  i32.const 2
+  i32.shl
+  local.set $bufferSize
+  global.get $~lib/memory/__stack_pointer
+  local.get $bufferSize
+  i32.const 1
+  call $~lib/rt/itcms/__new
+  local.tee $buffer
+  i32.store offset=8
+  i32.const 2
+  global.get $~lib/shared/runtime/Runtime.Incremental
+  i32.ne
+  drop
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  local.get $buffer
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=12
+  local.get $6
+  call $~lib/array/Array<i32>#set:buffer
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  local.get $buffer
+  call $~lib/array/Array<i32>#set:dataStart
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  local.get $bufferSize
+  call $~lib/array/Array<i32>#set:byteLength
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  local.get $length
+  call $~lib/array/Array<i32>#set:length_
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  i32.const 16
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $6
+ )
+ (func $~lib/array/ensureCapacity (param $array i32) (param $newSize i32) (param $alignLog2 i32) (param $canGrow i32)
+  (local $oldCapacity i32)
+  (local $oldData i32)
+  (local $6 i32)
+  (local $7 i32)
+  (local $newCapacity i32)
+  (local $9 i32)
+  (local $10 i32)
+  (local $11 i32)
+  (local $12 i32)
+  (local $newData i32)
+  (local $14 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $array
+  local.set $14
+  global.get $~lib/memory/__stack_pointer
+  local.get $14
+  i32.store
+  local.get $14
+  call $~lib/arraybuffer/ArrayBufferView#get:byteLength
+  local.set $oldCapacity
+  local.get $newSize
+  local.get $oldCapacity
+  local.get $alignLog2
+  i32.shr_u
+  i32.gt_u
+  if
+   local.get $newSize
+   i32.const 1073741820
+   local.get $alignLog2
+   i32.shr_u
+   i32.gt_u
+   if
+    i32.const 0
+    i32.const 992
+    call $~lib/error/RangeError#constructor
+    throw $$error
+   end
+   local.get $array
+   local.set $14
+   global.get $~lib/memory/__stack_pointer
+   local.get $14
+   i32.store
+   local.get $14
+   call $~lib/arraybuffer/ArrayBufferView#get:buffer
+   local.set $oldData
+   local.get $newSize
+   local.tee $6
+   i32.const 8
+   local.tee $7
+   local.get $6
+   local.get $7
+   i32.gt_u
+   select
+   local.get $alignLog2
+   i32.shl
+   local.set $newCapacity
+   local.get $canGrow
+   if
+    local.get $oldCapacity
+    i32.const 1
+    i32.shl
+    local.tee $9
+    i32.const 1073741820
+    local.tee $10
+    local.get $9
+    local.get $10
+    i32.lt_u
+    select
+    local.tee $11
+    local.get $newCapacity
+    local.tee $12
+    local.get $11
+    local.get $12
+    i32.gt_u
+    select
+    local.set $newCapacity
+   end
+   local.get $oldData
+   local.get $newCapacity
+   call $~lib/rt/itcms/__renew
+   local.set $newData
+   i32.const 2
+   global.get $~lib/shared/runtime/Runtime.Incremental
+   i32.ne
+   drop
+   local.get $newData
+   local.get $oldData
+   i32.ne
+   if
+    local.get $array
+    local.get $newData
+    i32.store
+    local.get $array
+    local.get $newData
+    i32.store offset=4
+    local.get $array
+    local.get $newData
+    i32.const 0
+    call $~lib/rt/itcms/__link
+   end
+   local.get $array
+   local.get $newCapacity
+   i32.store offset=8
+  end
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/array/Array<i32>#__set (param $this i32) (param $index i32) (param $value i32)
+  (local $3 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $index
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store
+  local.get $3
+  call $~lib/array/Array<i32>#get:length_
+  i32.ge_u
+  if
+   local.get $index
+   i32.const 0
+   i32.lt_s
+   if
+    i32.const 0
+    i32.const 224
+    call $~lib/error/RangeError#constructor
+    throw $$error
+   end
+   local.get $this
+   local.get $index
+   i32.const 1
+   i32.add
+   i32.const 2
+   i32.const 1
+   call $~lib/array/ensureCapacity
+   local.get $this
+   local.set $3
+   global.get $~lib/memory/__stack_pointer
+   local.get $3
+   i32.store
+   local.get $3
+   local.get $index
+   i32.const 1
+   i32.add
+   call $~lib/array/Array<i32>#set:length_
+  end
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store
+  local.get $3
+  call $~lib/array/Array<i32>#get:dataStart
+  local.get $index
+  i32.const 2
+  i32.shl
+  i32.add
+  local.get $value
+  i32.store
+  i32.const 0
+  drop
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/array/Array<i32>#get:length (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $~lib/array/Array<i32>#get:length_
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+  return
+ )
+ (func $~lib/array/Array<i32>#__get (param $this i32) (param $index i32) (result i32)
+  (local $value i32)
+  (local $3 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $index
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store
+  local.get $3
+  call $~lib/array/Array<i32>#get:length_
+  i32.ge_u
+  if
+   i32.const 0
+   i32.const 224
+   call $~lib/error/RangeError#constructor
+   throw $$error
+  end
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store
+  local.get $3
+  call $~lib/array/Array<i32>#get:dataStart
+  local.get $index
+  i32.const 2
+  i32.shl
+  i32.add
+  i32.load
+  local.set $value
+  i32.const 0
+  drop
+  local.get $value
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $3
+  return
+ )
+ (func $exceptions/testArrayWithExceptions (result i32)
+  (local $arr i32)
+  (local $sum i32)
+  (local $i i32)
+  (local $e i32)
+  (local $4 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 3
+  call $~lib/array/Array<i32>#constructor
+  local.tee $arr
+  i32.store
+  local.get $arr
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store offset=4
+  local.get $4
+  i32.const 0
+  i32.const 1
+  call $~lib/array/Array<i32>#__set
+  local.get $arr
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store offset=4
+  local.get $4
+  i32.const 1
+  i32.const 2
+  call $~lib/array/Array<i32>#__set
+  local.get $arr
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store offset=4
+  local.get $4
+  i32.const 2
+  i32.const 3
+  call $~lib/array/Array<i32>#__set
+  i32.const 0
+  local.set $sum
+  try $try|0
+   i32.const 0
+   local.set $i
+   loop $for-loop|1
+    local.get $i
+    local.get $arr
+    local.set $4
+    global.get $~lib/memory/__stack_pointer
+    local.get $4
+    i32.store offset=4
+    local.get $4
+    call $~lib/array/Array<i32>#get:length
+    i32.lt_s
+    if
+     local.get $sum
+     local.get $arr
+     local.set $4
+     global.get $~lib/memory/__stack_pointer
+     local.get $4
+     i32.store offset=4
+     local.get $4
+     local.get $i
+     call $~lib/array/Array<i32>#__get
+     i32.add
+     local.set $sum
+     local.get $sum
+     i32.const 5
+     i32.gt_s
+     if
+      i32.const 0
+      i32.const 1040
+      call $~lib/error/Error#constructor
+      throw $$error
+     end
+     local.get $i
+     i32.const 1
+     i32.add
+     local.set $i
+     br $for-loop|1
+    end
+   end
+  catch $$error
+   
+   local.set $e
+   local.get $sum
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $4
+   return
+  end
+  i32.const 0
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $4
+  return
+ )
+ (func $~lib/string/String#concat (param $this i32) (param $other i32) (result i32)
+  (local $thisSize i32)
+  (local $otherSize i32)
+  (local $outSize i32)
+  (local $out i32)
+  (local $6 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store
+  local.get $6
+  call $~lib/string/String#get:length
+  i32.const 1
+  i32.shl
+  local.set $thisSize
+  local.get $other
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store
+  local.get $6
+  call $~lib/string/String#get:length
+  i32.const 1
+  i32.shl
+  local.set $otherSize
+  local.get $thisSize
+  local.get $otherSize
+  i32.add
+  local.set $outSize
+  local.get $outSize
+  i32.const 0
+  i32.eq
+  if
+   i32.const 416
+   local.set $6
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $6
+   return
+  end
+  global.get $~lib/memory/__stack_pointer
+  local.get $outSize
+  i32.const 2
+  call $~lib/rt/itcms/__new
+  local.tee $out
+  i32.store offset=4
+  local.get $out
+  local.get $this
+  local.get $thisSize
+  memory.copy
+  local.get $out
+  local.get $thisSize
+  i32.add
+  local.get $other
+  local.get $otherSize
+  memory.copy
+  local.get $out
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $6
+  return
+ )
+ (func $~lib/string/String.__concat (param $left i32) (param $right i32) (result i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $left
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  local.get $right
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=4
+  local.get $2
+  call $~lib/string/String#concat
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+  return
+ )
+ (func $exceptions/innerRethrow
+  (local $e i32)
+  (local $1 i32)
+  (local $e|2 i32)
+  (local $3 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
+  try $try_finally|0
+   try $try|1
+    i32.const 0
+    i32.const 1088
+    call $~lib/error/Error#constructor
+    throw $$error
+   catch $$error
+    
+    local.set $e|2
+    i32.const 0
+    global.set $exceptions/rethrowFinallyRan
+    i32.const 0
+    i32.const 1136
+    local.get $e|2
+    local.set $3
+    global.get $~lib/memory/__stack_pointer
+    local.get $3
+    i32.store offset=8
+    local.get $3
+    call $~lib/error/Error#get:message
+    local.set $3
+    global.get $~lib/memory/__stack_pointer
+    local.get $3
+    i32.store offset=4
+    local.get $3
+    call $~lib/string/String.__concat
+    local.set $3
+    global.get $~lib/memory/__stack_pointer
+    local.get $3
+    i32.store
+    local.get $3
+    call $~lib/error/Error#constructor
+    throw $$error
+   end
+   unreachable
+  catch_all
+   i32.const 1
+   global.set $exceptions/rethrowFinallyRan
+   rethrow $try_finally|0
+  end
+  unreachable
+ )
+ (func $exceptions/StateMachine#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 5
+   i32.const 12
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  global.get $~lib/memory/__stack_pointer
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $~lib/object/Object#constructor
+  local.tee $this
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 0
+  call $exceptions/StateMachine#set:state
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 0
+  call $exceptions/StateMachine#set:errorState
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $exceptions/StateMachine#transition (param $this i32) (param $newState i32)
+  (local $e i32)
+  (local $3 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  try $try|0
+   local.get $newState
+   i32.const 0
+   i32.lt_s
+   if
+    i32.const 0
+    i32.const 1184
+    call $~lib/error/Error#constructor
+    throw $$error
+   end
+   local.get $this
+   local.set $3
+   global.get $~lib/memory/__stack_pointer
+   local.get $3
+   i32.store
+   local.get $3
+   local.get $newState
+   call $exceptions/StateMachine#set:state
+  catch $$error
+   
+   local.set $e
+   local.get $this
+   local.set $3
+   global.get $~lib/memory/__stack_pointer
+   local.get $3
+   i32.store
+   local.get $3
+   i32.const 1
+   call $exceptions/StateMachine#set:errorState
+   local.get $this
+   local.set $3
+   global.get $~lib/memory/__stack_pointer
+   local.get $3
+   i32.store
+   local.get $3
+   i32.const -1
+   call $exceptions/StateMachine#set:state
+  end
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $exceptions/StateMachine#reset (param $this i32)
+  (local $1 i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  try $try_finally|0
+   local.get $this
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store
+   local.get $2
+   i32.const 0
+   call $exceptions/StateMachine#set:state
+   local.get $this
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store
+   local.get $2
+   i32.const 0
+   call $exceptions/StateMachine#set:errorState
+  catch_all
+   rethrow $try_finally|0
+  end
+  local.get $1
+  i32.const 1
+  i32.eq
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   return
+  end
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $exceptions/testDeepNesting (result i32)
+  (local $e i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $e|3 i32)
+  (local $e|4 i32)
+  (local $5 i32)
+  (local $6 i32)
+  (local $e|7 i32)
+  (local $8 i32)
+  (local $9 i32)
+  (local $e|10 i32)
+  (local $e|11 i32)
+  (local $e|12 i32)
+  (local $13 i32)
+  (local $14 i32)
+  (local $e|15 i32)
+  (local $16 i32)
+  (local $17 i32)
+  (local $e|18 i32)
+  (local $e|19 i32)
+  (local $20 i32)
+  (local $21 i32)
+  (local $e|22 i32)
+  (local $23 i32)
+  (local $24 i32)
+  (local $e|25 i32)
+  (local $e|26 i32)
+  (local $e|27 i32)
+  (local $28 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  i32.const 416
+  global.set $exceptions/deepNestingOrder
+  try $try_finally|0
+   try $try|7
+    global.get $exceptions/deepNestingOrder
+    local.set $28
+    global.get $~lib/memory/__stack_pointer
+    local.get $28
+    i32.store
+    local.get $28
+    i32.const 1232
+    call $~lib/string/String.__concat
+    global.set $exceptions/deepNestingOrder
+    try $try_finally|8
+     try $try|11
+      global.get $exceptions/deepNestingOrder
+      local.set $28
+      global.get $~lib/memory/__stack_pointer
+      local.get $28
+      i32.store
+      local.get $28
+      i32.const 1264
+      call $~lib/string/String.__concat
+      global.set $exceptions/deepNestingOrder
+      try $try_finally|12
+       try $try|13
+        global.get $exceptions/deepNestingOrder
+        local.set $28
+        global.get $~lib/memory/__stack_pointer
+        local.get $28
+        i32.store
+        local.get $28
+        i32.const 1296
+        call $~lib/string/String.__concat
+        global.set $exceptions/deepNestingOrder
+        i32.const 0
+        i32.const 1328
+        call $~lib/error/Error#constructor
+        throw $$error
+       catch $$error
+        
+        local.set $e|25
+        global.get $exceptions/deepNestingOrder
+        local.set $28
+        global.get $~lib/memory/__stack_pointer
+        local.get $28
+        i32.store
+        local.get $28
+        i32.const 1360
+        call $~lib/string/String.__concat
+        global.set $exceptions/deepNestingOrder
+        i32.const 0
+        i32.const 1392
+        call $~lib/error/Error#constructor
+        throw $$error
+       end
+       unreachable
+      catch_all
+       global.get $exceptions/deepNestingOrder
+       local.set $28
+       global.get $~lib/memory/__stack_pointer
+       local.get $28
+       i32.store
+       local.get $28
+       i32.const 1440
+       call $~lib/string/String.__concat
+       global.set $exceptions/deepNestingOrder
+       rethrow $try_finally|12
+      end
+      unreachable
+     catch $$error
+      
+      local.set $e|26
+      global.get $exceptions/deepNestingOrder
+      local.set $28
+      global.get $~lib/memory/__stack_pointer
+      local.get $28
+      i32.store
+      local.get $28
+      i32.const 1472
+      call $~lib/string/String.__concat
+      global.set $exceptions/deepNestingOrder
+     end
+    catch_all
+     global.get $exceptions/deepNestingOrder
+     local.set $28
+     global.get $~lib/memory/__stack_pointer
+     local.get $28
+     i32.store
+     local.get $28
+     i32.const 1504
+     call $~lib/string/String.__concat
+     global.set $exceptions/deepNestingOrder
+     rethrow $try_finally|8
+    end
+    global.get $exceptions/deepNestingOrder
+    local.set $28
+    global.get $~lib/memory/__stack_pointer
+    local.get $28
+    i32.store
+    local.get $28
+    i32.const 1504
+    call $~lib/string/String.__concat
+    global.set $exceptions/deepNestingOrder
+    local.get $20
+    i32.const 1
+    i32.eq
+    if
+     local.get $21
+     local.set $28
+     global.get $~lib/memory/__stack_pointer
+     i32.const 4
+     i32.add
+     global.set $~lib/memory/__stack_pointer
+     local.get $28
+     return
+    end
+    unreachable
+   catch $$error
+    
+    local.set $e|27
+    global.get $exceptions/deepNestingOrder
+    local.set $28
+    global.get $~lib/memory/__stack_pointer
+    local.get $28
+    i32.store
+    local.get $28
+    i32.const 1536
+    call $~lib/string/String.__concat
+    global.set $exceptions/deepNestingOrder
+   end
+  catch_all
+   global.get $exceptions/deepNestingOrder
+   local.set $28
+   global.get $~lib/memory/__stack_pointer
+   local.get $28
+   i32.store
+   local.get $28
+   i32.const 1568
+   call $~lib/string/String.__concat
+   global.set $exceptions/deepNestingOrder
+   rethrow $try_finally|0
+  end
+  global.get $exceptions/deepNestingOrder
+  local.set $28
+  global.get $~lib/memory/__stack_pointer
+  local.get $28
+  i32.store
+  local.get $28
+  i32.const 1568
+  call $~lib/string/String.__concat
+  global.set $exceptions/deepNestingOrder
+  local.get $13
+  i32.const 1
+  i32.eq
+  if
+   local.get $14
+   local.set $28
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $28
+   return
+  end
+  unreachable
+ )
+ (func $exceptions/Counter#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.const 13
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  global.get $~lib/memory/__stack_pointer
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $~lib/object/Object#constructor
+  local.tee $this
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 0
+  call $exceptions/Counter#set:count
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $exceptions/Counter#increment (param $this i32) (result i32)
+  (local $e i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  try $try|0
+   local.get $this
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store
+   local.get $2
+   local.get $this
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store offset=4
+   local.get $2
+   call $exceptions/Counter#get:count
+   i32.const 1
+   i32.add
+   call $exceptions/Counter#set:count
+   local.get $this
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store
+   local.get $2
+   call $exceptions/Counter#get:count
+   i32.const 3
+   i32.gt_s
+   if
+    i32.const 0
+    i32.const 1680
+    call $~lib/error/Error#constructor
+    throw $$error
+   end
+   local.get $this
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store
+   local.get $2
+   call $exceptions/Counter#get:count
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $2
+   return
+  catch $$error
+   
+   local.set $e
+   i32.const -1
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $2
+   return
+  end
+  unreachable
+ )
  (func $start:exceptions
   (local $0 i32)
   global.get $~lib/memory/__stack_pointer
@@ -2972,6 +5260,30 @@
    call $~lib/builtins/abort
    unreachable
   end
+  call $exceptions/testReturnInCatchFinally
+  i32.const 10
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 76
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/returnInCatchFinallyRan
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 77
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
   call $exceptions/testTryCatchFinally
   global.get $exceptions/tryCatchFinallyResult
   i32.const 10
@@ -2980,7 +5292,7 @@
   if
    i32.const 0
    i32.const 480
-   i32.const 78
+   i32.const 92
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -2992,7 +5304,7 @@
   if
    i32.const 0
    i32.const 480
-   i32.const 79
+   i32.const 93
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -3004,7 +5316,7 @@
   if
    i32.const 0
    i32.const 480
-   i32.const 98
+   i32.const 112
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -3016,7 +5328,567 @@
   if
    i32.const 0
    i32.const 480
-   i32.const 110
+   i32.const 124
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testCustomError
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 147
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testResourceCleanup
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 185
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/Resource.disposed
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 186
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testResourceCleanupWithException
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 203
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  i32.const 0
+  call $exceptions/Calculator#constructor
+  global.set $exceptions/calc
+  global.get $exceptions/calc
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  i32.const 10
+  i32.const 2
+  call $exceptions/Calculator#divide
+  i32.const 5
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 237
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/calc
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  i32.const 10
+  i32.const 0
+  call $exceptions/Calculator#divide
+  i32.const 0
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 238
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/calc
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/Calculator#get:value
+  i32.const -1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 239
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/calc
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  i32.const 0
+  call $exceptions/Calculator#set:value
+  global.get $exceptions/calc
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  i32.const 20
+  i32.const 4
+  call $exceptions/Calculator#safeDivide
+  i32.const 5
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 242
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/calc
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  i32.const 20
+  i32.const 0
+  call $exceptions/Calculator#safeDivide
+  i32.const -1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 243
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  i32.const 0
+  call $exceptions/Outer#constructor
+  global.set $exceptions/outer
+  global.get $exceptions/outer
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/Outer#process
+  i32.const -1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 274
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testArrayWithExceptions
+  i32.const 6
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 296
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testRethrowWithFinally
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 321
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  i32.const 0
+  call $exceptions/StateMachine#constructor
+  global.set $exceptions/sm
+  global.get $exceptions/sm
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  i32.const 1
+  call $exceptions/StateMachine#transition
+  global.get $exceptions/sm
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/StateMachine#get:state
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 352
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/sm
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/StateMachine#get:errorState
+  i32.const 0
+  i32.ne
+  i32.const 0
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 353
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/sm
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  i32.const -5
+  call $exceptions/StateMachine#transition
+  global.get $exceptions/sm
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/StateMachine#get:state
+  i32.const -1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 356
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/sm
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/StateMachine#get:errorState
+  i32.const 0
+  i32.ne
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 357
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/sm
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/StateMachine#reset
+  global.get $exceptions/sm
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/StateMachine#get:state
+  i32.const 0
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 360
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/sm
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/StateMachine#get:errorState
+  i32.const 0
+  i32.ne
+  i32.const 0
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 361
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testDeepNesting
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 393
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/deepNestingOrder
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  i32.const 1600
+  call $~lib/string/String.__eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 394
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  i32.const 0
+  call $exceptions/Counter#constructor
+  global.set $exceptions/counter
+  global.get $exceptions/counter
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/Counter#increment
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 414
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/counter
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/Counter#increment
+  i32.const 2
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 415
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/counter
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/Counter#increment
+  i32.const 3
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 416
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/counter
+  local.set $0
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $exceptions/Counter#increment
+  i32.const -1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 417
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  call $exceptions/testReturnFromTry
+  i32.const 42
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 429
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  i32.const 0
+  global.set $exceptions/multiReturnFinallyCount
+  i32.const -5
+  call $exceptions/testMultipleReturnsWithFinally
+  i32.const -1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 453
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/multiReturnFinallyCount
+  i32.const 1
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 454
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  i32.const 0
+  call $exceptions/testMultipleReturnsWithFinally
+  i32.const 0
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 456
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/multiReturnFinallyCount
+  i32.const 2
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 457
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  i32.const 50
+  call $exceptions/testMultipleReturnsWithFinally
+  i32.const 50
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 459
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/multiReturnFinallyCount
+  i32.const 3
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 460
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  i32.const 200
+  call $exceptions/testMultipleReturnsWithFinally
+  i32.const 100
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 462
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $exceptions/multiReturnFinallyCount
+  i32.const 4
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 480
+   i32.const 463
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -3025,5 +5897,59 @@
   i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/array/Array<i32>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  i32.const 0
+  drop
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/array/Array<i32>#get:buffer
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/object/Object#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 0
+   i32.const 0
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
  )
 )

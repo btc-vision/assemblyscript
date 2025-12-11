@@ -2966,6 +2966,28 @@ export class Compiler extends DiagnosticEmitter {
     // Remember that this flow returns
     flow.set(FlowFlags.Returns | FlowFlags.Terminates);
 
+    // Handle try-finally context: defer return until after finally
+    let tryFinallyContext = flow.getTryFinallyContext();
+    if (tryFinallyContext) {
+      let pendingActionLocal = tryFinallyContext.tryFinallyPendingActionLocal;
+      let pendingValueLocal = tryFinallyContext.tryFinallyPendingValueLocal;
+      let dispatchLabel = assert(tryFinallyContext.tryFinallyDispatchLabel);
+      let stmts = new Array<ExpressionRef>();
+
+      // Store return value if any
+      if (expr && returnType != Type.void) {
+        stmts.push(module.local_set(pendingValueLocal, expr, returnType.isManaged));
+      }
+
+      // Set pending action to RETURN (1)
+      stmts.push(module.local_set(pendingActionLocal, module.i32(1), false));
+
+      // Branch to finally dispatch
+      stmts.push(module.br(dispatchLabel));
+
+      return module.flatten(stmts);
+    }
+
     // Handle inline return
     if (flow.isInline) {
       let inlineReturnLabel = assert(flow.inlineReturnLabel);
@@ -3230,49 +3252,180 @@ export class Compiler extends DiagnosticEmitter {
     // Handle finally clause if present
     let finallyStatements = statement.finallyStatements;
     if (finallyStatements) {
-      // Compile finally block statements (we'll use this in multiple places)
-      let finallyFlow = outerFlow.fork();
-      this.currentFlow = finallyFlow;
-      let finallyStmts = new Array<ExpressionRef>();
-      this.compileStatements(finallyStatements, finallyStmts);
-      let finallyExpr = module.flatten(finallyStmts);
+      // Set up pending action pattern for deferred control flow
+      // pendingAction: 0=normal, 1=return, 2=break, 3=continue
+      let returnType = outerFlow.returnType;
+      let targetFunction = outerFlow.targetFunction;
 
+      // Create locals for pending action tracking
+      let pendingActionLocal = targetFunction.addLocal(Type.i32);
+      let pendingValueLocal: Local | null = returnType != Type.void
+        ? targetFunction.addLocal(returnType)
+        : null;
+      let pendingValueLocalIndex = pendingValueLocal ? pendingValueLocal.index : -1;
+
+      // Create labels
+      let dispatchLabel = `finally_dispatch|${label}`;
+      let outerTryLabel = `try_finally|${label}`;
+
+      // Set up try-finally context on the flows BEFORE compiling try/catch bodies
+      // We need to recompile try and catch with the context set
       outerFlow.popControlFlowLabel(label);
-      this.currentFlow = outerFlow;
 
-      // For try-finally, we need to:
-      // 1. Wrap the try (and catch if present) in an outer try with catch_all
-      // 2. In catch_all: run finally, then rethrow
-      // 3. After the try: run finally for normal completion
+      // Re-fork flows with try-finally context
+      let label2 = outerFlow.pushControlFlowLabel();
+      tryLabel = `try|${label2}`;
+
+      tryFlow = outerFlow.fork();
+      tryFlow.tryFinallyPendingActionLocal = pendingActionLocal.index;
+      tryFlow.tryFinallyPendingValueLocal = pendingValueLocalIndex;
+      tryFlow.tryFinallyDispatchLabel = dispatchLabel;
+      tryFlow.tryFinallyReturnType = returnType;
+
+      this.currentFlow = tryFlow;
+      let tryStmts2 = new Array<ExpressionRef>();
+      this.compileStatements(statement.bodyStatements, tryStmts2);
+      tryBodyExpr = module.flatten(tryStmts2);
+      tryFlowTerminates = tryFlow.isAny(FlowFlags.Terminates);
+
+      // Recompile catch with context if present
+      catchTags = [];
+      catchBodies = [];
+      catchFlow = null;
+      catchFlowTerminates = false;
+
+      if (catchStatements) {
+        catchFlow = outerFlow.fork();
+        catchFlow.tryFinallyPendingActionLocal = pendingActionLocal.index;
+        catchFlow.tryFinallyPendingValueLocal = pendingValueLocalIndex;
+        catchFlow.tryFinallyDispatchLabel = dispatchLabel;
+        catchFlow.tryFinallyReturnType = returnType;
+
+        this.currentFlow = catchFlow;
+
+        let catchStmts2 = new Array<ExpressionRef>();
+        let popExpr = module.pop(this.options.sizeTypeRef);
+
+        if (catchVariable) {
+          let catchVarName = catchVariable.text;
+          let errorClass = this.program.lookup(CommonNames.Error);
+          let errorType: Type;
+          if (errorClass && errorClass.kind == ElementKind.ClassPrototype) {
+            let resolved = this.resolver.resolveClass(<ClassPrototype>errorClass, null);
+            errorType = resolved ? resolved.type : this.options.usizeType;
+          } else {
+            errorType = this.options.usizeType;
+          }
+          let catchLocal = catchFlow.addScopedLocal(catchVarName, errorType);
+          catchStmts2.push(binaryen._BinaryenLocalSet(module.ref, catchLocal.index, popExpr));
+          catchFlow.setLocalFlag(catchLocal.index, LocalFlags.Initialized);
+        } else {
+          catchStmts2.push(module.drop(popExpr));
+        }
+
+        this.compileStatements(catchStatements, catchStmts2);
+
+        catchTags.push(tagName);
+        catchBodies.push(module.flatten(catchStmts2));
+        catchFlowTerminates = catchFlow.isAny(FlowFlags.Terminates);
+      }
+
+      this.currentFlow = outerFlow;
 
       // Build the inner try-catch (if there's a catch clause)
       let innerTryExpr: ExpressionRef;
       if (catchBodies.length > 0) {
-        // We have a catch clause - wrap in try-catch
         innerTryExpr = module.try(tryLabel, tryBodyExpr, catchTags, catchBodies, null);
       } else {
-        // No catch clause - just the try body
         innerTryExpr = tryBodyExpr;
       }
 
-      // Create the outer try with catch_all for finally+rethrow
-      // In Binaryen, catch_all is signaled by having one more catchBody than catchTags
-      // i.e., catchTags=[], catchBodies=[body] creates a catch_all
-      let outerTryLabel = `try_finally|${label}`;
+      // Compile finally statements for the catch_all path (exception handling)
+      let finallyFlow1 = outerFlow.fork();
+      this.currentFlow = finallyFlow1;
+      let finallyStmts1 = new Array<ExpressionRef>();
+      this.compileStatements(finallyStatements, finallyStmts1);
+      let finallyExpr1 = module.flatten(finallyStmts1);
+
+      // Create catch_all body: run finally, then rethrow
       let catchAllBody = module.block(null, [
-        // Run finally code
-        finallyExpr,
-        // Rethrow the caught exception
+        finallyExpr1,
         module.rethrow(outerTryLabel)
       ]);
 
+      // Outer try with catch_all for exception path
       let outerTryExpr = module.try(
         outerTryLabel,
         innerTryExpr,
-        [],  // No specific tags - the extra body becomes catch_all
-        [catchAllBody],  // One body without a tag = catch_all
+        [],
+        [catchAllBody],
         null
       );
+
+      // Compile finally statements for the normal/deferred path
+      let finallyFlow2 = outerFlow.fork();
+      this.currentFlow = finallyFlow2;
+      let finallyStmts2 = new Array<ExpressionRef>();
+      this.compileStatements(finallyStatements, finallyStmts2);
+      let finallyExpr2 = module.flatten(finallyStmts2);
+
+      this.currentFlow = outerFlow;
+      outerFlow.popControlFlowLabel(label2);
+
+      // Build the dispatch logic after finally
+      let dispatchStmts = new Array<ExpressionRef>();
+
+      // Run finally code
+      dispatchStmts.push(finallyExpr2);
+
+      // Dispatch based on pendingAction
+      // if (pendingAction == 1) return pendingValue;
+      if (returnType != Type.void && pendingValueLocal) {
+        dispatchStmts.push(
+          module.if(
+            module.binary(BinaryOp.EqI32,
+              module.local_get(pendingActionLocal.index, TypeRef.I32),
+              module.i32(1)
+            ),
+            module.return(module.local_get(pendingValueLocal.index, returnType.toRef()))
+          )
+        );
+      } else {
+        dispatchStmts.push(
+          module.if(
+            module.binary(BinaryOp.EqI32,
+              module.local_get(pendingActionLocal.index, TypeRef.I32),
+              module.i32(1)
+            ),
+            module.return()
+          )
+        );
+      }
+
+      // The full structure:
+      // (block $dispatch            ;; Branch here skips try but runs finally
+      //   (try $try_finally
+      //     (do ...)
+      //     (catch_all ... rethrow)
+      //   )
+      // )
+      // finally code                 ;; Runs after try completes or after br $dispatch
+      // dispatch logic              ;; if pendingAction==1 return pendingValue
+
+      // Wrap the try in a block that return can branch to
+      let tryBlock = module.block(dispatchLabel, [outerTryExpr]);
+
+      // For functions that return a value, add unreachable at the end
+      // This handles the case where normal completion didn't have a return
+      // (in theory this path shouldn't be reachable if all paths return)
+      if (returnType != Type.void) {
+        dispatchStmts.push(module.unreachable());
+      }
+
+      let fullBlock = module.block(null, [
+        tryBlock,
+        ...dispatchStmts
+      ]);
 
       // Merge flow states
       if (catchFlow) {
@@ -3282,20 +3435,10 @@ export class Compiler extends DiagnosticEmitter {
           outerFlow.inheritAlternatives(tryFlow, catchFlow);
         }
       } else {
-        // Only finally, no catch - exceptions propagate after finally
         outerFlow.mergeSideEffects(tryFlow);
       }
 
-      // For normal completion: run the outer try, then finally
-      // We need to compile finally again for the normal path since finallyExpr was already used
-      finallyFlow = outerFlow.fork();
-      this.currentFlow = finallyFlow;
-      let finallyStmts2 = new Array<ExpressionRef>();
-      this.compileStatements(finallyStatements, finallyStmts2);
-      let finallyExpr2 = module.flatten(finallyStmts2);
-      this.currentFlow = outerFlow;
-
-      return module.block(null, [outerTryExpr, finallyExpr2]);
+      return fullBlock;
     }
 
     // No finally clause
