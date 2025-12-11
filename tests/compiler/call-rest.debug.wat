@@ -27,7 +27,6 @@
  (global $~lib/rt/tlsf/ROOT (mut i32) (i32.const 0))
  (global $~lib/native/ASC_LOW_MEMORY_LIMIT i32 (i32.const 0))
  (global $call-rest/indirect (mut i32) (i32.const 624))
- (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/native/ASC_RUNTIME i32 (i32.const 2))
  (global $~lib/rt/__rtti_base i32 (i32.const 1072))
  (global $~lib/memory/__data_end i32 (i32.const 1112))
@@ -3401,19 +3400,14 @@
   (local $7 i32)
   (local $8 i32)
   (local $9 i32)
-  (local $10 i32)
-  (local $11 i32)
-  (local $12 i32)
-  (local $13 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 24
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.const 24
-  memory.fill
+  i64.const 0
+  i64.store
   memory.size
   i32.const 16
   i32.shl
@@ -3472,11 +3466,11 @@
   i32.const 4
   i32.const 560
   call $~lib/rt/__newArray
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
+  local.get $9
   call $call-rest/fn
   i32.const 6
   i32.eq
@@ -3496,11 +3490,11 @@
   i32.const 4
   i32.const 592
   call $~lib/rt/__newArray
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
+  local.get $9
   call $call-rest/fn
   i32.const 15
   i32.eq
@@ -3516,16 +3510,9 @@
   i32.const 1
   i32.const 0
   i32.const 0
-  global.get $~lib/memory/__stack_pointer
   i32.const 1
   global.set $~argumentsLength
   global.get $call-rest/indirect
-  local.tee $2
-  i32.store offset=4
-  local.get $2
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $2
   i32.load
   call_indirect (type $3)
   i32.const 1
@@ -3542,16 +3529,9 @@
   i32.const 1
   i32.const 2
   i32.const 0
-  global.get $~lib/memory/__stack_pointer
   i32.const 2
   global.set $~argumentsLength
   global.get $call-rest/indirect
-  local.tee $3
-  i32.store offset=8
-  local.get $3
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $3
   i32.load
   call_indirect (type $3)
   i32.const 3
@@ -3572,21 +3552,14 @@
   i32.const 4
   i32.const 656
   call $~lib/rt/__newArray
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
-  global.get $~lib/memory/__stack_pointer
+  local.get $9
   i32.const 3
   global.set $~argumentsLength
   global.get $call-rest/indirect
-  local.tee $5
-  i32.store offset=12
-  local.get $5
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $5
   i32.load
   call_indirect (type $3)
   i32.const 6
@@ -3607,21 +3580,14 @@
   i32.const 4
   i32.const 688
   call $~lib/rt/__newArray
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
-  global.get $~lib/memory/__stack_pointer
+  local.get $9
   i32.const 3
   global.set $~argumentsLength
   global.get $call-rest/indirect
-  local.tee $7
-  i32.store offset=16
-  local.get $7
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $7
   i32.load
   call_indirect (type $3)
   i32.const 15
@@ -3642,11 +3608,11 @@
   global.set $~argumentsLength
   i32.const 0
   call $call-rest/Foo#constructor@varargs
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
+  local.get $9
   call $call-rest/Foo#sum
   i32.const 1
   i32.eq
@@ -3666,11 +3632,11 @@
   global.set $~argumentsLength
   i32.const 0
   call $call-rest/Foo#constructor@varargs
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
+  local.get $9
   call $call-rest/Foo#sum
   i32.const 3
   i32.eq
@@ -3691,17 +3657,17 @@
   i32.const 4
   i32.const 800
   call $~lib/rt/__newArray
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
-  i32.store offset=20
-  local.get $13
+  local.get $9
+  i32.store offset=4
+  local.get $9
   call $call-rest/Foo#constructor
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
+  local.get $9
   call $call-rest/Foo#sum
   i32.const 6
   i32.eq
@@ -3722,17 +3688,17 @@
   i32.const 4
   i32.const 832
   call $~lib/rt/__newArray
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
-  i32.store offset=20
-  local.get $13
+  local.get $9
+  i32.store offset=4
+  local.get $9
   call $call-rest/Foo#constructor
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
+  local.get $9
   call $call-rest/Foo#sum
   i32.const 15
   i32.eq
@@ -3765,11 +3731,11 @@
   i32.const 4
   i32.const 896
   call $~lib/rt/__newArray
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
+  local.get $9
   call $call-rest/count<i32>
   i32.const 1
   i32.eq
@@ -3787,11 +3753,11 @@
   i32.const 4
   i32.const 928
   call $~lib/rt/__newArray
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
+  local.get $9
   call $call-rest/count<i32>
   i32.const 3
   i32.eq
@@ -3809,11 +3775,11 @@
   i32.const 8
   i32.const 1056
   call $~lib/rt/__newArray
-  local.set $13
+  local.set $9
   global.get $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $9
   i32.store
-  local.get $13
+  local.get $9
   call $call-rest/count<~lib/string/String>
   i32.const 3
   i32.eq
@@ -3827,7 +3793,7 @@
    unreachable
   end
   global.get $~lib/memory/__stack_pointer
-  i32.const 24
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
  )

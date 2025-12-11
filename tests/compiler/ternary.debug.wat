@@ -7,7 +7,6 @@
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (global $ternary/a (mut i32) (i32.const 0))
  (global $~argumentsLength (mut i32) (i32.const 0))
- (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/memory/__data_end i32 (i32.const 44))
  (global $~lib/memory/__stack_pointer (mut i32) (i32.const 32812))
  (global $~lib/memory/__heap_base i32 (i32.const 32812))
@@ -74,61 +73,25 @@
   global.set $~lib/memory/__stack_pointer
  )
  (func $ternary/testVoidInclTypeMismatch (param $cond i32) (param $nop i32)
-  (local $2 i32)
-  (local $3 i32)
-  (local $4 i32)
-  (local $5 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 16
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store offset=8
   local.get $cond
   if
-   global.get $~lib/memory/__stack_pointer
    i32.const 0
    global.set $~argumentsLength
    local.get $nop
-   local.tee $2
-   i32.store
-   local.get $2
-   i32.load offset=4
-   global.set $$~lib/__closure_env
-   local.get $2
    i32.load
    call_indirect (type $0)
   else
-   global.get $~lib/memory/__stack_pointer
    i32.const 0
    global.set $~argumentsLength
    local.get $nop
-   local.tee $3
-   i32.store offset=4
-   local.get $3
-   i32.load offset=4
-   global.set $$~lib/__closure_env
-   local.get $3
    i32.load
    call_indirect (type $0)
   end
   local.get $cond
   if
-   global.get $~lib/memory/__stack_pointer
    i32.const 0
    global.set $~argumentsLength
    local.get $nop
-   local.tee $4
-   i32.store offset=8
-   local.get $4
-   i32.load offset=4
-   global.set $$~lib/__closure_env
-   local.get $4
    i32.load
    call_indirect (type $0)
   else
@@ -140,23 +103,12 @@
    i32.const 1
    drop
   else
-   global.get $~lib/memory/__stack_pointer
    i32.const 0
    global.set $~argumentsLength
    local.get $nop
-   local.tee $5
-   i32.store offset=12
-   local.get $5
-   i32.load offset=4
-   global.set $$~lib/__closure_env
-   local.get $5
    i32.load
    call_indirect (type $0)
   end
-  global.get $~lib/memory/__stack_pointer
-  i32.const 16
-  i32.add
-  global.set $~lib/memory/__stack_pointer
  )
  (func $~start
   call $start:ternary

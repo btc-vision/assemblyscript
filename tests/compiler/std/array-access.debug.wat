@@ -11,7 +11,6 @@
  (global $~lib/shared/runtime/Runtime.Incremental i32 (i32.const 2))
  (global $~lib/native/ASC_SHRINK_LEVEL i32 (i32.const 0))
  (global $~argumentsLength (mut i32) (i32.const 0))
- (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/memory/__data_end i32 (i32.const 284))
  (global $~lib/memory/__stack_pointer (mut i32) (i32.const 33052))
  (global $~lib/memory/__heap_base i32 (i32.const 33052))
@@ -795,41 +794,33 @@
  )
  (func $std/array-access/functionArrayElementCall (param $a i32) (result i32)
   (local $1 i32)
-  (local $2 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 4
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
+  i32.const 0
+  i32.store
   i32.const 123
-  global.get $~lib/memory/__stack_pointer
   i32.const 1
   global.set $~argumentsLength
   local.get $a
-  local.set $2
+  local.set $1
   global.get $~lib/memory/__stack_pointer
-  local.get $2
+  local.get $1
   i32.store
-  local.get $2
+  local.get $1
   i32.const 0
   call $~lib/array/Array<%28i32%29=>i32>#__get
-  local.tee $1
-  i32.store offset=4
-  local.get $1
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $1
   i32.load
   call_indirect (type $0)
-  local.set $2
+  local.set $1
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $2
+  local.get $1
   return
  )
  (func $export:std/array-access/i32ArrayArrayElementAccess (param $0 i32) (result i32)

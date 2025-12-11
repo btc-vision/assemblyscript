@@ -18,7 +18,6 @@
  (global $~lib/shared/runtime/Runtime.Minimal i32 (i32.const 1))
  (global $~lib/shared/runtime/Runtime.Incremental i32 (i32.const 2))
  (global $~argumentsLength (mut i32) (i32.const 0))
- (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/total (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/threshold (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/state (mut i32) (i32.const 0))
@@ -2493,28 +2492,24 @@
   (local $6 i32)
   (local $7 i32)
   (local $8 i32)
-  (local $9 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store offset=8
   local.get $initialValue
   local.set $acc
   i32.const 0
   local.set $i
   local.get $this
-  local.set $9
+  local.set $8
   global.get $~lib/memory/__stack_pointer
-  local.get $9
+  local.get $8
   i32.store
-  local.get $9
+  local.get $8
   call $~lib/array/Array<f32>#get:length_
   local.set $len
   loop $for-loop|0
@@ -2522,11 +2517,11 @@
    local.get $len
    local.tee $6
    local.get $this
-   local.set $9
+   local.set $8
    global.get $~lib/memory/__stack_pointer
-   local.get $9
+   local.get $8
    i32.store
-   local.get $9
+   local.get $8
    call $~lib/array/Array<f32>#get:length_
    local.tee $7
    local.get $6
@@ -2537,11 +2532,11 @@
    if
     local.get $acc
     local.get $this
-    local.set $9
+    local.set $8
     global.get $~lib/memory/__stack_pointer
-    local.get $9
-    i32.store offset=8
-    local.get $9
+    local.get $8
+    i32.store offset=4
+    local.get $8
     call $~lib/array/Array<f32>#get:dataStart
     local.get $i
     i32.const 2
@@ -2550,21 +2545,14 @@
     f32.load
     local.get $i
     local.get $this
-    local.set $9
+    local.set $8
     global.get $~lib/memory/__stack_pointer
-    local.get $9
+    local.get $8
     i32.store
-    local.get $9
-    global.get $~lib/memory/__stack_pointer
+    local.get $8
     i32.const 4
     global.set $~argumentsLength
     local.get $fn
-    local.tee $8
-    i32.store offset=4
-    local.get $8
-    i32.load offset=4
-    global.set $$~lib/__closure_env
-    local.get $8
     i32.load
     call_indirect (type $5)
     local.set $acc
@@ -2576,12 +2564,12 @@
    end
   end
   local.get $acc
-  local.set $9
+  local.set $8
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $9
+  local.get $8
   return
  )
  (func $infer-generic/Ref#constructor (param $this i32) (result i32)

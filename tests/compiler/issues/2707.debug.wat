@@ -27,7 +27,6 @@
  (global $~lib/rt/tlsf/ROOT (mut i32) (i32.const 0))
  (global $~lib/native/ASC_LOW_MEMORY_LIMIT i32 (i32.const 0))
  (global $~argumentsLength (mut i32) (i32.const 0))
- (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/rt/__rtti_base i32 (i32.const 496))
  (global $~lib/memory/__data_end i32 (i32.const 524))
  (global $~lib/memory/__stack_pointer (mut i32) (i32.const 33292))
@@ -2437,15 +2436,14 @@
  (func $start:issues/2707
   (local $0 i32)
   (local $1 i32)
-  (local $2 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 4
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
+  i32.const 0
+  i32.store
   memory.size
   i32.const 16
   i32.shl
@@ -2468,26 +2466,19 @@
   i32.const 4
   i32.const 64
   call $~lib/rt/__newArray
-  local.set $2
+  local.set $1
   global.get $~lib/memory/__stack_pointer
-  local.get $2
+  local.get $1
   i32.store
-  local.get $2
-  global.get $~lib/memory/__stack_pointer
+  local.get $1
   i32.const 1
   global.set $~argumentsLength
   global.get $issues/2707/func
-  local.tee $1
-  i32.store offset=4
-  local.get $1
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $1
   i32.load
   call_indirect (type $0)
   drop
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
  )

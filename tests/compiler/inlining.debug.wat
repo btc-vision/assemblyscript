@@ -13,7 +13,6 @@
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (global $inlining/constantGlobal i32 (i32.const 1))
  (global $~argumentsLength (mut i32) (i32.const 0))
- (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/total (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/threshold (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/state (mut i32) (i32.const 0))
@@ -81,24 +80,20 @@
   (local $c|17 i32)
   (local $d|18 i32)
   (local $a|19 i32)
-  (local $20 i32)
-  (local $a|21 i32)
-  (local $b|22 i32)
+  (local $a|20 i32)
+  (local $b|21 i32)
   (local $foo i32)
   (local $this i32)
-  (local $a|25 i32)
-  (local $b|26 i32)
+  (local $a|24 i32)
+  (local $b|25 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store offset=8
   f32.const -1
   local.set $a
   f64.const -2
@@ -249,19 +244,12 @@
   i32.const 0
   local.set $a|19
   i32.const 2
-  global.get $~lib/memory/__stack_pointer
   i32.const 1
   global.set $~argumentsLength
   block $inlining/func_fe|inlined.0 (result i32)
    i32.const 80
    br $inlining/func_fe|inlined.0
   end
-  local.tee $20
-  i32.store
-  local.get $20
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $20
   i32.load
   call_indirect (type $0)
   i32.const 2
@@ -277,11 +265,11 @@
   end
   block $inlining/Foo.method_static|inlined.0 (result i32)
    i32.const 42
-   local.set $a|21
+   local.set $a|20
    i32.const 2
-   local.set $b|22
-   local.get $a|21
-   local.get $b|22
+   local.set $b|21
+   local.get $a|20
+   local.get $b|21
    i32.add
    br $inlining/Foo.method_static|inlined.0
   end
@@ -291,16 +279,16 @@
   global.get $~lib/memory/__stack_pointer
   i32.const 123
   local.tee $foo
-  i32.store offset=4
+  i32.store
   block $inlining/Foo#method_this|inlined.0 (result i32)
    global.get $~lib/memory/__stack_pointer
    local.get $foo
    local.tee $this
-   i32.store offset=8
+   i32.store offset=4
    i32.const 43
-   local.set $a|25
+   local.set $a|24
    i32.const 3
-   local.set $b|26
+   local.set $b|25
    local.get $this
    br $inlining/Foo#method_this|inlined.0
   end
@@ -316,7 +304,7 @@
    unreachable
   end
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
