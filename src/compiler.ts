@@ -174,6 +174,7 @@ import {
   UnaryPostfixExpression,
   UnaryPrefixExpression,
   CompiledExpression,
+  SwitchCase,
 
   TypeNode,
   NamedTypeNode,
@@ -456,6 +457,8 @@ export class Compiler extends DiagnosticEmitter {
   functionTable: Function[] = [];
   /** Arguments length helper global. */
   builtinArgumentsLength: GlobalRef = 0;
+  /** Closure environment helper global. */
+  closureEnvironmentGlobal: GlobalRef = 0;
   /** Requires runtime features. */
   runtimeFeatures: RuntimeFeatures = RuntimeFeatures.None;
   /** Current inline functions stack. */
@@ -1772,6 +1775,90 @@ export class Compiler extends DiagnosticEmitter {
       : null;
     let bodyStartIndex = stmts.length;
 
+    // Pre-scan the body to identify captured variables before compiling
+    // This ensures we know which locals need to be stored in the environment
+    this.prescanForClosures(bodyNode, instance, flow);
+
+    // Mark captured parameters and set up environment if needed
+    let preCapturedNames = instance.preCapturedNames;
+    if (preCapturedNames && preCapturedNames.size > 0) {
+      // Check if any parameters are captured
+      let parameterTypes = instance.signature.parameterTypes;
+      for (let i = 0, k = parameterTypes.length; i < k; i++) {
+        let paramName = instance.getParameterName(i);
+        if (preCapturedNames.has(paramName)) {
+          let local = flow.lookupLocal(paramName);
+          if (local && !local.isCaptured) {
+            local.isCaptured = true;
+            // Ensure environment structures are set up
+            if (!instance.capturedLocals) {
+              instance.capturedLocals = new Map();
+            }
+            if (!instance.capturedLocals.has(local)) {
+              // Calculate proper byte offset with alignment
+              // Reserve slot 0 for parent environment pointer (4 or 8 bytes depending on wasm32/64)
+              let ptrSize = this.options.usizeType.byteSize;
+              let currentOffset = ptrSize; // Start after parent pointer slot
+              for (let _keys = Map_keys(instance.capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
+                let existingLocal = _keys[j];
+                let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+                if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+              }
+              // Align to the type's natural alignment
+              let typeSize = local.type.byteSize;
+              let align = typeSize;
+              currentOffset = (currentOffset + align - 1) & ~(align - 1);
+              local.envSlotIndex = currentOffset;
+              local.envOwner = instance; // Track which function owns this capture
+              instance.capturedLocals.set(local, local.envSlotIndex);
+            }
+            if (!instance.envLocal) {
+              let envLocal = flow.addScopedLocal("$env", this.options.usizeType);
+              instance.envLocal = envLocal;
+            }
+          }
+        }
+      }
+
+      // Also check if 'this' is captured (for methods)
+      if (preCapturedNames.has(CommonNames.this_)) {
+        let thisLocal = flow.lookupLocal(CommonNames.this_);
+        if (thisLocal && !thisLocal.isCaptured) {
+          thisLocal.isCaptured = true;
+          if (!instance.capturedLocals) {
+            instance.capturedLocals = new Map();
+          }
+          if (!instance.capturedLocals.has(thisLocal)) {
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize;
+            for (let _keys = Map_keys(instance.capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
+              let existingLocal = _keys[j];
+              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+            }
+            let typeSize = thisLocal.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
+            thisLocal.envSlotIndex = currentOffset;
+            thisLocal.envOwner = instance;
+            instance.capturedLocals.set(thisLocal, thisLocal.envSlotIndex);
+          }
+          if (!instance.envLocal) {
+            let envLocal = flow.addScopedLocal("$env", this.options.usizeType);
+            instance.envLocal = envLocal;
+          }
+        }
+      }
+    }
+
+    // For closures (functions that capture from outer scope), create a local to cache
+    // the environment pointer. This is needed because indirect calls to other closures
+    // can overwrite the global $$~lib/__closure_env.
+    if (instance.outerFunction && !instance.closureEnvLocal) {
+      let closureEnvLocal = flow.addScopedLocal("$closureEnv", this.options.usizeType);
+      instance.closureEnvLocal = closureEnvLocal;
+    }
+
     // compile statements
     if (bodyNode.kind == NodeKind.Block) {
       stmts = this.compileStatements((<BlockStatement>bodyNode).statements, stmts);
@@ -1797,6 +1884,38 @@ export class Compiler extends DiagnosticEmitter {
         if (flow.isNonnull(expr, returnType)) flow.set(FlowFlags.ReturnsNonNull);
         flow.set(FlowFlags.Returns | FlowFlags.Terminates);
       }
+    }
+
+    // Allocate closure environment if this function has captured variables
+    // This is done after compiling the body because we discover captures during body compilation
+    if (instance.envLocal && instance.capturedLocals && instance.capturedLocals.size > 0) {
+      let envAlloc = this.compileClosureEnvironmentAllocation(instance);
+      // Insert at the beginning of the body
+      for (let i = stmts.length - 1; i >= bodyStartIndex; --i) {
+        stmts[i + 1] = stmts[i];
+      }
+      stmts[bodyStartIndex] = envAlloc;
+    }
+
+    // For closures (functions that capture from outer scope), emit code to cache the
+    // environment pointer in a local at function entry. This is needed because indirect
+    // calls to other closures can overwrite the global $$~lib/__closure_env.
+    if (instance.closureEnvLocal) {
+      let closureEnvLocal = instance.closureEnvLocal;
+
+      let closureEnvGlobal = this.ensureClosureEnvironmentGlobal();
+      let sizeTypeRef = this.options.sizeTypeRef;
+      let cacheEnv = module.local_set(
+        closureEnvLocal.index,
+        module.global_get(closureEnvGlobal, sizeTypeRef),
+        false // not a reference type
+      );
+
+      // Insert at the beginning of the body
+      for (let i = stmts.length - 1; i >= bodyStartIndex; --i) {
+        stmts[i + 1] = stmts[i];
+      }
+      stmts[bodyStartIndex] = cacheEnv;
     }
 
     // Make constructors return their instance pointer, and prepend a conditional
@@ -3208,6 +3327,41 @@ export class Compiler extends DiagnosticEmitter {
           flow.unsetLocalFlag(local.index, ~0);
           if (isConst) flow.setLocalFlag(local.index, LocalFlags.Constant);
         }
+
+        // Check if this local is pre-marked as captured by a closure
+        let sourceFunc = flow.sourceFunction;
+        let preCapturedNames = sourceFunc.preCapturedNames;
+        if (preCapturedNames && preCapturedNames.has(name)) {
+          local.isCaptured = true;
+          // Ensure we have a closure environment for this function
+          if (!sourceFunc.capturedLocals) {
+            sourceFunc.capturedLocals = new Map();
+          }
+          if (!sourceFunc.capturedLocals.has(local)) {
+            // Calculate proper byte offset based on current environment size with alignment
+            // Reserve slot 0 for parent environment pointer (4 or 8 bytes depending on wasm32/64)
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize; // Start after parent pointer slot
+            for (let _keys = Map_keys(sourceFunc.capturedLocals), i = 0, k = _keys.length; i < k; ++i) {
+              let existingLocal = _keys[i];
+              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+            }
+            // Align to the type's natural alignment
+            let typeSize = local.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
+            local.envSlotIndex = currentOffset;
+            local.envOwner = sourceFunc; // Track which function owns this capture
+            sourceFunc.capturedLocals.set(local, local.envSlotIndex);
+          }
+          // Ensure we have an environment local
+          if (!sourceFunc.envLocal) {
+            let envLocal = flow.addScopedLocal("$env", this.options.usizeType);
+            sourceFunc.envLocal = envLocal;
+          }
+        }
+
         if (initExpr) {
           initializers.push(
             this.makeLocalAssignment(local, initExpr, initType ? initType : type, false)
@@ -5676,13 +5830,15 @@ export class Compiler extends DiagnosticEmitter {
             return this.module.unreachable();
           }
         } else if (!(<Local>target).declaredByFlow(flow)) {
-          // TODO: closures
-          this.error(
-            DiagnosticCode.Not_implemented_0,
-            expression.range,
-            "Closures"
-          );
-          return this.module.unreachable();
+          // Closure: we'll handle the store later after compiling the value
+          if (!(<Local>target).isCaptured || (<Local>target).envSlotIndex < 0) {
+            this.error(
+              DiagnosticCode.Not_implemented_0,
+              expression.range,
+              "Closures"
+            );
+            return this.module.unreachable();
+          }
         }
         if (this.pendingElements.has(target)) {
           this.error(
@@ -6002,6 +6158,40 @@ export class Compiler extends DiagnosticEmitter {
     let type = local.type;
     assert(type != Type.void);
     let localIndex = local.index;
+
+    // Handle closure store: if the local is captured, always store to the environment
+    // This applies both in the declaring function and in inner closures
+    if (local.isCaptured && local.envSlotIndex >= 0) {
+      let sourceFunc = flow.sourceFunction;
+      // Check if we're in the declaring function (outer) or in a closure (inner)
+      let isInDeclaringFunction = local.parent == sourceFunc;
+
+      // In the declaring function, we need to check if environment is set up
+      // In a closure, we always use the environment
+      if (!isInDeclaringFunction || sourceFunc.envLocal) {
+        // Mark the local as initialized for flow analysis
+        flow.setLocalFlag(localIndex, LocalFlags.Initialized);
+        if (type.isNullableReference) {
+          if (!valueType.isNullableReference || flow.isNonnull(valueExpr, type)) flow.setLocalFlag(localIndex, LocalFlags.NonNull);
+          else flow.unsetLocalFlag(localIndex, LocalFlags.NonNull);
+        }
+        if (type.isShortIntegerValue) {
+          if (!flow.canOverflow(valueExpr, type)) flow.setLocalFlag(localIndex, LocalFlags.Wrapped);
+          else flow.unsetLocalFlag(localIndex, LocalFlags.Wrapped);
+        }
+        let storeExpr = this.compileClosureStore(local, valueExpr, valueType);
+        if (tee) {
+          // For tee, we need to return the stored value
+          // Store, then load it back
+          let loadExpr = this.compileClosureLoad(local, local.declaration);
+          this.currentType = type;
+          return module.block(null, [storeExpr, loadExpr], type.toRef());
+        } else {
+          this.currentType = Type.void;
+          return storeExpr;
+        }
+      }
+    }
 
     if (type.isNullableReference) {
       if (!valueType.isNullableReference || flow.isNonnull(valueExpr, type)) flow.setLocalFlag(localIndex, LocalFlags.NonNull);
@@ -6530,6 +6720,18 @@ export class Compiler extends DiagnosticEmitter {
     if (!this.builtinArgumentsLength) {
       let module = this.module;
       this.builtinArgumentsLength = module.addGlobal(name, TypeRef.I32, true, module.i32(0));
+    }
+    return name;
+  }
+
+  /** Ensures the closure environment global variable exists. */
+  ensureClosureEnvironmentGlobal(): string {
+    let name = "$~lib/__closure_env";
+    if (!this.closureEnvironmentGlobal) {
+      let module = this.module;
+      let sizeTypeRef = this.options.sizeTypeRef;
+      let zero = this.options.isWasm64 ? module.i64(0) : module.i32(0);
+      this.closureEnvironmentGlobal = module.addGlobal(name, sizeTypeRef, true, zero);
     }
     return name;
   }
@@ -7100,9 +7302,56 @@ export class Compiler extends DiagnosticEmitter {
       ], sizeTypeRef);
     }
     if (operands) this.operandsTostack(signature, operands);
+
+    // Only set up closure environment handling when closures feature is enabled
+    if (this.options.hasFeature(Feature.Closures)) {
+      // Load the _env field from Function object and store to global for closure access
+      let closureEnvGlobal = this.ensureClosureEnvironmentGlobal();
+      let usizeSize = this.options.usizeType.byteSize;
+
+      // Get the offset of _env in the Function class
+      // _index is u32 (4 bytes), _env follows at offset 4 (wasm32) or 8 (wasm64 with padding)
+      let envOffset = this.options.isWasm64 ? 8 : 4;
+
+      // We need to evaluate functionArg once, store to temp, then use for both _env and _index
+      let flow = this.currentFlow;
+      let funcTemp = flow.getTempLocal(this.options.usizeType);
+      let funcTempIndex = funcTemp.index;
+
+      let stmts: ExpressionRef[] = [
+        // Store function pointer to temp
+        module.local_set(funcTempIndex, functionArg, true),
+        // Store _env to global: $~lib/__closure_env = func._env
+        module.global_set(closureEnvGlobal,
+          module.load(usizeSize, false,
+            module.local_get(funcTempIndex, sizeTypeRef),
+            sizeTypeRef,
+            envOffset
+          )
+        )
+      ];
+
+      let indexExpr = module.load(4, false,
+        module.local_get(funcTempIndex, sizeTypeRef),
+        TypeRef.I32 // ._index
+      );
+
+      let expr = module.call_indirect(
+        null, // TODO: handle multiple tables
+        module.block(null, stmts.concat([indexExpr]), TypeRef.I32),
+        operands,
+        signature.paramRefs,
+        signature.resultRefs
+      );
+      this.currentType = returnType;
+      return expr;
+    }
+
+    // Without closures, use simpler indirect call (just load _index from Function)
+    let indexExpr = module.load(4, false, functionArg, TypeRef.I32); // ._index at offset 0
     let expr = module.call_indirect(
-      null, // TODO: handle multiple tables
-      module.load(4, false, functionArg, TypeRef.I32), // ._index
+      null,
+      indexExpr,
       operands,
       signature.paramRefs,
       signature.resultRefs
@@ -7295,6 +7544,23 @@ export class Compiler extends DiagnosticEmitter {
         contextualTypeArguments
       );
       instance.flow.outer = flow;
+
+      // Analyze captured variables before compiling
+      let captures = this.analyzeCapturedVariables(declaration, flow);
+      if (captures.size > 0) {
+        // Check if closures feature is enabled
+        if (!this.options.hasFeature(Feature.Closures)) {
+          this.error(
+            DiagnosticCode.Feature_0_is_not_enabled,
+            expression.range, "closures"
+          );
+          return module.unreachable();
+        }
+        instance.capturedLocals = captures;
+        instance.outerFunction = sourceFunction;
+        this.ensureClosureEnvironment(sourceFunction, captures, flow);
+      }
+
       let worked = this.compileFunction(instance);
       this.currentType = contextualSignature.type;
       if (!worked) return module.unreachable();
@@ -7304,12 +7570,37 @@ export class Compiler extends DiagnosticEmitter {
       instance = this.resolver.resolveFunction(prototype, null, contextualTypeArguments);
       if (!instance) return this.module.unreachable();
       instance.flow.outer = flow;
+
+      // Analyze captured variables before compiling
+      let captures = this.analyzeCapturedVariables(declaration, flow);
+      if (captures.size > 0) {
+        // Check if closures feature is enabled
+        if (!this.options.hasFeature(Feature.Closures)) {
+          this.error(
+            DiagnosticCode.Feature_0_is_not_enabled,
+            expression.range, "closures"
+          );
+          return module.unreachable();
+        }
+        instance.capturedLocals = captures;
+        instance.outerFunction = sourceFunction;
+        this.ensureClosureEnvironment(sourceFunction, captures, flow);
+      }
+
       let worked = this.compileFunction(instance);
       this.currentType = instance.signature.type;
       if (!worked) return module.unreachable();
     }
 
     let offset = this.ensureRuntimeFunction(instance); // reports
+    let sizeTypeRef = this.options.sizeTypeRef;
+
+    // If this is a closure, we need to allocate the Function object dynamically
+    // and set the _env field to point to our environment
+    if (instance.capturedLocals && instance.capturedLocals.size > 0) {
+      return this.compileClosureFunctionCreation(instance, sourceFunction, offset);
+    }
+
     let expr = this.options.isWasm64
       ? module.i64(i64_low(offset), i64_high(offset))
       : module.i32(i64_low(offset));
@@ -7341,6 +7632,1068 @@ export class Compiler extends DiagnosticEmitter {
     }
 
     return expr;
+  }
+
+  // === Closure Support ==========================================================================
+
+  /** Scans a node and its children for captured variables from outer scopes. */
+  private scanNodeForCaptures(
+    node: Node,
+    outerFlow: Flow,
+    innerFunctionNames: Set<string>,
+    captures: Map<Local, i32>
+  ): void {
+    switch (node.kind) {
+      case NodeKind.Identifier: {
+        let ident = <IdentifierExpression>node;
+        let name = ident.text;
+        // Skip identifiers that are parameters/locals of inner functions
+        if (innerFunctionNames.has(name)) break;
+        // Check if this references a local from an outer scope
+        let local = outerFlow.lookupLocal(name);
+        if (!local) {
+          // Also check via outer flow chain
+          local = outerFlow.lookupLocalInOuter(name);
+        }
+        if (local && !captures.has(local)) {
+          local.isCaptured = true;
+          // Set envOwner to track which function's environment holds this local
+          if (!local.envOwner) {
+            local.envOwner = <Function>local.parent;
+          }
+          // If envSlotIndex is already set (from variable declaration), use it
+          if (local.envSlotIndex >= 0) {
+            captures.set(local, local.envSlotIndex);
+          } else {
+            // Calculate proper byte offset based on existing captures with alignment
+            // Reserve slot 0 for parent environment pointer (4 or 8 bytes depending on wasm32/64)
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize; // Start after parent pointer slot
+            for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
+              let existingLocal = _keys[idx];
+              // The slot index already accounts for alignment, add the size to get next free offset
+              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+            }
+            // Align to the type's natural alignment
+            let typeSize = local.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
+            local.envSlotIndex = currentOffset;
+            captures.set(local, local.envSlotIndex);
+          }
+        }
+        break;
+      }
+      case NodeKind.This: {
+        // Handle 'this' capture - look it up in outer flow
+        let local = outerFlow.lookupLocal(CommonNames.this_);
+        if (!local) {
+          local = outerFlow.lookupLocalInOuter(CommonNames.this_);
+        }
+        if (local && !captures.has(local)) {
+          local.isCaptured = true;
+          if (!local.envOwner) {
+            local.envOwner = <Function>local.parent;
+          }
+          if (local.envSlotIndex >= 0) {
+            captures.set(local, local.envSlotIndex);
+          } else {
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize;
+            for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
+              let existingLocal = _keys[idx];
+              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+            }
+            let typeSize = local.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
+            local.envSlotIndex = currentOffset;
+            captures.set(local, local.envSlotIndex);
+          }
+        }
+        break;
+      }
+      case NodeKind.Function: {
+        // For nested function expressions, scan their body but add their params to inner names
+        let funcExpr = <FunctionExpression>node;
+        let decl = funcExpr.declaration;
+        let params = decl.signature.parameters;
+        for (let i = 0, k = params.length; i < k; i++) {
+          innerFunctionNames.add(params[i].name.text);
+        }
+        if (decl.body) {
+          this.scanNodeForCaptures(decl.body, outerFlow, innerFunctionNames, captures);
+        }
+        for (let i = 0, k = params.length; i < k; i++) {
+          innerFunctionNames.delete(params[i].name.text);
+        }
+        break;
+      }
+      // Expression nodes
+      case NodeKind.Assertion: {
+        let expr = <AssertionExpression>node;
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.Binary: {
+        let expr = <BinaryExpression>node;
+        this.scanNodeForCaptures(expr.left, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(expr.right, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.Call: {
+        let expr = <CallExpression>node;
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
+        let args = expr.args;
+        for (let i = 0, k = args.length; i < k; i++) {
+          this.scanNodeForCaptures(args[i], outerFlow, innerFunctionNames, captures);
+        }
+        break;
+      }
+      case NodeKind.Comma: {
+        let expr = <CommaExpression>node;
+        let expressions = expr.expressions;
+        for (let i = 0, k = expressions.length; i < k; i++) {
+          this.scanNodeForCaptures(expressions[i], outerFlow, innerFunctionNames, captures);
+        }
+        break;
+      }
+      case NodeKind.ElementAccess: {
+        let expr = <ElementAccessExpression>node;
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(expr.elementExpression, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.New: {
+        let expr = <NewExpression>node;
+        this.scanNodeForCaptures(expr.typeName, outerFlow, innerFunctionNames, captures);
+        let args = expr.args;
+        for (let i = 0, k = args.length; i < k; i++) {
+          this.scanNodeForCaptures(args[i], outerFlow, innerFunctionNames, captures);
+        }
+        break;
+      }
+      case NodeKind.Parenthesized: {
+        let expr = <ParenthesizedExpression>node;
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.PropertyAccess: {
+        let expr = <PropertyAccessExpression>node;
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.Ternary: {
+        let expr = <TernaryExpression>node;
+        this.scanNodeForCaptures(expr.condition, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(expr.ifThen, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(expr.ifElse, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.UnaryPostfix: {
+        let expr = <UnaryPostfixExpression>node;
+        this.scanNodeForCaptures(expr.operand, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.UnaryPrefix: {
+        let expr = <UnaryPrefixExpression>node;
+        this.scanNodeForCaptures(expr.operand, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.InstanceOf: {
+        let expr = <InstanceOfExpression>node;
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      // Statement nodes
+      case NodeKind.Block: {
+        let stmt = <BlockStatement>node;
+        let statements = stmt.statements;
+        for (let i = 0, k = statements.length; i < k; i++) {
+          this.scanNodeForCaptures(statements[i], outerFlow, innerFunctionNames, captures);
+        }
+        break;
+      }
+      case NodeKind.Do: {
+        let stmt = <DoStatement>node;
+        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.Expression: {
+        let stmt = <ExpressionStatement>node;
+        this.scanNodeForCaptures(stmt.expression, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.For: {
+        let stmt = <ForStatement>node;
+        if (stmt.initializer) this.scanNodeForCaptures(stmt.initializer, outerFlow, innerFunctionNames, captures);
+        if (stmt.condition) this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures);
+        if (stmt.incrementor) this.scanNodeForCaptures(stmt.incrementor, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.ForOf: {
+        let stmt = <ForOfStatement>node;
+        this.scanNodeForCaptures(stmt.variable, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.iterable, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.If: {
+        let stmt = <IfStatement>node;
+        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.ifTrue, outerFlow, innerFunctionNames, captures);
+        if (stmt.ifFalse) this.scanNodeForCaptures(stmt.ifFalse, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.Return: {
+        let stmt = <ReturnStatement>node;
+        if (stmt.value) this.scanNodeForCaptures(stmt.value, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.Switch: {
+        let stmt = <SwitchStatement>node;
+        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures);
+        let cases = stmt.cases;
+        for (let i = 0, k = cases.length; i < k; i++) {
+          let case_ = cases[i];
+          if (case_.label) this.scanNodeForCaptures(case_.label, outerFlow, innerFunctionNames, captures);
+          let stmts = case_.statements;
+          for (let j = 0, l = stmts.length; j < l; j++) {
+            this.scanNodeForCaptures(stmts[j], outerFlow, innerFunctionNames, captures);
+          }
+        }
+        break;
+      }
+      case NodeKind.Throw: {
+        let stmt = <ThrowStatement>node;
+        this.scanNodeForCaptures(stmt.value, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.Try: {
+        let stmt = <TryStatement>node;
+        let bodyStmts = stmt.bodyStatements;
+        for (let i = 0, k = bodyStmts.length; i < k; i++) {
+          this.scanNodeForCaptures(bodyStmts[i], outerFlow, innerFunctionNames, captures);
+        }
+        if (stmt.catchStatements) {
+          let catchStmts = stmt.catchStatements;
+          for (let i = 0, k = catchStmts.length; i < k; i++) {
+            this.scanNodeForCaptures(catchStmts[i], outerFlow, innerFunctionNames, captures);
+          }
+        }
+        if (stmt.finallyStatements) {
+          let finallyStmts = stmt.finallyStatements;
+          for (let i = 0, k = finallyStmts.length; i < k; i++) {
+            this.scanNodeForCaptures(finallyStmts[i], outerFlow, innerFunctionNames, captures);
+          }
+        }
+        break;
+      }
+      case NodeKind.Variable: {
+        let stmt = <VariableStatement>node;
+        let declarations = stmt.declarations;
+        for (let i = 0, k = declarations.length; i < k; i++) {
+          let decl = declarations[i];
+          // Add the variable name as a local name (not captured from outer)
+          innerFunctionNames.add(decl.name.text);
+          if (decl.initializer) {
+            this.scanNodeForCaptures(decl.initializer, outerFlow, innerFunctionNames, captures);
+          }
+        }
+        break;
+      }
+      case NodeKind.While: {
+        let stmt = <WhileStatement>node;
+        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      case NodeKind.Void: {
+        let stmt = <VoidStatement>node;
+        this.scanNodeForCaptures(stmt.expression, outerFlow, innerFunctionNames, captures);
+        break;
+      }
+      // Ignore other nodes (literals, this, super, etc.)
+    }
+  }
+
+  /** Scans an array of statements for captures. */
+  private scanStatementsForCaptures(
+    statements: Statement[],
+    outerFlow: Flow,
+    innerFunctionNames: Set<string>,
+    captures: Map<Local, i32>
+  ): void {
+    for (let i = 0, k = statements.length; i < k; i++) {
+      this.scanNodeForCaptures(statements[i], outerFlow, innerFunctionNames, captures);
+    }
+  }
+
+  /** Analyzes a function expression to find captured variables from outer scopes. */
+  private analyzeCapturedVariables(
+    declaration: FunctionDeclaration,
+    outerFlow: Flow
+  ): Map<Local, i32> {
+    let captures = new Map<Local, i32>();
+    let innerFunctionNames = new Set<string>();
+
+    // Add the function's own parameters to the inner names set
+    let params = declaration.signature.parameters;
+    for (let i = 0, k = params.length; i < k; i++) {
+      innerFunctionNames.add(params[i].name.text);
+    }
+
+    // Scan the function body
+    let body = declaration.body;
+    if (body) {
+      this.scanNodeForCaptures(body, outerFlow, innerFunctionNames, captures);
+    }
+
+    return captures;
+  }
+
+  /** Pre-scans a function body to identify all closures and their captured variables.
+   *  This must be done before compiling the body so that local variables know they're captured. */
+  private prescanForClosures(
+    bodyNode: Statement,
+    instance: Function,
+    flow: Flow
+  ): void {
+    // Collect all variable names declared in this function body
+    let declaredVars = new Map<string, Type | null>();
+    this.collectDeclaredVariables(bodyNode, declaredVars);
+
+    // Scan for function expressions in the body
+    this.prescanNodeForFunctionExpressions(bodyNode, instance, flow, declaredVars);
+  }
+
+  /** Collects all variable declarations in a node (for prescan). */
+  private collectDeclaredVariables(node: Node, vars: Map<string, Type | null>): void {
+    switch (node.kind) {
+      case NodeKind.Block: {
+        let block = <BlockStatement>node;
+        for (let i = 0, k = block.statements.length; i < k; i++) {
+          this.collectDeclaredVariables(block.statements[i], vars);
+        }
+        break;
+      }
+      case NodeKind.Variable: {
+        let varStmt = <VariableStatement>node;
+        for (let i = 0, k = varStmt.declarations.length; i < k; i++) {
+          let decl = varStmt.declarations[i];
+          vars.set(decl.name.text, null); // null = type will be determined during compilation
+        }
+        break;
+      }
+      case NodeKind.If: {
+        let ifStmt = <IfStatement>node;
+        this.collectDeclaredVariables(ifStmt.ifTrue, vars);
+        if (ifStmt.ifFalse) {
+          this.collectDeclaredVariables(ifStmt.ifFalse, vars);
+        }
+        break;
+      }
+      case NodeKind.While: {
+        let whileStmt = <WhileStatement>node;
+        this.collectDeclaredVariables(whileStmt.body, vars);
+        break;
+      }
+      case NodeKind.Do: {
+        let doStmt = <DoStatement>node;
+        this.collectDeclaredVariables(doStmt.body, vars);
+        break;
+      }
+      case NodeKind.For: {
+        let forStmt = <ForStatement>node;
+        if (forStmt.initializer) this.collectDeclaredVariables(forStmt.initializer, vars);
+        this.collectDeclaredVariables(forStmt.body, vars);
+        break;
+      }
+      case NodeKind.FunctionDeclaration:
+      case NodeKind.Function:
+        // Function declarations and expressions don't add their variables to outer scope
+        break;
+    }
+  }
+
+  /** Recursively scans a node for function expressions and sets up their captures. */
+  private prescanNodeForFunctionExpressions(
+    node: Node,
+    instance: Function,
+    flow: Flow,
+    declaredVars: Map<string, Type | null>
+  ): void {
+    switch (node.kind) {
+      case NodeKind.Block: {
+        let block = <BlockStatement>node;
+        for (let i = 0, k = block.statements.length; i < k; i++) {
+          this.prescanNodeForFunctionExpressions(block.statements[i], instance, flow, declaredVars);
+        }
+        break;
+      }
+      case NodeKind.Expression: {
+        let exprStmt = <ExpressionStatement>node;
+        this.prescanNodeForFunctionExpressions(exprStmt.expression, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Return: {
+        let ret = <ReturnStatement>node;
+        if (ret.value) {
+          this.prescanNodeForFunctionExpressions(ret.value, instance, flow, declaredVars);
+        }
+        break;
+      }
+      case NodeKind.Variable: {
+        let varStmt = <VariableStatement>node;
+        for (let i = 0, k = varStmt.declarations.length; i < k; i++) {
+          let decl = varStmt.declarations[i];
+          if (decl.initializer) {
+            this.prescanNodeForFunctionExpressions(decl.initializer, instance, flow, declaredVars);
+          }
+        }
+        break;
+      }
+      case NodeKind.If: {
+        let ifStmt = <IfStatement>node;
+        this.prescanNodeForFunctionExpressions(ifStmt.condition, instance, flow, declaredVars);
+        this.prescanNodeForFunctionExpressions(ifStmt.ifTrue, instance, flow, declaredVars);
+        if (ifStmt.ifFalse) {
+          this.prescanNodeForFunctionExpressions(ifStmt.ifFalse, instance, flow, declaredVars);
+        }
+        break;
+      }
+      case NodeKind.While: {
+        let whileStmt = <WhileStatement>node;
+        this.prescanNodeForFunctionExpressions(whileStmt.condition, instance, flow, declaredVars);
+        this.prescanNodeForFunctionExpressions(whileStmt.body, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Do: {
+        let doStmt = <DoStatement>node;
+        this.prescanNodeForFunctionExpressions(doStmt.condition, instance, flow, declaredVars);
+        this.prescanNodeForFunctionExpressions(doStmt.body, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.For: {
+        let forStmt = <ForStatement>node;
+        if (forStmt.initializer) this.prescanNodeForFunctionExpressions(forStmt.initializer, instance, flow, declaredVars);
+        if (forStmt.condition) this.prescanNodeForFunctionExpressions(forStmt.condition, instance, flow, declaredVars);
+        if (forStmt.incrementor) this.prescanNodeForFunctionExpressions(forStmt.incrementor, instance, flow, declaredVars);
+        this.prescanNodeForFunctionExpressions(forStmt.body, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Function: {
+        // Found a function expression - analyze its captures
+        let funcExpr = <FunctionExpression>node;
+        let declaration = funcExpr.declaration;
+        let capturedNames = this.analyzeCapturedVariablesWithDeclared(declaration, flow, instance, declaredVars);
+        if (capturedNames.size > 0) {
+          // Check if closures feature is enabled
+          if (!this.options.hasFeature(Feature.Closures)) {
+            this.error(
+              DiagnosticCode.Feature_0_is_not_enabled,
+              funcExpr.range, "closures"
+            );
+            break;
+          }
+          // Store captured names for later use when compiling variable declarations
+          let existingNames = instance.preCapturedNames;
+          if (!existingNames) {
+            instance.preCapturedNames = new Set();
+            existingNames = instance.preCapturedNames;
+          }
+          for (let _keys = Map_keys(capturedNames), i = 0, k = _keys.length; i < k; i++) {
+            existingNames.add(_keys[i]);
+          }
+        }
+        // Also scan the function body for nested closures
+        if (declaration.body) {
+          // Create a temporary set of inner parameter names
+          let innerNames = new Set<string>();
+          let params = declaration.signature.parameters;
+          for (let i = 0, k = params.length; i < k; i++) {
+            innerNames.add(params[i].name.text);
+          }
+          // We don't recurse into nested function bodies here - that happens when the inner function is compiled
+        }
+        break;
+      }
+      case NodeKind.Binary: {
+        let binary = <BinaryExpression>node;
+        this.prescanNodeForFunctionExpressions(binary.left, instance, flow, declaredVars);
+        this.prescanNodeForFunctionExpressions(binary.right, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.UnaryPrefix: {
+        let unary = <UnaryPrefixExpression>node;
+        this.prescanNodeForFunctionExpressions(unary.operand, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.UnaryPostfix: {
+        let unary = <UnaryPostfixExpression>node;
+        this.prescanNodeForFunctionExpressions(unary.operand, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Call: {
+        let call = <CallExpression>node;
+        this.prescanNodeForFunctionExpressions(call.expression, instance, flow, declaredVars);
+        let args = call.args;
+        for (let i = 0, k = args.length; i < k; i++) {
+          this.prescanNodeForFunctionExpressions(args[i], instance, flow, declaredVars);
+        }
+        break;
+      }
+      case NodeKind.New: {
+        let newExpr = <NewExpression>node;
+        // Scan constructor arguments for function expressions
+        let args = newExpr.args;
+        for (let i = 0, k = args.length; i < k; i++) {
+          this.prescanNodeForFunctionExpressions(args[i], instance, flow, declaredVars);
+        }
+        break;
+      }
+      case NodeKind.Parenthesized: {
+        let paren = <ParenthesizedExpression>node;
+        this.prescanNodeForFunctionExpressions(paren.expression, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Ternary: {
+        let ternary = <TernaryExpression>node;
+        this.prescanNodeForFunctionExpressions(ternary.condition, instance, flow, declaredVars);
+        this.prescanNodeForFunctionExpressions(ternary.ifThen, instance, flow, declaredVars);
+        this.prescanNodeForFunctionExpressions(ternary.ifElse, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Comma: {
+        let comma = <CommaExpression>node;
+        for (let i = 0, k = comma.expressions.length; i < k; i++) {
+          this.prescanNodeForFunctionExpressions(comma.expressions[i], instance, flow, declaredVars);
+        }
+        break;
+      }
+      // Most other node kinds don't contain function expressions
+    }
+  }
+
+  /** Analyzes captured variables using both flow and pre-collected variable names. */
+  private analyzeCapturedVariablesWithDeclared(
+    declaration: FunctionDeclaration,
+    outerFlow: Flow,
+    outerFunc: Function,
+    declaredVars: Map<string, Type | null>
+  ): Map<string, null> {
+    // For prescan, we just collect variable NAMES that are captured
+    // We'll create the actual captures with proper Local references later
+    let capturedNames = new Map<string, null>();
+    let innerFunctionNames = new Set<string>();
+
+    // Add the function's own parameters to the inner names set
+    let params = declaration.signature.parameters;
+    for (let i = 0, k = params.length; i < k; i++) {
+      innerFunctionNames.add(params[i].name.text);
+    }
+
+    // Scan the function body for identifier usages
+    let body = declaration.body;
+    if (body) {
+      this.collectCapturedNames(body, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+    }
+
+    return capturedNames;
+  }
+
+  /** Collects names of variables that are captured from outer scope. */
+  private collectCapturedNames(
+    node: Node,
+    innerFunctionNames: Set<string>,
+    outerFlow: Flow,
+    declaredVars: Map<string, Type | null>,
+    capturedNames: Map<string, null>
+  ): void {
+    switch (node.kind) {
+      case NodeKind.Identifier: {
+        let ident = <IdentifierExpression>node;
+        let name = ident.text;
+        // Skip if it's an inner function parameter/local
+        if (innerFunctionNames.has(name)) break;
+        // Check if it's a declared variable in outer scope OR a local in the flow
+        if (declaredVars.has(name) || outerFlow.lookupLocal(name)) {
+          capturedNames.set(name, null);
+        }
+        break;
+      }
+      case NodeKind.This: {
+        // Handle 'this' capture - check if outer function has a 'this' local
+        let thisLocal = outerFlow.lookupLocal(CommonNames.this_);
+        if (!thisLocal) {
+          thisLocal = outerFlow.lookupLocalInOuter(CommonNames.this_);
+        }
+        if (thisLocal) {
+          capturedNames.set(CommonNames.this_, null);
+        }
+        break;
+      }
+      case NodeKind.Block: {
+        let block = <BlockStatement>node;
+        for (let i = 0, k = block.statements.length; i < k; i++) {
+          this.collectCapturedNames(block.statements[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        break;
+      }
+      case NodeKind.Expression: {
+        let exprStmt = <ExpressionStatement>node;
+        this.collectCapturedNames(exprStmt.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Return: {
+        let ret = <ReturnStatement>node;
+        if (ret.value) {
+          this.collectCapturedNames(ret.value, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        break;
+      }
+      case NodeKind.Variable: {
+        // Add declared variables to inner names so they're not considered captures
+        let varStmt = <VariableStatement>node;
+        for (let i = 0, k = varStmt.declarations.length; i < k; i++) {
+          let decl = varStmt.declarations[i];
+          innerFunctionNames.add(decl.name.text);
+          // Scan initializers for captures
+          if (decl.initializer) {
+            this.collectCapturedNames(decl.initializer, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+          }
+        }
+        break;
+      }
+      case NodeKind.Binary: {
+        let binary = <BinaryExpression>node;
+        this.collectCapturedNames(binary.left, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(binary.right, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Call: {
+        let call = <CallExpression>node;
+        this.collectCapturedNames(call.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        let args = call.args;
+        for (let i = 0, k = args.length; i < k; i++) {
+          this.collectCapturedNames(args[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        break;
+      }
+      case NodeKind.If: {
+        let ifStmt = <IfStatement>node;
+        this.collectCapturedNames(ifStmt.condition, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(ifStmt.ifTrue, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        if (ifStmt.ifFalse) {
+          this.collectCapturedNames(ifStmt.ifFalse, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        break;
+      }
+      case NodeKind.ElementAccess: {
+        let elemAccess = <ElementAccessExpression>node;
+        this.collectCapturedNames(elemAccess.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(elemAccess.elementExpression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.PropertyAccess: {
+        let propAccess = <PropertyAccessExpression>node;
+        this.collectCapturedNames(propAccess.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Parenthesized: {
+        let paren = <ParenthesizedExpression>node;
+        this.collectCapturedNames(paren.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.UnaryPrefix: {
+        let unary = <UnaryPrefixExpression>node;
+        this.collectCapturedNames(unary.operand, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.UnaryPostfix: {
+        let unary = <UnaryPostfixExpression>node;
+        this.collectCapturedNames(unary.operand, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Ternary: {
+        let ternary = <TernaryExpression>node;
+        this.collectCapturedNames(ternary.condition, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(ternary.ifThen, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(ternary.ifElse, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Assertion: {
+        let assertion = <AssertionExpression>node;
+        this.collectCapturedNames(assertion.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.New: {
+        let newExpr = <NewExpression>node;
+        let args = newExpr.args;
+        for (let i = 0, k = args.length; i < k; i++) {
+          this.collectCapturedNames(args[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        break;
+      }
+      case NodeKind.InstanceOf: {
+        let instanceOf = <InstanceOfExpression>node;
+        this.collectCapturedNames(instanceOf.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Comma: {
+        let comma = <CommaExpression>node;
+        for (let i = 0, k = comma.expressions.length; i < k; i++) {
+          this.collectCapturedNames(comma.expressions[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        break;
+      }
+      case NodeKind.Function: {
+        // For nested function expressions, scan their body recursively
+        // This is critical for deeply nested closures that capture from grandparent scopes
+        let funcExpr = <FunctionExpression>node;
+        let decl = funcExpr.declaration;
+        let params = decl.signature.parameters;
+        // Add the nested function's params to inner names
+        for (let i = 0, k = params.length; i < k; i++) {
+          innerFunctionNames.add(params[i].name.text);
+        }
+        if (decl.body) {
+          this.collectCapturedNames(decl.body, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        // Remove the params after scanning
+        for (let i = 0, k = params.length; i < k; i++) {
+          innerFunctionNames.delete(params[i].name.text);
+        }
+        break;
+      }
+      // Add more cases as needed for complete coverage
+      default: {
+        // For other nodes, recursively scan children
+        // This is a simplified version - a complete implementation would handle all node types
+      }
+    }
+  }
+
+  /** Computes the total size needed for a closure environment. */
+  private computeEnvironmentSize(captures: Map<Local, i32>): i32 {
+    // Calculate the total size based on already-assigned slot indices
+    // The envSlotIndex values were already assigned during capture analysis
+    // Slot 0 is always reserved for the parent environment pointer
+    let usizeSize = this.options.usizeType.byteSize;
+    let maxEnd = usizeSize; // Minimum size is parent pointer slot
+    for (let _keys = Map_keys(captures), i = 0, k = _keys.length; i < k; i++) {
+      let local = _keys[i];
+      let endOfSlot = local.envSlotIndex + local.type.byteSize;
+      if (endOfSlot > maxEnd) maxEnd = endOfSlot;
+    }
+    // Ensure total size is aligned to pointer size
+    let size = (maxEnd + usizeSize - 1) & ~(usizeSize - 1);
+    return size;
+  }
+
+  /** Ensures a closure environment is set up for the outer function. */
+  private ensureClosureEnvironment(
+    outerFunc: Function,
+    captures: Map<Local, i32>,
+    flow: Flow
+  ): void {
+    // If the outer function already has an environment, just merge the captures
+    if (outerFunc.envLocal) {
+      // Merge captures into existing environment
+      let existingCaptures = outerFunc.capturedLocals;
+      if (existingCaptures) {
+        for (let _keys = Map_keys(captures), i = 0, k = _keys.length; i < k; i++) {
+          let local = _keys[i];
+          if (!existingCaptures.has(local)) {
+            existingCaptures.set(local, captures.get(local)!);
+          }
+        }
+      }
+      return;
+    }
+
+    // Create a new environment local for the outer function
+    let usizeType = this.options.usizeType;
+    let envLocal = flow.addScopedLocal("$env", usizeType);
+    outerFunc.envLocal = envLocal;
+    outerFunc.capturedLocals = captures;
+
+    // Compute the environment size
+    this.computeEnvironmentSize(captures);
+  }
+
+  /** Compiles the creation of a closure Function object with environment pointer. */
+  private compileClosureFunctionCreation(
+    instance: Function,
+    outerFunc: Function,
+    staticOffset: i64
+  ): ExpressionRef {
+    let module = this.module;
+    let program = this.program;
+    let options = this.options;
+    let sizeTypeRef = options.sizeTypeRef;
+    let usizeType = options.usizeType;
+
+    // Get the Function wrapper class for this function type
+    let rtInstance = assert(this.resolver.resolveClass(program.functionPrototype, [instance.type]));
+
+    // Create the Function object dynamically using __new
+    let classId = rtInstance.id;
+    let classSize = rtInstance.nextMemoryOffset;
+
+    // Get __new function
+    let newInstance = program.newInstance;
+    assert(newInstance);
+    this.compileFunction(newInstance);
+
+    // Allocate the Function object: __new(size, classId)
+    let allocExpr = module.call(
+      newInstance.internalName,
+      [
+        options.isWasm64 ? module.i64(classSize) : module.i32(classSize),
+        module.i32(classId)
+      ],
+      sizeTypeRef
+    );
+
+    // Store the allocation result in a temp local
+    let flow = this.currentFlow;
+    let funcPtrLocal = flow.getTempLocal(usizeType);
+    flow.setLocalFlag(funcPtrLocal.index, LocalFlags.Wrapped);
+
+    // Get the environment pointer from the outer function
+    let envPtrExpr: ExpressionRef;
+    if (outerFunc.envLocal) {
+      envPtrExpr = module.local_get(outerFunc.envLocal.index, sizeTypeRef);
+    } else {
+      envPtrExpr = options.isWasm64 ? module.i64(0) : module.i32(0);
+    }
+
+    // Get the function table index
+    let tableBase = options.tableBase;
+    if (!tableBase) tableBase = 1;
+    let funcIndex = tableBase + this.functionTable.indexOf(instance);
+
+    // Get field offsets for Function class
+    let indexOffset = rtInstance.offsetof("_index");
+    let envOffset = rtInstance.offsetof("_env");
+
+    // Build the block:
+    // 1. Allocate Function object
+    // 2. Store _index
+    // 3. Store _env
+    // 4. Return pointer
+    let stmts: ExpressionRef[] = [
+      // funcPtr = __new(size, classId)
+      module.local_set(funcPtrLocal.index, allocExpr, false),
+      // funcPtr._index = index
+      module.store(4, // _index is always u32
+        module.local_get(funcPtrLocal.index, sizeTypeRef),
+        module.i32(funcIndex),
+        TypeRef.I32,
+        indexOffset
+      ),
+      // funcPtr._env = envPtr
+      module.store(usizeType.byteSize,
+        module.local_get(funcPtrLocal.index, sizeTypeRef),
+        envPtrExpr,
+        sizeTypeRef,
+        envOffset
+      ),
+      // Return funcPtr
+      module.local_get(funcPtrLocal.index, sizeTypeRef)
+    ];
+
+    this.currentType = instance.type;
+
+    return module.block(null, stmts, sizeTypeRef);
+  }
+
+  /** Gets the environment pointer for accessing a captured variable. */
+  private getClosureEnvironmentPointer(capturedLocal: Local): ExpressionRef {
+    let module = this.module;
+    let flow = this.currentFlow;
+    let currentFunc = flow.sourceFunction;
+    let sizeTypeRef = this.options.sizeTypeRef;
+    let envOwner = capturedLocal.envOwner;
+
+    // Case 1: We're in the function that owns the environment (the variable was declared here)
+    if (envOwner == currentFunc && currentFunc.envLocal) {
+      return module.local_get(currentFunc.envLocal.index, sizeTypeRef);
+    }
+
+    // Case 2: We're in a closure and need to access a variable from an outer scope
+    // Start from our closure's environment and traverse parent pointers
+    let envExpr: ExpressionRef;
+    if (currentFunc.closureEnvLocal) {
+      envExpr = module.local_get(currentFunc.closureEnvLocal.index, sizeTypeRef);
+    } else {
+      // Fallback to global (shouldn't normally happen)
+      let closureEnvGlobal = this.ensureClosureEnvironmentGlobal();
+      envExpr = module.global_get(closureEnvGlobal, sizeTypeRef);
+    }
+
+    // Count how many levels up we need to go
+    // Start from current function's outer function and walk up to find envOwner
+    let func: Function | null = currentFunc.outerFunction;
+    let depth = 0;
+    while (func && func != envOwner) {
+      depth++;
+      func = func.outerFunction;
+    }
+
+    // Traverse the parent chain: load parent pointer (at offset 0) `depth` times
+    for (let i = 0; i < depth; i++) {
+      envExpr = module.load(
+        this.options.usizeType.byteSize,
+        false,  // unsigned
+        envExpr,
+        sizeTypeRef,
+        0  // Parent pointer is at offset 0
+      );
+    }
+
+    return envExpr;
+  }
+
+  /** Compiles loading a captured variable from the closure environment. */
+  private compileClosureLoad(local: Local, expression: Expression): ExpressionRef {
+    let module = this.module;
+    let localType = local.type;
+    let slotOffset = local.envSlotIndex;
+
+    // Get the environment pointer
+    let envPtr = this.getClosureEnvironmentPointer(local);
+
+    // Load from the environment: load<Type>(envPtr + slotOffset)
+    this.currentType = localType;
+    return module.load(
+      localType.byteSize,
+      localType.is(TypeFlags.Signed),
+      envPtr,
+      localType.toRef(),
+      slotOffset
+    );
+  }
+
+  /** Compiles storing a value to a captured variable in the closure environment. */
+  private compileClosureStore(
+    local: Local,
+    valueExpr: ExpressionRef,
+    valueType: Type
+  ): ExpressionRef {
+    let module = this.module;
+    let localType = local.type;
+    let slotOffset = local.envSlotIndex;
+
+    // Get the environment pointer
+    let envPtr = this.getClosureEnvironmentPointer(local);
+
+    // Store to the environment: store<Type>(envPtr + slotOffset, value)
+    return module.store(
+      localType.byteSize,
+      envPtr,
+      valueExpr,
+      localType.toRef(),
+      slotOffset
+    );
+  }
+
+  /** Compiles the allocation of a closure environment at function entry. */
+  private compileClosureEnvironmentAllocation(instance: Function): ExpressionRef {
+    let module = this.module;
+    let program = this.program;
+    let options = this.options;
+    let sizeTypeRef = options.sizeTypeRef;
+    let usizeType = options.usizeType;
+
+    let captures = assert(instance.capturedLocals);
+    let envLocal = assert(instance.envLocal);
+
+    // Calculate the total size needed for the environment
+    let envSize = this.computeEnvironmentSize(captures);
+
+    // Get __alloc function for raw memory allocation
+    let allocInstance = program.allocInstance;
+    assert(allocInstance);
+    this.compileFunction(allocInstance);
+
+    // Allocate the environment: __alloc(size)
+    let allocExpr = module.call(
+      allocInstance.internalName,
+      [
+        options.isWasm64 ? module.i64(envSize) : module.i32(envSize)
+      ],
+      sizeTypeRef
+    );
+
+    let stmts: ExpressionRef[] = [];
+
+    // envLocal = __alloc(envSize)
+    stmts.push(
+      module.local_set(envLocal.index, allocExpr, false)
+    );
+
+    // Store parent environment pointer at slot 0
+    // If this is a closure (has outerFunction), use closureEnvLocal as parent
+    // Otherwise, parent is null (0)
+    let parentEnvExpr: ExpressionRef;
+    if (instance.closureEnvLocal) {
+      // This is a nested closure - use the cached closure env as parent
+      parentEnvExpr = module.local_get(instance.closureEnvLocal.index, sizeTypeRef);
+    } else {
+      // This is the outermost function - no parent
+      parentEnvExpr = options.isWasm64 ? module.i64(0) : module.i32(0);
+    }
+    stmts.push(
+      module.store(
+        usizeType.byteSize,
+        module.local_get(envLocal.index, sizeTypeRef),
+        parentEnvExpr,
+        sizeTypeRef,
+        0  // Parent pointer is at offset 0
+      )
+    );
+
+    // Initialize captured parameters in the environment
+    // Parameters are already initialized, so copy them now
+    // Local variables (var/let) will be initialized later when they're declared
+    let signature = instance.signature;
+    let numParams = signature.parameterTypes.length;
+    let hasThis = signature.thisType != null;
+    let paramStartIndex = hasThis ? 1 : 0;
+    let paramEndIndex = paramStartIndex + numParams;
+
+    for (let _keys = Map_keys(captures), i = 0, k = _keys.length; i < k; i++) {
+      let local = _keys[i];
+      let slotOffset = local.envSlotIndex;
+      let localType = local.type;
+
+      // Copy parameters and 'this' to the environment
+      // Local variables (var/let) will be initialized later when their declaration is compiled
+      let isParameter = local.index >= paramStartIndex && local.index < paramEndIndex;
+      let isThis = hasThis && local.index == 0; // 'this' is at index 0 in methods
+      if (isParameter || isThis) {
+        stmts.push(
+          module.store(
+            localType.byteSize,
+            module.local_get(envLocal.index, sizeTypeRef),
+            module.local_get(local.index, localType.toRef()),
+            localType.toRef(),
+            slotOffset
+          )
+        );
+      }
+    }
+
+    // Mark environment as initialized
+    this.currentFlow.setLocalFlag(envLocal.index, LocalFlags.Initialized);
+
+    return module.flatten(stmts, TypeRef.None);
   }
 
   /** Makes sure the enclosing source file of the specified expression has been compiled. */
@@ -7399,6 +8752,22 @@ export class Compiler extends DiagnosticEmitter {
       }
       case NodeKind.This: {
         let thisType = sourceFunction.signature.thisType;
+
+        // Check if 'this' is captured from an outer scope (closure case)
+        if (!thisType && this.options.hasFeature(Feature.Closures)) {
+          // Look for 'this' in outer flow - it might be captured
+          let thisLocal = flow.lookupLocal(CommonNames.this_);
+          if (!thisLocal) {
+            thisLocal = flow.lookupLocalInOuter(CommonNames.this_);
+          }
+          if (thisLocal && thisLocal.isCaptured && thisLocal.envSlotIndex >= 0) {
+            // 'this' is captured - load from closure environment
+            flow.set(FlowFlags.AccessesThis);
+            this.currentType = thisLocal.type;
+            return this.compileClosureLoad(thisLocal, expression);
+          }
+        }
+
         if (!thisType) {
           this.error(
             DiagnosticCode._this_cannot_be_referenced_in_current_location,
@@ -7505,6 +8874,31 @@ export class Compiler extends DiagnosticEmitter {
           return this.compileInlineConstant(local, contextualType, constraints);
         }
         let localIndex = local.index;
+
+        // Handle closure access BEFORE initialization check
+        // Captured variables are stored in the environment, not in flow locals
+        if (!local.declaredByFlow(flow)) {
+          // Closure: load from environment (from inner function)
+          if (local.isCaptured && local.envSlotIndex >= 0) {
+            this.currentType = localType;
+            return this.compileClosureLoad(local, expression);
+          }
+          // Not a recognized closure - error
+          this.error(
+            DiagnosticCode.Not_implemented_0,
+            expression.range,
+            "Closures"
+          );
+          return module.unreachable();
+        }
+        // Also handle captured locals in the declaring function
+        // When a local is captured, its value lives in the environment
+        let sourceFunc = flow.sourceFunction;
+        if (local.isCaptured && local.envSlotIndex >= 0 && sourceFunc.envLocal) {
+          this.currentType = localType;
+          return this.compileClosureLoad(local, expression);
+        }
+
         if (!flow.isLocalFlag(localIndex, LocalFlags.Initialized)) {
           this.error(
             DiagnosticCode.Variable_0_is_used_before_being_assigned,
@@ -7519,15 +8913,6 @@ export class Compiler extends DiagnosticEmitter {
           this.currentType = localType;
         }
 
-        if (!local.declaredByFlow(flow)) {
-          // TODO: closures
-          this.error(
-            DiagnosticCode.Not_implemented_0,
-            expression.range,
-            "Closures"
-          );
-          return module.unreachable();
-        }
         let expr = module.local_get(localIndex, localType.toRef());
         if (isNonNull && localType.isNullableExternalReference && this.options.hasFeature(Feature.GC)) {
           // If the local's type is nullable, but its value is known to be non-null, propagate
