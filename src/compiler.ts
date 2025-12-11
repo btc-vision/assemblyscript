@@ -1819,6 +1819,36 @@ export class Compiler extends DiagnosticEmitter {
           }
         }
       }
+
+      // Also check if 'this' is captured (for methods)
+      if (preCapturedNames.has(CommonNames.this_)) {
+        let thisLocal = flow.lookupLocal(CommonNames.this_);
+        if (thisLocal && !thisLocal.isCaptured) {
+          thisLocal.isCaptured = true;
+          if (!instance.capturedLocals) {
+            instance.capturedLocals = new Map();
+          }
+          if (!instance.capturedLocals.has(thisLocal)) {
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize;
+            for (let _keys = Map_keys(instance.capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
+              let existingLocal = _keys[j];
+              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+            }
+            let typeSize = thisLocal.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
+            thisLocal.envSlotIndex = currentOffset;
+            thisLocal.envOwner = instance;
+            instance.capturedLocals.set(thisLocal, thisLocal.envSlotIndex);
+          }
+          if (!instance.envLocal) {
+            let envLocal = flow.addScopedLocal("$env", this.options.usizeType);
+            instance.envLocal = envLocal;
+          }
+        }
+      }
     }
 
     // For closures (functions that capture from outer scope), create a local to cache
@@ -7655,6 +7685,36 @@ export class Compiler extends DiagnosticEmitter {
         }
         break;
       }
+      case NodeKind.This: {
+        // Handle 'this' capture - look it up in outer flow
+        let local = outerFlow.lookupLocal(CommonNames.this_);
+        if (!local) {
+          local = outerFlow.lookupLocalInOuter(CommonNames.this_);
+        }
+        if (local && !captures.has(local)) {
+          local.isCaptured = true;
+          if (!local.envOwner) {
+            local.envOwner = <Function>local.parent;
+          }
+          if (local.envSlotIndex >= 0) {
+            captures.set(local, local.envSlotIndex);
+          } else {
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize;
+            for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
+              let existingLocal = _keys[idx];
+              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+            }
+            let typeSize = local.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
+            local.envSlotIndex = currentOffset;
+            captures.set(local, local.envSlotIndex);
+          }
+        }
+        break;
+      }
       case NodeKind.Function: {
         // For nested function expressions, scan their body but add their params to inner names
         let funcExpr = <FunctionExpression>node;
@@ -8166,6 +8226,17 @@ export class Compiler extends DiagnosticEmitter {
         }
         break;
       }
+      case NodeKind.This: {
+        // Handle 'this' capture - check if outer function has a 'this' local
+        let thisLocal = outerFlow.lookupLocal(CommonNames.this_);
+        if (!thisLocal) {
+          thisLocal = outerFlow.lookupLocalInOuter(CommonNames.this_);
+        }
+        if (thisLocal) {
+          capturedNames.set(CommonNames.this_, null);
+        }
+        break;
+      }
       case NodeKind.Block: {
         let block = <BlockStatement>node;
         for (let i = 0, k = block.statements.length; i < k; i++) {
@@ -8602,9 +8673,11 @@ export class Compiler extends DiagnosticEmitter {
       let slotOffset = local.envSlotIndex;
       let localType = local.type;
 
-      // Only copy if this is a parameter (index in parameter range)
-      // Local variables will be initialized when their declaration is compiled
-      if (local.index >= paramStartIndex && local.index < paramEndIndex) {
+      // Copy parameters and 'this' to the environment
+      // Local variables (var/let) will be initialized later when their declaration is compiled
+      let isParameter = local.index >= paramStartIndex && local.index < paramEndIndex;
+      let isThis = hasThis && local.index == 0; // 'this' is at index 0 in methods
+      if (isParameter || isThis) {
         stmts.push(
           module.store(
             localType.byteSize,
@@ -8679,6 +8752,22 @@ export class Compiler extends DiagnosticEmitter {
       }
       case NodeKind.This: {
         let thisType = sourceFunction.signature.thisType;
+
+        // Check if 'this' is captured from an outer scope (closure case)
+        if (!thisType && this.options.hasFeature(Feature.Closures)) {
+          // Look for 'this' in outer flow - it might be captured
+          let thisLocal = flow.lookupLocal(CommonNames.this_);
+          if (!thisLocal) {
+            thisLocal = flow.lookupLocalInOuter(CommonNames.this_);
+          }
+          if (thisLocal && thisLocal.isCaptured && thisLocal.envSlotIndex >= 0) {
+            // 'this' is captured - load from closure environment
+            flow.set(FlowFlags.AccessesThis);
+            this.currentType = thisLocal.type;
+            return this.compileClosureLoad(thisLocal, expression);
+          }
+        }
+
         if (!thisType) {
           this.error(
             DiagnosticCode._this_cannot_be_referenced_in_current_location,
