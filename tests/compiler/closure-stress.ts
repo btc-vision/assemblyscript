@@ -611,6 +611,141 @@ function mutateStringRef(): string {
 assert(mutateStringRef() == "ABCD");
 
 // =============================================================================
+// SECTION 12: Tests from Issue #798 Discussion
+// =============================================================================
+
+// Test 12.1: Nested closures (outer -> inner -> innerInner) from @dcodeIO's example
+// This tests the parent environment chain - innerInner captures x from grandparent scope
+function testNestedClosureFunctions(): i32 {
+  let x: i32 = 0;
+
+  let inner = (): i32 => {
+    x += 1;
+    let innerInner = (): i32 => {
+      x += 1;  // Capture from grandparent scope!
+      return x;
+    };
+    innerInner();
+    return x;
+  };
+
+  return inner(); // x should be 2 (incremented twice)
+}
+assert(testNestedClosureFunctions() == 2);
+
+// Test 12.2: Range callback pattern from @MaxGraey's original example
+// Tests passing closures to higher-order functions with captures
+function range(a: i32, b: i32, fn: (n: i32) => void): void {
+  for (let i = a; i < b; i++) {
+    fn(i);
+  }
+}
+
+function testRangeWithClosure(): i32 {
+  let sum: i32 = 0;
+  let n: i32 = 10;
+
+  range(0, n, (i: i32): void => {
+    sum += i; // captures sum
+  });
+
+  return sum; // 0+1+2+3+4+5+6+7+8+9 = 45
+}
+assert(testRangeWithClosure() == 45);
+
+// Test 12.3: Return closure pattern from @jtenner's question
+// function add(a, b) { return () => a + b; }
+function add(a: i32, b: i32): () => i32 {
+  return (): i32 => a + b;
+}
+let addResult = add(3, 4);
+assert(addResult() == 7);
+
+// Test 12.4: Two closures different views of same variable from @jtenner's example
+// let a = 1; let b = () => a; let c = () => a += 1;
+function testTwoClosuresSameVar(): i32 {
+  let a: i32 = 1;
+  let b = (): i32 => a;
+  let c = (): i32 => {
+    a += 1;
+    return a;
+  };
+
+  let br = b(); // 1
+  assert(br == 1);
+  let cr = c(); // 2
+  assert(cr == 2);
+  assert(a == 2);
+
+  return a;
+}
+assert(testTwoClosuresSameVar() == 2);
+
+// Test 12.5: Deeply nested closure chain
+// Tests multiple levels of environment parent pointers
+function testDeeplyNestedClosures(): i32 {
+  let level1: i32 = 1;
+
+  let fn1 = (): i32 => {
+    let level2: i32 = 10;
+
+    let fn2 = (): i32 => {
+      let level3: i32 = 100;
+
+      let fn3 = (): i32 => {
+        return level1 + level2 + level3; // captures from 3 levels up!
+      };
+
+      return fn3();
+    };
+
+    return fn2();
+  };
+
+  return fn1(); // 1 + 10 + 100 = 111
+}
+assert(testDeeplyNestedClosures() == 111);
+
+// Test 12.6: Closure escapes outer function and is called later
+// Tests that environment stays alive after outer function returns
+function makeAdderPair(initial: i32): (() => i32)[] {
+  let value = initial;
+  let arr = new Array<() => i32>(2);
+
+  arr[0] = (): i32 => {
+    value += 1;
+    return value;
+  };
+
+  arr[1] = (): i32 => value;
+
+  return arr;
+}
+
+function testClosureEscapesFunction(): i32 {
+  let pair = makeAdderPair(10);
+  let increment = pair[0];
+  let getValue = pair[1];
+
+  assert(getValue() == 10);
+  increment(); // 11
+  increment(); // 12
+  assert(getValue() == 12);
+
+  // Create another independent pair
+  let pair2 = makeAdderPair(100);
+  let increment2 = pair2[0];
+  let getValue2 = pair2[1];
+
+  increment2(); // 101
+  assert(getValue2() == 101);
+  assert(getValue() == 12); // Original pair unchanged
+
+  return getValue() + getValue2(); // 12 + 101 = 113
+}
+assert(testClosureEscapesFunction() == 113);
+
+// =============================================================================
 // Final assertion to confirm all tests passed
 // =============================================================================
 assert(true); // If we reach here, all tests passed!

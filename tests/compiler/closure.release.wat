@@ -60,7 +60,7 @@
  (start $~start)
  (func $closure/testCaptureParam~anonymous|0 (result i32)
   global.get $$~lib/__closure_env
-  i32.load
+  i32.load offset=4
  )
  (func $~lib/rt/itcms/visitRoots
   (local $0 i32)
@@ -1544,27 +1544,27 @@
   global.get $$~lib/__closure_env
   local.tee $0
   local.get $0
-  i32.load
+  i32.load offset=4
   i32.const 1
   i32.add
-  i32.store
+  i32.store offset=4
  )
  (func $closure/testMultipleCaptures~anonymous|0 (result i32)
   (local $0 i32)
   global.get $$~lib/__closure_env
   local.tee $0
-  i32.load offset=8
-  local.get $0
-  i32.load
+  i32.load offset=12
   local.get $0
   i32.load offset=4
+  local.get $0
+  i32.load offset=8
   i32.add
   i32.add
  )
  (func $closure/testSharedEnvironment~anonymous|0 (param $0 i32)
   global.get $$~lib/__closure_env
   i32.const 50
-  i32.store
+  i32.store offset=4
  )
  (func $start:closure
   (local $0 i32)
@@ -1624,22 +1624,26 @@
     call $~lib/rt/tlsf/initialize
    end
    global.get $~lib/rt/tlsf/ROOT
-   i32.const 4
+   i32.const 8
    call $~lib/rt/tlsf/allocateBlock
+   local.tee $0
    i32.const 4
    i32.add
-   local.tee $0
-   i32.const 42
+   local.tee $1
+   i32.const 0
    i32.store
+   local.get $0
+   i32.const 42
+   i32.store offset=8
    i32.const 4
    call $~lib/rt/itcms/__new
-   local.tee $1
+   local.tee $0
    i32.const 1
    i32.store
-   local.get $1
    local.get $0
-   i32.store offset=4
    local.get $1
+   i32.store offset=4
+   local.get $0
    global.set $closure/fn1
    global.get $~lib/memory/__stack_pointer
    global.get $closure/fn1
@@ -1667,22 +1671,26 @@
     call $~lib/rt/tlsf/initialize
    end
    global.get $~lib/rt/tlsf/ROOT
-   i32.const 4
+   i32.const 8
    call $~lib/rt/tlsf/allocateBlock
+   local.tee $0
    i32.const 4
    i32.add
-   local.tee $0
-   i32.const 100
+   local.tee $1
+   i32.const 0
    i32.store
+   local.get $0
+   i32.const 100
+   i32.store offset=8
    i32.const 4
    call $~lib/rt/itcms/__new
-   local.tee $1
+   local.tee $0
    i32.const 2
    i32.store
-   local.get $1
    local.get $0
-   i32.store offset=4
    local.get $1
+   i32.store offset=4
+   local.get $0
    global.set $closure/fn2
    global.get $~lib/memory/__stack_pointer
    global.get $closure/fn2
@@ -1710,22 +1718,26 @@
     call $~lib/rt/tlsf/initialize
    end
    global.get $~lib/rt/tlsf/ROOT
-   i32.const 4
+   i32.const 8
    call $~lib/rt/tlsf/allocateBlock
+   local.tee $0
    i32.const 4
    i32.add
-   local.tee $0
-   i32.const 200
+   local.tee $1
+   i32.const 0
    i32.store
+   local.get $0
+   i32.const 200
+   i32.store offset=8
    i32.const 4
    call $~lib/rt/itcms/__new
-   local.tee $1
+   local.tee $0
    i32.const 3
    i32.store
-   local.get $1
    local.get $0
-   i32.store offset=4
    local.get $1
+   i32.store offset=4
+   local.get $0
    global.set $closure/fn3
    global.get $~lib/memory/__stack_pointer
    global.get $closure/fn3
@@ -1765,13 +1777,17 @@
     call $~lib/rt/tlsf/initialize
    end
    global.get $~lib/rt/tlsf/ROOT
-   i32.const 4
+   i32.const 8
    call $~lib/rt/tlsf/allocateBlock
+   local.tee $0
    i32.const 4
    i32.add
-   local.tee $0
+   local.tee $1
    i32.const 0
    i32.store
+   local.get $0
+   i32.const 0
+   i32.store offset=8
    global.get $~lib/memory/__stack_pointer
    i32.const 5
    call $~lib/rt/itcms/__new
@@ -1779,7 +1795,7 @@
    i32.const 4
    i32.store
    local.get $2
-   local.get $0
+   local.get $1
    i32.store offset=4
    local.get $2
    i32.store
@@ -1790,7 +1806,7 @@
    i32.const 5
    i32.store
    local.get $3
-   local.get $0
+   local.get $1
    i32.store offset=4
    local.get $3
    i32.store offset=4
@@ -1850,20 +1866,23 @@
     call $~lib/rt/tlsf/initialize
    end
    global.get $~lib/rt/tlsf/ROOT
-   i32.const 12
+   i32.const 16
    call $~lib/rt/tlsf/allocateBlock
    local.tee $0
    i32.const 4
    i32.add
    local.tee $1
-   i32.const 1
+   i32.const 0
    i32.store
    local.get $0
-   i32.const 2
+   i32.const 1
    i32.store offset=8
    local.get $0
-   i32.const 10
+   i32.const 2
    i32.store offset=12
+   local.get $0
+   i32.const 10
+   i32.store offset=16
    i32.const 4
    call $~lib/rt/itcms/__new
    local.tee $0
@@ -1914,13 +1933,17 @@
     call $~lib/rt/tlsf/initialize
    end
    global.get $~lib/rt/tlsf/ROOT
-   i32.const 4
+   i32.const 8
    call $~lib/rt/tlsf/allocateBlock
+   local.tee $0
    i32.const 4
    i32.add
-   local.tee $0
+   local.tee $1
    i32.const 0
    i32.store
+   local.get $0
+   i32.const 0
+   i32.store offset=8
    global.get $~lib/memory/__stack_pointer
    i32.const 6
    call $~lib/rt/itcms/__new
@@ -1928,7 +1951,7 @@
    i32.const 7
    i32.store
    local.get $2
-   local.get $0
+   local.get $1
    i32.store offset=4
    local.get $2
    i32.store
@@ -1939,7 +1962,7 @@
    i32.const 8
    i32.store
    local.get $3
-   local.get $0
+   local.get $1
    i32.store offset=4
    local.get $3
    i32.store offset=4
