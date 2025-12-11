@@ -7267,40 +7267,55 @@ export class Compiler extends DiagnosticEmitter {
     }
     if (operands) this.operandsTostack(signature, operands);
 
-    // Load the _env field from Function object and store to global for closure access
-    let closureEnvGlobal = this.ensureClosureEnvironmentGlobal();
-    let usizeSize = this.options.usizeType.byteSize;
+    // Only set up closure environment handling when closures feature is enabled
+    if (this.options.hasFeature(Feature.Closures)) {
+      // Load the _env field from Function object and store to global for closure access
+      let closureEnvGlobal = this.ensureClosureEnvironmentGlobal();
+      let usizeSize = this.options.usizeType.byteSize;
 
-    // Get the offset of _env in the Function class
-    // _index is u32 (4 bytes), _env follows at offset 4 (wasm32) or 8 (wasm64 with padding)
-    let envOffset = this.options.isWasm64 ? 8 : 4;
+      // Get the offset of _env in the Function class
+      // _index is u32 (4 bytes), _env follows at offset 4 (wasm32) or 8 (wasm64 with padding)
+      let envOffset = this.options.isWasm64 ? 8 : 4;
 
-    // We need to evaluate functionArg once, store to temp, then use for both _env and _index
-    let flow = this.currentFlow;
-    let funcTemp = flow.getTempLocal(this.options.usizeType);
-    let funcTempIndex = funcTemp.index;
+      // We need to evaluate functionArg once, store to temp, then use for both _env and _index
+      let flow = this.currentFlow;
+      let funcTemp = flow.getTempLocal(this.options.usizeType);
+      let funcTempIndex = funcTemp.index;
 
-    let stmts: ExpressionRef[] = [
-      // Store function pointer to temp
-      module.local_set(funcTempIndex, functionArg, true),
-      // Store _env to global: $~lib/__closure_env = func._env
-      module.global_set(closureEnvGlobal,
-        module.load(usizeSize, false,
-          module.local_get(funcTempIndex, sizeTypeRef),
-          sizeTypeRef,
-          envOffset
+      let stmts: ExpressionRef[] = [
+        // Store function pointer to temp
+        module.local_set(funcTempIndex, functionArg, true),
+        // Store _env to global: $~lib/__closure_env = func._env
+        module.global_set(closureEnvGlobal,
+          module.load(usizeSize, false,
+            module.local_get(funcTempIndex, sizeTypeRef),
+            sizeTypeRef,
+            envOffset
+          )
         )
-      )
-    ];
+      ];
 
-    let indexExpr = module.load(4, false,
-      module.local_get(funcTempIndex, sizeTypeRef),
-      TypeRef.I32 // ._index
-    );
+      let indexExpr = module.load(4, false,
+        module.local_get(funcTempIndex, sizeTypeRef),
+        TypeRef.I32 // ._index
+      );
 
+      let expr = module.call_indirect(
+        null, // TODO: handle multiple tables
+        module.block(null, stmts.concat([indexExpr]), TypeRef.I32),
+        operands,
+        signature.paramRefs,
+        signature.resultRefs
+      );
+      this.currentType = returnType;
+      return expr;
+    }
+
+    // Without closures, use simpler indirect call (just load _index from Function)
+    let indexExpr = module.load(4, false, functionArg, TypeRef.I32); // ._index at offset 0
     let expr = module.call_indirect(
-      null, // TODO: handle multiple tables
-      module.block(null, stmts.concat([indexExpr]), TypeRef.I32),
+      null,
+      indexExpr,
       operands,
       signature.paramRefs,
       signature.resultRefs

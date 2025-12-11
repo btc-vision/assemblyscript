@@ -11,7 +11,6 @@
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (global $function-expression/f1 (mut i32) (i32.const 32))
  (global $~argumentsLength (mut i32) (i32.const 0))
- (global $$~lib/__closure_env (mut i32) (i32.const 0))
  (global $function-expression/f2 (mut i32) (i32.const 128))
  (global $function-expression/f3 (mut i32) (i32.const 160))
  (global $function-expression/f4 (mut i32) (i32.const 192))
@@ -87,6 +86,16 @@
   local.get $b
   i32.add
  )
+ (func $function-expression/testOmitted (param $fn i32) (result i32)
+  i32.const 1
+  i32.const 2
+  i32.const 2
+  global.set $~argumentsLength
+  local.get $fn
+  i32.load
+  call_indirect (type $2)
+  return
+ )
  (func $start:function-expression~anonymous|5 (param $a i32) (param $$1 i32) (result i32)
   local.get $a
  )
@@ -138,45 +147,26 @@
  )
  (func $function-expression/testGlobal
   (local $0 i32)
-  (local $1 i32)
-  (local $2 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
+  i32.const 4
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  global.get $~lib/memory/__stack_pointer
   i32.const 0
-  i32.store offset=8
+  i32.store
   i32.const 1
-  global.get $~lib/memory/__stack_pointer
-  global.get $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   global.get $function-expression/globalFunc
-  local.tee $0
-  i32.store
-  local.get $0
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $0
   i32.load
   call_indirect (type $3)
-  local.tee $1
-  i32.store offset=4
+  local.tee $0
+  i32.store
   i32.const 1
   global.set $~argumentsLength
-  local.get $1
-  local.tee $2
-  i32.store offset=8
-  local.get $2
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $2
+  local.get $0
   i32.load
   call_indirect (type $0)
   i32.const 25
@@ -191,7 +181,7 @@
    unreachable
   end
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
+  i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
@@ -204,10 +194,8 @@
  (func $function-expression/testLocal
   (local $localFunc i32)
   (local $1 i32)
-  (local $2 i32)
-  (local $3 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 16
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
@@ -215,38 +203,21 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store offset=8
-  global.get $~lib/memory/__stack_pointer
   i32.const 544
   local.tee $localFunc
   i32.store
   i32.const 1
   global.get $~lib/memory/__stack_pointer
-  global.get $~lib/memory/__stack_pointer
-  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   local.get $localFunc
-  local.tee $1
-  i32.store offset=4
-  local.get $1
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $1
   i32.load
   call_indirect (type $3)
-  local.tee $2
-  i32.store offset=8
+  local.tee $1
+  i32.store offset=4
   i32.const 1
   global.set $~argumentsLength
-  local.get $2
-  local.tee $3
-  i32.store offset=12
-  local.get $3
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $3
+  local.get $1
   i32.load
   call_indirect (type $0)
   i32.const 25
@@ -261,7 +232,7 @@
    unreachable
   end
   global.get $~lib/memory/__stack_pointer
-  i32.const 16
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
@@ -2809,60 +2780,46 @@
   (local $fieldInst i32)
   (local $1 i32)
   (local $2 i32)
-  (local $3 i32)
-  (local $4 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 20
+  i32.const 12
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
   i32.const 0
-  i32.const 20
-  memory.fill
+  i32.store offset=8
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   i32.const 1008
-  local.set $4
+  local.set $2
   global.get $~lib/memory/__stack_pointer
-  local.get $4
+  local.get $2
   i32.store
-  local.get $4
+  local.get $2
   call $function-expression/FieldClass#constructor
   local.tee $fieldInst
   i32.store offset=4
   i32.const 1
   global.get $~lib/memory/__stack_pointer
-  global.get $~lib/memory/__stack_pointer
-  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   local.get $fieldInst
-  local.set $4
+  local.set $2
   global.get $~lib/memory/__stack_pointer
-  local.get $4
+  local.get $2
   i32.store
-  local.get $4
+  local.get $2
   call $function-expression/FieldClass#get:fieldFunc
-  local.tee $1
-  i32.store offset=8
-  local.get $1
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $1
   i32.load
   call_indirect (type $3)
-  local.tee $2
-  i32.store offset=12
+  local.tee $1
+  i32.store offset=8
   i32.const 1
   global.set $~argumentsLength
-  local.get $2
-  local.tee $3
-  i32.store offset=16
-  local.get $3
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $3
+  local.get $1
   i32.load
   call_indirect (type $0)
   i32.const 25
@@ -2877,39 +2834,24 @@
    unreachable
   end
   global.get $~lib/memory/__stack_pointer
-  i32.const 20
+  i32.const 12
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
  (func $start:function-expression
   (local $0 i32)
-  (local $1 i32)
-  (local $2 i32)
-  (local $3 i32)
-  (local $4 i32)
-  (local $5 i32)
-  (local $6 i32)
-  (local $7 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 32
+  i32.const 4
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
   i32.const 0
-  i32.const 32
-  memory.fill
+  i32.store
   i32.const 1
-  global.get $~lib/memory/__stack_pointer
   i32.const 1
   global.set $~argumentsLength
   global.get $function-expression/f1
-  local.tee $0
-  i32.store
-  local.get $0
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $0
   i32.load
   call_indirect (type $0)
   i32.const 1
@@ -2924,16 +2866,9 @@
    unreachable
   end
   i32.const 2
-  global.get $~lib/memory/__stack_pointer
   i32.const 1
   global.set $~argumentsLength
   global.get $function-expression/f2
-  local.tee $1
-  i32.store offset=4
-  local.get $1
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $1
   i32.load
   call_indirect (type $0)
   i32.const 2
@@ -2947,28 +2882,14 @@
    call $~lib/builtins/abort
    unreachable
   end
-  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   global.get $function-expression/f3
-  local.tee $2
-  i32.store offset=8
-  local.get $2
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $2
   i32.load
   call_indirect (type $4)
-  global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   global.get $function-expression/f4
-  local.tee $3
-  i32.store offset=12
-  local.get $3
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $3
   i32.load
   call_indirect (type $3)
   i32.const 1
@@ -2983,11 +2904,11 @@
    unreachable
   end
   i32.const 224
-  local.set $7
+  local.set $0
   global.get $~lib/memory/__stack_pointer
-  local.get $7
-  i32.store offset=16
-  local.get $7
+  local.get $0
+  i32.store
+  local.get $0
   call $function-expression/testOmitted
   i32.const 3
   i32.eq
@@ -3001,11 +2922,11 @@
    unreachable
   end
   i32.const 256
-  local.set $7
+  local.set $0
   global.get $~lib/memory/__stack_pointer
-  local.get $7
-  i32.store offset=16
-  local.get $7
+  local.get $0
+  i32.store
+  local.get $0
   call $function-expression/testOmitted
   i32.const 1
   i32.eq
@@ -3019,11 +2940,11 @@
    unreachable
   end
   i32.const 288
-  local.set $7
+  local.set $0
   global.get $~lib/memory/__stack_pointer
-  local.get $7
-  i32.store offset=16
-  local.get $7
+  local.get $0
+  i32.store
+  local.get $0
   call $function-expression/testOmitted
   i32.const 42
   i32.eq
@@ -3038,16 +2959,9 @@
   end
   i32.const 1
   i32.const 2
-  global.get $~lib/memory/__stack_pointer
   i32.const 2
   global.set $~argumentsLength
   call $function-expression/testOmittedReturn1
-  local.tee $4
-  i32.store offset=20
-  local.get $4
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $4
   i32.load
   call_indirect (type $2)
   i32.const 3
@@ -3063,16 +2977,9 @@
   end
   i32.const 1
   i32.const 2
-  global.get $~lib/memory/__stack_pointer
   i32.const 2
   global.set $~argumentsLength
   call $function-expression/testOmittedReturn2
-  local.tee $5
-  i32.store offset=24
-  local.get $5
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $5
   i32.load
   call_indirect (type $2)
   i32.const 1
@@ -3088,16 +2995,9 @@
   end
   i32.const 1
   i32.const 2
-  global.get $~lib/memory/__stack_pointer
   i32.const 2
   global.set $~argumentsLength
   call $function-expression/testOmittedReturn3
-  local.tee $6
-  i32.store offset=28
-  local.get $6
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $6
   i32.load
   call_indirect (type $2)
   i32.const 42
@@ -3146,7 +3046,7 @@
   call $function-expression/testField
   call $function-expression/semanticallyAnonymous
   global.get $~lib/memory/__stack_pointer
-  i32.const 32
+  i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
@@ -3269,39 +3169,6 @@
   i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
- )
- (func $function-expression/testOmitted (param $fn i32) (result i32)
-  (local $1 i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  i32.const 1
-  i32.const 2
-  global.get $~lib/memory/__stack_pointer
-  i32.const 2
-  global.set $~argumentsLength
-  local.get $fn
-  local.tee $1
-  i32.store
-  local.get $1
-  i32.load offset=4
-  global.set $$~lib/__closure_env
-  local.get $1
-  i32.load
-  call_indirect (type $2)
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $2
-  return
  )
  (func $start:function-expression~anonymous|7 (result i32)
   (local $myFunc i32)

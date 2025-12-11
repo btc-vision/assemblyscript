@@ -2493,7 +2493,7 @@
  (func $start:call-rest
   (local $0 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 24
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   block $folding-inner0
@@ -2502,9 +2502,8 @@
    i32.lt_s
    br_if $folding-inner0
    global.get $~lib/memory/__stack_pointer
-   i32.const 0
-   i32.const 24
-   memory.fill
+   i64.const 0
+   i64.store
    memory.size
    i32.const 16
    i32.shl
@@ -2613,12 +2612,6 @@
    end
    i32.const 1
    global.set $~argumentsLength
-   global.get $~lib/memory/__stack_pointer
-   i32.const 1648
-   i32.store offset=4
-   i32.const 1652
-   i32.load
-   drop
    i32.const 1
    i32.const 0
    i32.const 0
@@ -2637,12 +2630,6 @@
    end
    i32.const 2
    global.set $~argumentsLength
-   global.get $~lib/memory/__stack_pointer
-   i32.const 1648
-   i32.store offset=8
-   i32.const 1652
-   i32.load
-   drop
    i32.const 1
    i32.const 2
    i32.const 0
@@ -2669,12 +2656,6 @@
    i32.store
    i32.const 3
    global.set $~argumentsLength
-   global.get $~lib/memory/__stack_pointer
-   i32.const 1648
-   i32.store offset=12
-   i32.const 1652
-   i32.load
-   drop
    i32.const 1
    i32.const 2
    local.get $0
@@ -2701,12 +2682,6 @@
    i32.store
    i32.const 3
    global.set $~argumentsLength
-   global.get $~lib/memory/__stack_pointer
-   i32.const 1648
-   i32.store offset=16
-   i32.const 1652
-   i32.load
-   drop
    i32.const 1
    i32.const 2
    local.get $0
@@ -2770,7 +2745,7 @@
    local.set $0
    global.get $~lib/memory/__stack_pointer
    local.get $0
-   i32.store offset=20
+   i32.store offset=4
    i32.const 2
    local.get $0
    call $call-rest/Foo#constructor
@@ -2797,7 +2772,7 @@
    local.set $0
    global.get $~lib/memory/__stack_pointer
    local.get $0
-   i32.store offset=20
+   i32.store offset=4
    i32.const 2
    local.get $0
    call $call-rest/Foo#constructor
@@ -2915,7 +2890,7 @@
     unreachable
    end
    global.get $~lib/memory/__stack_pointer
-   i32.const 24
+   i32.const 8
    i32.add
    global.set $~lib/memory/__stack_pointer
    return
