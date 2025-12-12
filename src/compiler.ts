@@ -1852,7 +1852,7 @@ export class Compiler extends DiagnosticEmitter {
 
     // For closures (functions that capture from outer scope), create a local to cache
     // the environment pointer. This is needed because indirect calls to other closures
-    // can overwrite the global $$~lib/__closure_env.
+    // can overwrite the global $~lib/__closure_env.
     if (instance.outerFunction && !instance.closureEnvLocal) {
       let closureEnvLocal = flow.addScopedLocal("$closureEnv", this.options.usizeType);
       instance.closureEnvLocal = closureEnvLocal;
@@ -1898,7 +1898,7 @@ export class Compiler extends DiagnosticEmitter {
 
     // For closures (functions that capture from outer scope), emit code to cache the
     // environment pointer in a local at function entry. This is needed because indirect
-    // calls to other closures can overwrite the global $$~lib/__closure_env.
+    // calls to other closures can overwrite the global $~lib/__closure_env.
     if (instance.closureEnvLocal) {
       let closureEnvLocal = instance.closureEnvLocal;
 
@@ -6725,7 +6725,7 @@ export class Compiler extends DiagnosticEmitter {
 
   /** Ensures the closure environment global variable exists. */
   ensureClosureEnvironmentGlobal(): string {
-    let name = "$~lib/__closure_env";
+    let name = "~lib/__closure_env";
     if (!this.closureEnvironmentGlobal) {
       let module = this.module;
       let sizeTypeRef = this.options.sizeTypeRef;
