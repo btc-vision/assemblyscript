@@ -3297,10 +3297,12 @@ export class Compiler extends DiagnosticEmitter {
         dispatchStmts.push(module.unreachable());
       }
 
-      let fullBlock = module.block(null, [
-        tryBlock,
-        ...dispatchStmts
-      ]);
+      let fullBlockStmts = new Array<ExpressionRef>(1 + dispatchStmts.length);
+      fullBlockStmts[0] = tryBlock;
+      for (let i = 0; i < dispatchStmts.length; i++) {
+        fullBlockStmts[1 + i] = dispatchStmts[i];
+      }
+      let fullBlock = module.block(null, fullBlockStmts);
 
       // Merge flow states
       // If finally always terminates, the whole construct terminates
