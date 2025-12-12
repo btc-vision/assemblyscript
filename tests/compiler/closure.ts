@@ -214,3 +214,19 @@ assert(counter1() == 2);
 assert(counter2() == 1);  // Independent counter
 assert(counter1() == 3);
 assert(counter2() == 2);
+
+// Test 18: Closure with parameter default value capturing outer variable
+function testDefaultParamCapture(): i32 {
+  let defaultVal = 42;
+  let fn = (x: i32 = defaultVal): i32 => x;
+  return fn();
+}
+assert(testDefaultParamCapture() == 42);
+
+// Test 19: Closure with parameter default value using another param
+function testDefaultParamWithOtherParam(): i32 {
+  let multiplier = 3;
+  let fn = (a: i32, b: i32 = a * multiplier): i32 => b;
+  return fn(10);  // b defaults to 10 * 3 = 30
+}
+assert(testDefaultParamWithOtherParam() == 30);
