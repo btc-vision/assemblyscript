@@ -174,7 +174,6 @@ import {
   UnaryPostfixExpression,
   UnaryPrefixExpression,
   CompiledExpression,
-  SwitchCase,
 
   TypeNode,
   NamedTypeNode,
@@ -7974,18 +7973,11 @@ export class Compiler extends DiagnosticEmitter {
   /** Collects all variable declarations in a node (for prescan). */
   private collectDeclaredVariables(node: Node, vars: Map<string, Type | null>): void {
     switch (node.kind) {
+      // Statements that contain other statements
       case NodeKind.Block: {
         let block = <BlockStatement>node;
         for (let i = 0, k = block.statements.length; i < k; i++) {
           this.collectDeclaredVariables(block.statements[i], vars);
-        }
-        break;
-      }
-      case NodeKind.Variable: {
-        let varStmt = <VariableStatement>node;
-        for (let i = 0, k = varStmt.declarations.length; i < k; i++) {
-          let decl = varStmt.declarations[i];
-          vars.set(decl.name.text, null); // null = type will be determined during compilation
         }
         break;
       }
@@ -8013,10 +8005,138 @@ export class Compiler extends DiagnosticEmitter {
         this.collectDeclaredVariables(forStmt.body, vars);
         break;
       }
+      case NodeKind.ForOf: {
+        let forOfStmt = <ForOfStatement>node;
+        if (forOfStmt.variable.kind == NodeKind.Variable) {
+          this.collectDeclaredVariables(forOfStmt.variable, vars);
+        }
+        this.collectDeclaredVariables(forOfStmt.body, vars);
+        break;
+      }
+      case NodeKind.Switch: {
+        let switchStmt = <SwitchStatement>node;
+        let cases = switchStmt.cases;
+        for (let i = 0, k = cases.length; i < k; i++) {
+          let statements = cases[i].statements;
+          for (let j = 0, l = statements.length; j < l; j++) {
+            this.collectDeclaredVariables(statements[j], vars);
+          }
+        }
+        break;
+      }
+      case NodeKind.Try: {
+        let tryStmt = <TryStatement>node;
+        let bodyStatements = tryStmt.bodyStatements;
+        for (let i = 0, k = bodyStatements.length; i < k; i++) {
+          this.collectDeclaredVariables(bodyStatements[i], vars);
+        }
+        let catchStatements = tryStmt.catchStatements;
+        if (catchStatements) {
+          let catchVariable = tryStmt.catchVariable;
+          if (catchVariable) {
+            vars.set(catchVariable.text, null);
+          }
+          for (let i = 0, k = catchStatements.length; i < k; i++) {
+            this.collectDeclaredVariables(catchStatements[i], vars);
+          }
+        }
+        let finallyStatements = tryStmt.finallyStatements;
+        if (finallyStatements) {
+          for (let i = 0, k = finallyStatements.length; i < k; i++) {
+            this.collectDeclaredVariables(finallyStatements[i], vars);
+          }
+        }
+        break;
+      }
+
+      // Variable declarations
+      case NodeKind.Variable: {
+        let varStmt = <VariableStatement>node;
+        for (let i = 0, k = varStmt.declarations.length; i < k; i++) {
+          let decl = varStmt.declarations[i];
+          vars.set(decl.name.text, null);
+        }
+        break;
+      }
+
+      // Function scopes - don't leak variables
       case NodeKind.FunctionDeclaration:
       case NodeKind.Function:
-        // Function declarations and expressions don't add their variables to outer scope
         break;
+
+      // Statements without variable declarations
+      case NodeKind.Expression:
+      case NodeKind.Return:
+      case NodeKind.Break:
+      case NodeKind.Continue:
+      case NodeKind.Throw:
+      case NodeKind.Empty:
+      case NodeKind.Void:
+        break;
+
+      // Module-level declarations (shouldn't appear in function bodies normally)
+      case NodeKind.Export:
+      case NodeKind.ExportDefault:
+      case NodeKind.ExportImport:
+      case NodeKind.Import:
+      case NodeKind.Module:
+      case NodeKind.ClassDeclaration:
+      case NodeKind.EnumDeclaration:
+      case NodeKind.InterfaceDeclaration:
+      case NodeKind.NamespaceDeclaration:
+      case NodeKind.TypeDeclaration:
+        break;
+
+      // Expression nodes (shouldn't be passed to this function normally)
+      case NodeKind.Identifier:
+      case NodeKind.Assertion:
+      case NodeKind.Binary:
+      case NodeKind.Call:
+      case NodeKind.Class:
+      case NodeKind.Comma:
+      case NodeKind.ElementAccess:
+      case NodeKind.False:
+      case NodeKind.InstanceOf:
+      case NodeKind.Literal:
+      case NodeKind.New:
+      case NodeKind.Null:
+      case NodeKind.Omitted:
+      case NodeKind.Parenthesized:
+      case NodeKind.PropertyAccess:
+      case NodeKind.Ternary:
+      case NodeKind.Super:
+      case NodeKind.This:
+      case NodeKind.True:
+      case NodeKind.Constructor:
+      case NodeKind.UnaryPostfix:
+      case NodeKind.UnaryPrefix:
+      case NodeKind.Compiled:
+        break;
+
+      // Type nodes
+      case NodeKind.NamedType:
+      case NodeKind.FunctionType:
+      case NodeKind.TypeName:
+      case NodeKind.TypeParameter:
+      case NodeKind.Parameter:
+        break;
+
+      // Special nodes
+      case NodeKind.Source:
+      case NodeKind.Decorator:
+      case NodeKind.ExportMember:
+      case NodeKind.SwitchCase:
+      case NodeKind.IndexSignature:
+      case NodeKind.Comment:
+      case NodeKind.EnumValueDeclaration:
+      case NodeKind.FieldDeclaration:
+      case NodeKind.ImportDeclaration:
+      case NodeKind.MethodDeclaration:
+      case NodeKind.VariableDeclaration:
+        break;
+
+      default:
+        assert(false, "collectDeclaredVariables: unhandled node kind: " + (node.kind as i32).toString());
     }
   }
 
@@ -8175,7 +8295,169 @@ export class Compiler extends DiagnosticEmitter {
         }
         break;
       }
-      // Most other node kinds don't contain function expressions
+      case NodeKind.Literal: {
+        let literal = <LiteralExpression>node;
+        if (literal.literalKind == LiteralKind.Array) {
+          let arrLiteral = <ArrayLiteralExpression>literal;
+          let elements = arrLiteral.elementExpressions;
+          for (let i = 0, k = elements.length; i < k; i++) {
+            let elem = elements[i];
+            if (elem) {
+              this.prescanNodeForFunctionExpressions(elem, instance, flow, declaredVars);
+            }
+          }
+        } else if (literal.literalKind == LiteralKind.Object) {
+          let objLiteral = <ObjectLiteralExpression>literal;
+          let values = objLiteral.values;
+          for (let i = 0, k = values.length; i < k; i++) {
+            this.prescanNodeForFunctionExpressions(values[i], instance, flow, declaredVars);
+          }
+        } else if (literal.literalKind == LiteralKind.Template) {
+          let tmplLiteral = <TemplateLiteralExpression>literal;
+          let expressions = tmplLiteral.expressions;
+          for (let i = 0, k = expressions.length; i < k; i++) {
+            this.prescanNodeForFunctionExpressions(expressions[i], instance, flow, declaredVars);
+          }
+        }
+        break;
+      }
+      case NodeKind.ElementAccess: {
+        let elemAccess = <ElementAccessExpression>node;
+        this.prescanNodeForFunctionExpressions(elemAccess.expression, instance, flow, declaredVars);
+        this.prescanNodeForFunctionExpressions(elemAccess.elementExpression, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.PropertyAccess: {
+        let propAccess = <PropertyAccessExpression>node;
+        this.prescanNodeForFunctionExpressions(propAccess.expression, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Assertion: {
+        let assertion = <AssertionExpression>node;
+        this.prescanNodeForFunctionExpressions(assertion.expression, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.InstanceOf: {
+        let instanceOf = <InstanceOfExpression>node;
+        this.prescanNodeForFunctionExpressions(instanceOf.expression, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Switch: {
+        let switchStmt = <SwitchStatement>node;
+        this.prescanNodeForFunctionExpressions(switchStmt.condition, instance, flow, declaredVars);
+        let cases = switchStmt.cases;
+        for (let i = 0, k = cases.length; i < k; i++) {
+          let switchCase = cases[i];
+          if (switchCase.label) {
+            this.prescanNodeForFunctionExpressions(switchCase.label, instance, flow, declaredVars);
+          }
+          let statements = switchCase.statements;
+          for (let j = 0, l = statements.length; j < l; j++) {
+            this.prescanNodeForFunctionExpressions(statements[j], instance, flow, declaredVars);
+          }
+        }
+        break;
+      }
+      case NodeKind.ForOf: {
+        let forOfStmt = <ForOfStatement>node;
+        this.prescanNodeForFunctionExpressions(forOfStmt.iterable, instance, flow, declaredVars);
+        if (forOfStmt.variable.kind == NodeKind.Variable) {
+          this.prescanNodeForFunctionExpressions(forOfStmt.variable, instance, flow, declaredVars);
+        }
+        this.prescanNodeForFunctionExpressions(forOfStmt.body, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Try: {
+        let tryStmt = <TryStatement>node;
+        let bodyStatements = tryStmt.bodyStatements;
+        for (let i = 0, k = bodyStatements.length; i < k; i++) {
+          this.prescanNodeForFunctionExpressions(bodyStatements[i], instance, flow, declaredVars);
+        }
+        let catchStatements = tryStmt.catchStatements;
+        if (catchStatements) {
+          for (let i = 0, k = catchStatements.length; i < k; i++) {
+            this.prescanNodeForFunctionExpressions(catchStatements[i], instance, flow, declaredVars);
+          }
+        }
+        let finallyStatements = tryStmt.finallyStatements;
+        if (finallyStatements) {
+          for (let i = 0, k = finallyStatements.length; i < k; i++) {
+            this.prescanNodeForFunctionExpressions(finallyStatements[i], instance, flow, declaredVars);
+          }
+        }
+        break;
+      }
+      case NodeKind.Throw: {
+        let throwStmt = <ThrowStatement>node;
+        this.prescanNodeForFunctionExpressions(throwStmt.value, instance, flow, declaredVars);
+        break;
+      }
+      case NodeKind.Void: {
+        let voidStmt = <VoidStatement>node;
+        this.prescanNodeForFunctionExpressions(voidStmt.expression, instance, flow, declaredVars);
+        break;
+      }
+
+      // Leaf expressions - no children to scan
+      case NodeKind.Identifier:
+      case NodeKind.True:
+      case NodeKind.False:
+      case NodeKind.Null:
+      case NodeKind.Super:
+      case NodeKind.This:
+      case NodeKind.Omitted:
+      case NodeKind.Compiled:
+        break;
+
+      // Statements without expressions
+      case NodeKind.Break:
+      case NodeKind.Continue:
+      case NodeKind.Empty:
+        break;
+
+      // Class expression - scan members would be complex, but class expressions with closures are rare
+      case NodeKind.Class:
+      case NodeKind.Constructor:
+        break;
+
+      // Module-level declarations (shouldn't appear in function bodies normally)
+      case NodeKind.Export:
+      case NodeKind.ExportDefault:
+      case NodeKind.ExportImport:
+      case NodeKind.Import:
+      case NodeKind.Module:
+      case NodeKind.ClassDeclaration:
+      case NodeKind.EnumDeclaration:
+      case NodeKind.InterfaceDeclaration:
+      case NodeKind.NamespaceDeclaration:
+      case NodeKind.TypeDeclaration:
+      case NodeKind.FunctionDeclaration:
+        break;
+
+      // Type nodes - no runtime expressions
+      case NodeKind.NamedType:
+      case NodeKind.FunctionType:
+      case NodeKind.TypeName:
+      case NodeKind.TypeParameter:
+      case NodeKind.Parameter:
+        break;
+
+      // Special nodes
+      case NodeKind.Source:
+      case NodeKind.Decorator:
+      case NodeKind.ExportMember:
+      case NodeKind.SwitchCase:
+      case NodeKind.IndexSignature:
+      case NodeKind.Comment:
+      case NodeKind.EnumValueDeclaration:
+      case NodeKind.FieldDeclaration:
+      case NodeKind.ImportDeclaration:
+      case NodeKind.MethodDeclaration:
+      case NodeKind.VariableDeclaration:
+        break;
+
+      default:
+        assert(false, "prescanNodeForFunctionExpressions: unhandled node kind: " + (node.kind as i32).toString());
     }
   }
 
@@ -8370,11 +8652,185 @@ export class Compiler extends DiagnosticEmitter {
         }
         break;
       }
-      // Add more cases as needed for complete coverage
-      default: {
-        // For other nodes, recursively scan children
-        // This is a simplified version - a complete implementation would handle all node types
+      case NodeKind.While: {
+        let whileStmt = <WhileStatement>node;
+        this.collectCapturedNames(whileStmt.condition, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(whileStmt.body, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
       }
+      case NodeKind.Do: {
+        let doStmt = <DoStatement>node;
+        this.collectCapturedNames(doStmt.body, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        this.collectCapturedNames(doStmt.condition, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.For: {
+        let forStmt = <ForStatement>node;
+        if (forStmt.initializer) {
+          this.collectCapturedNames(forStmt.initializer, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        if (forStmt.condition) {
+          this.collectCapturedNames(forStmt.condition, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        if (forStmt.incrementor) {
+          this.collectCapturedNames(forStmt.incrementor, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        this.collectCapturedNames(forStmt.body, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.ForOf: {
+        let forOfStmt = <ForOfStatement>node;
+        this.collectCapturedNames(forOfStmt.iterable, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        // Add the loop variable to inner names
+        let varDecl = forOfStmt.variable;
+        if (varDecl.kind == NodeKind.Variable) {
+          let varStmt = <VariableStatement>varDecl;
+          for (let i = 0, k = varStmt.declarations.length; i < k; i++) {
+            innerFunctionNames.add(varStmt.declarations[i].name.text);
+          }
+        }
+        this.collectCapturedNames(forOfStmt.body, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Switch: {
+        let switchStmt = <SwitchStatement>node;
+        this.collectCapturedNames(switchStmt.condition, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        let cases = switchStmt.cases;
+        for (let i = 0, k = cases.length; i < k; i++) {
+          let switchCase = cases[i];
+          if (switchCase.label) {
+            this.collectCapturedNames(switchCase.label, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+          }
+          let statements = switchCase.statements;
+          for (let j = 0, l = statements.length; j < l; j++) {
+            this.collectCapturedNames(statements[j], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+          }
+        }
+        break;
+      }
+      case NodeKind.Try: {
+        let tryStmt = <TryStatement>node;
+        let bodyStatements = tryStmt.bodyStatements;
+        for (let i = 0, k = bodyStatements.length; i < k; i++) {
+          this.collectCapturedNames(bodyStatements[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        }
+        let catchVariable = tryStmt.catchVariable;
+        if (catchVariable) {
+          innerFunctionNames.add(catchVariable.text);
+        }
+        let catchStatements = tryStmt.catchStatements;
+        if (catchStatements) {
+          for (let i = 0, k = catchStatements.length; i < k; i++) {
+            this.collectCapturedNames(catchStatements[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+          }
+        }
+        let finallyStatements = tryStmt.finallyStatements;
+        if (finallyStatements) {
+          for (let i = 0, k = finallyStatements.length; i < k; i++) {
+            this.collectCapturedNames(finallyStatements[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+          }
+        }
+        if (catchVariable) {
+          innerFunctionNames.delete(catchVariable.text);
+        }
+        break;
+      }
+      case NodeKind.Throw: {
+        let throwStmt = <ThrowStatement>node;
+        this.collectCapturedNames(throwStmt.value, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Void: {
+        let voidStmt = <VoidStatement>node;
+        this.collectCapturedNames(voidStmt.expression, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+        break;
+      }
+      case NodeKind.Literal: {
+        let literal = <LiteralExpression>node;
+        if (literal.literalKind == LiteralKind.Array) {
+          let arrLiteral = <ArrayLiteralExpression>literal;
+          let elements = arrLiteral.elementExpressions;
+          for (let i = 0, k = elements.length; i < k; i++) {
+            let elem = elements[i];
+            if (elem) {
+              this.collectCapturedNames(elem, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+            }
+          }
+        } else if (literal.literalKind == LiteralKind.Object) {
+          let objLiteral = <ObjectLiteralExpression>literal;
+          let values = objLiteral.values;
+          for (let i = 0, k = values.length; i < k; i++) {
+            this.collectCapturedNames(values[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+          }
+        } else if (literal.literalKind == LiteralKind.Template) {
+          let tmplLiteral = <TemplateLiteralExpression>literal;
+          let expressions = tmplLiteral.expressions;
+          for (let i = 0, k = expressions.length; i < k; i++) {
+            this.collectCapturedNames(expressions[i], innerFunctionNames, outerFlow, declaredVars, capturedNames);
+          }
+        }
+        // Other literal kinds (Integer, Float, String, RegExp) have no variable refs
+        break;
+      }
+
+      // Leaf expressions - no variable references
+      case NodeKind.True:
+      case NodeKind.False:
+      case NodeKind.Null:
+      case NodeKind.Super:
+      case NodeKind.Omitted:
+      case NodeKind.Compiled:
+        break;
+
+      // Statements without expressions
+      case NodeKind.Break:
+      case NodeKind.Continue:
+      case NodeKind.Empty:
+        break;
+
+      // Class expression - would need to scan members, but rare in closure context
+      case NodeKind.Class:
+      case NodeKind.Constructor:
+        break;
+
+      // Module-level declarations (shouldn't appear in closure bodies normally)
+      case NodeKind.Export:
+      case NodeKind.ExportDefault:
+      case NodeKind.ExportImport:
+      case NodeKind.Import:
+      case NodeKind.Module:
+      case NodeKind.ClassDeclaration:
+      case NodeKind.EnumDeclaration:
+      case NodeKind.InterfaceDeclaration:
+      case NodeKind.NamespaceDeclaration:
+      case NodeKind.TypeDeclaration:
+      case NodeKind.FunctionDeclaration:
+        break;
+
+      // Type nodes - no runtime variable references
+      case NodeKind.NamedType:
+      case NodeKind.FunctionType:
+      case NodeKind.TypeName:
+      case NodeKind.TypeParameter:
+      case NodeKind.Parameter:
+        break;
+
+      // Special nodes
+      case NodeKind.Source:
+      case NodeKind.Decorator:
+      case NodeKind.ExportMember:
+      case NodeKind.SwitchCase:
+      case NodeKind.IndexSignature:
+      case NodeKind.Comment:
+      case NodeKind.EnumValueDeclaration:
+      case NodeKind.FieldDeclaration:
+      case NodeKind.ImportDeclaration:
+      case NodeKind.MethodDeclaration:
+      case NodeKind.VariableDeclaration:
+        break;
+
+      default:
+        assert(false, "collectCapturedNames: unhandled node kind: " + (node.kind as i32).toString());
     }
   }
 
