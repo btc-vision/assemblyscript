@@ -2511,13 +2511,13 @@
   i32.const 0
   i32.store
   local.get $$env
-  local.get $operand
+  local.get $operation
   i32.store offset=4
   local.get $$env
-  local.get $operation
+  local.get $this
   i32.store offset=8
   local.get $$env
-  local.get $this
+  local.get $operand
   i32.store offset=12
   i32.const 8
   i32.const 6
@@ -3654,10 +3654,10 @@
   i32.const 0
   i32.store
   local.get $$env
-  local.get $amount
+  local.get $this
   i32.store offset=4
   local.get $$env
-  local.get $this
+  local.get $amount
   i32.store offset=8
   i32.const 8
   i32.const 34
@@ -3682,10 +3682,10 @@
   i32.const 0
   i32.store
   local.get $$env
-  local.get $factor
+  local.get $this
   i32.store offset=4
   local.get $$env
-  local.get $this
+  local.get $factor
   i32.store offset=8
   i32.const 8
   i32.const 34
@@ -5898,19 +5898,19 @@
   global.get $~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load offset=8
+  i32.load offset=4
   i32.const 0
   i32.eq
   if
    local.get $$closureEnv
-   i32.load offset=12
+   i32.load offset=8
    local.set $1
    global.get $~lib/memory/__stack_pointer
    local.get $1
    i32.store
    local.get $1
    local.get $$closureEnv
-   i32.load offset=12
+   i32.load offset=8
    local.set $1
    global.get $~lib/memory/__stack_pointer
    local.get $1
@@ -5918,24 +5918,24 @@
    local.get $1
    call $closure-class/Calculator#get:result
    local.get $$closureEnv
-   i32.load offset=4
+   i32.load offset=12
    i32.add
    call $closure-class/Calculator#set:result
   else
    local.get $$closureEnv
-   i32.load offset=8
+   i32.load offset=4
    i32.const 1
    i32.eq
    if
     local.get $$closureEnv
-    i32.load offset=12
+    i32.load offset=8
     local.set $1
     global.get $~lib/memory/__stack_pointer
     local.get $1
     i32.store
     local.get $1
     local.get $$closureEnv
-    i32.load offset=12
+    i32.load offset=8
     local.set $1
     global.get $~lib/memory/__stack_pointer
     local.get $1
@@ -5943,24 +5943,24 @@
     local.get $1
     call $closure-class/Calculator#get:result
     local.get $$closureEnv
-    i32.load offset=4
+    i32.load offset=12
     i32.sub
     call $closure-class/Calculator#set:result
    else
     local.get $$closureEnv
-    i32.load offset=8
+    i32.load offset=4
     i32.const 2
     i32.eq
     if
      local.get $$closureEnv
-     i32.load offset=12
+     i32.load offset=8
      local.set $1
      global.get $~lib/memory/__stack_pointer
      local.get $1
      i32.store
      local.get $1
      local.get $$closureEnv
-     i32.load offset=12
+     i32.load offset=8
      local.set $1
      global.get $~lib/memory/__stack_pointer
      local.get $1
@@ -5968,14 +5968,14 @@
      local.get $1
      call $closure-class/Calculator#get:result
      local.get $$closureEnv
-     i32.load offset=4
+     i32.load offset=12
      i32.mul
      call $closure-class/Calculator#set:result
     end
    end
   end
   local.get $$closureEnv
-  i32.load offset=12
+  i32.load offset=8
   local.set $1
   global.get $~lib/memory/__stack_pointer
   local.get $1
@@ -10358,14 +10358,14 @@
   global.get $~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load offset=8
+  i32.load offset=4
   local.set $1
   global.get $~lib/memory/__stack_pointer
   local.get $1
   i32.store
   local.get $1
   local.get $$closureEnv
-  i32.load offset=8
+  i32.load offset=4
   local.set $1
   global.get $~lib/memory/__stack_pointer
   local.get $1
@@ -10373,11 +10373,11 @@
   local.get $1
   call $closure-class/ChainableCounter#get:count
   local.get $$closureEnv
-  i32.load offset=4
+  i32.load offset=8
   i32.add
   call $closure-class/ChainableCounter#set:count
   local.get $$closureEnv
-  i32.load offset=8
+  i32.load offset=4
   local.set $1
   global.get $~lib/memory/__stack_pointer
   i32.const 8
@@ -10400,14 +10400,14 @@
   global.get $~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load offset=8
+  i32.load offset=4
   local.set $1
   global.get $~lib/memory/__stack_pointer
   local.get $1
   i32.store
   local.get $1
   local.get $$closureEnv
-  i32.load offset=8
+  i32.load offset=4
   local.set $1
   global.get $~lib/memory/__stack_pointer
   local.get $1
@@ -10415,11 +10415,11 @@
   local.get $1
   call $closure-class/ChainableCounter#get:count
   local.get $$closureEnv
-  i32.load offset=4
+  i32.load offset=8
   i32.mul
   call $closure-class/ChainableCounter#set:count
   local.get $$closureEnv
-  i32.load offset=8
+  i32.load offset=4
   local.set $1
   global.get $~lib/memory/__stack_pointer
   i32.const 8
@@ -10819,11 +10819,11 @@
   return
  )
  (func $closure-class/testTaskCallbacks (result i32)
+  (local $$env i32)
   (local $task i32)
   (local $then i32)
   (local $complete i32)
   (local $receivedValue i32)
-  (local $$env i32)
   (local $5 i32)
   (local $6 i32)
   (local $7 i32)
@@ -10969,12 +10969,12 @@
   return
  )
  (func $closure-class/testTaskCallbackAfterComplete (result i32)
+  (local $$env i32)
   (local $task i32)
   (local $then i32)
   (local $complete i32)
-  (local $3 i32)
+  (local $4 i32)
   (local $receivedValue i32)
-  (local $$env i32)
   (local $6 i32)
   (local $7 i32)
   (local $8 i32)
@@ -11023,12 +11023,12 @@
   i32.const 1
   global.set $~argumentsLength
   local.get $complete
-  local.tee $3
+  local.tee $4
   i32.store offset=16
-  local.get $3
+  local.get $4
   i32.load offset=4
   global.set $~lib/__closure_env
-  local.get $3
+  local.get $4
   i32.load
   call_indirect (type $3)
   local.get $$env

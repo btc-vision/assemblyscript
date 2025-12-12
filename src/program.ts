@@ -3639,6 +3639,9 @@ export class Local extends VariableLikeElement {
   /** The function whose environment this local is stored in. Set when captured. */
   envOwner: Function | null = null;
 
+  /** Whether this local was accessed as a regular wasm local (before capture was discovered). */
+  wasAccessedAsLocal: bool = false;
+
   /** Constructs a new local variable. */
   constructor(
     /** Simple name. */
@@ -3814,8 +3817,8 @@ export class Function extends TypedElement {
    *  This is needed because indirect calls can overwrite the global. */
   closureEnvLocal: Local | null = null;
 
-  /** Pre-scanned names of captured variables (set before compilation, used to mark locals). */
-  preCapturedNames: Set<string> | null = null;
+  /** Whether this function needs recompilation due to late capture discovery. */
+  needsCaptureRecompile: bool = false;
 
   /** Whether this function requires an environment (is a closure). */
   get needsEnvironment(): bool {

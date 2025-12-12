@@ -230,7 +230,7 @@
  (data $96 (i32.const 4496) "\14\00\00\00 \00\00\00 \00\00\00 ")
  (data $96.1 (i32.const 4552) "\02A\00\00\02\t\00\00 \00\00\00\00\00\00\00\10\t\12")
  (table $0 75 75 funcref)
- (elem $0 (i32.const 1) $closure-stress/captureI32Param~anonymous|0 $closure-stress/captureI64Param~anonymous|0 $closure-stress/captureF32Param~anonymous|0 $closure-stress/captureF64Param~anonymous|0 $closure-stress/captureBool~anonymous|0 $closure-stress/captureMultipleI32~anonymous|0 $closure-stress/captureMixedTypes~anonymous|0 $closure-stress/capture8Params~anonymous|0 $closure-stress/captureParamsAndLocals~anonymous|0 $closure-stress/makeCounter~anonymous|0 $closure-stress/testBidirectionalMutation~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/testSharedMutation~anonymous|0 $closure-stress/testSharedMutation~anonymous|1 $closure-stress/captureI32Param~anonymous|0 $closure-stress/testOuterScopeMutation~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/curriedAdd~anonymous|0 $closure-stress/makeGreaterThan~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/simpleClosureArray~anonymous|1 $closure-stress/simpleClosureArray~anonymous|2 $closure-stress/captureI32Param~anonymous|0 $closure-stress/simpleClosureArray~anonymous|1 $closure-stress/captureI32Param~anonymous|0 $closure-stress/captureArray~anonymous|0 $closure-stress/mutateCapturedArray~anonymous|0 $closure-stress/captureArray~anonymous|0 $closure-stress/captureClassInstance~anonymous|0 $closure-stress/captureClassInstance~anonymous|1 $closure-stress/testMapWithClosure~anonymous|0 $closure-stress/testFilterWithClosure~anonymous|0 $closure-stress/testReduceWithClosure~anonymous|0 $closure-stress/testReduceWithClosure~anonymous|1 $closure-stress/makeAdder~anonymous|0 $closure-stress/testMapWithClosure~anonymous|0 $closure-stress/compose~anonymous|0 $closure-stress/expensiveComputation $closure-stress/memoize~anonymous|0 $closure-stress/emptyClosure~anonymous|0 $closure-stress/captureOnlyNoParams~anonymous|0 $closure-stress/emptyClosure~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/simpleClosureArray~anonymous|1 $closure-stress/simpleClosureArray~anonymous|2 $closure-stress/makeFactorial~anonymous|0 $closure-stress/captureSmallTypes~anonymous|0 $closure-stress/testSharedMutation~anonymous|0 $closure-stress/manyClosuresSameEnv~anonymous|1 $closure-stress/manyClosuresSameEnv~anonymous|2 $closure-stress/manyClosuresSameEnv~anonymous|3 $closure-stress/manyClosuresSameEnv~anonymous|4 $closure-stress/captureI32Param~anonymous|0 $closure-stress/manyCaptures~anonymous|0 $closure-stress/simpleIIFE~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/testSharedMutation~anonymous|0 $closure-stress/interleavedClosures~anonymous|2 $closure-stress/interleavedClosures~anonymous|3 $closure-stress/captureString~anonymous|0 $closure-stress/mutateStringRef~anonymous|0 $closure-stress/captureString~anonymous|0 $closure-stress/testNestedClosureFunctions~anonymous|0~anonymous|0 $closure-stress/testNestedClosureFunctions~anonymous|0 $closure-stress/testRangeWithClosure~anonymous|0 $closure-stress/captureOnlyNoParams~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/makeCounter~anonymous|0 $closure-stress/testDeeplyNestedClosures~anonymous|0~anonymous|0~anonymous|0 $closure-stress/testDeeplyNestedClosures~anonymous|0~anonymous|0 $closure-stress/testDeeplyNestedClosures~anonymous|0 $closure-stress/makeCounter~anonymous|0 $closure-stress/captureI32Param~anonymous|0)
+ (elem $0 (i32.const 1) $closure-stress/captureI32Param~anonymous|0 $closure-stress/captureI64Param~anonymous|0 $closure-stress/captureF32Param~anonymous|0 $closure-stress/captureF64Param~anonymous|0 $closure-stress/captureBool~anonymous|0 $closure-stress/captureMultipleI32~anonymous|0 $closure-stress/captureMixedTypes~anonymous|0 $closure-stress/capture8Params~anonymous|0 $closure-stress/captureParamsAndLocals~anonymous|0 $closure-stress/makeCounter~anonymous|0 $closure-stress/testBidirectionalMutation~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/testSharedMutation~anonymous|0 $closure-stress/testSharedMutation~anonymous|1 $closure-stress/captureI32Param~anonymous|0 $closure-stress/testOuterScopeMutation~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/curriedAdd~anonymous|0 $closure-stress/makeGreaterThan~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/simpleClosureArray~anonymous|1 $closure-stress/simpleClosureArray~anonymous|2 $closure-stress/captureI32Param~anonymous|0 $closure-stress/simpleClosureArray~anonymous|1 $closure-stress/captureI32Param~anonymous|0 $closure-stress/captureArray~anonymous|0 $closure-stress/mutateCapturedArray~anonymous|0 $closure-stress/captureArray~anonymous|0 $closure-stress/captureClassInstance~anonymous|0 $closure-stress/captureClassInstance~anonymous|1 $closure-stress/testMapWithClosure~anonymous|0 $closure-stress/testFilterWithClosure~anonymous|0 $closure-stress/testReduceWithClosure~anonymous|0 $closure-stress/testReduceWithClosure~anonymous|1 $closure-stress/makeAdder~anonymous|0 $closure-stress/testMapWithClosure~anonymous|0 $closure-stress/compose~anonymous|0 $closure-stress/expensiveComputation $closure-stress/memoize~anonymous|0 $closure-stress/emptyClosure~anonymous|0 $closure-stress/testReduceWithClosure~anonymous|1 $closure-stress/emptyClosure~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/simpleClosureArray~anonymous|1 $closure-stress/simpleClosureArray~anonymous|2 $closure-stress/makeFactorial~anonymous|0 $closure-stress/captureSmallTypes~anonymous|0 $closure-stress/testSharedMutation~anonymous|0 $closure-stress/manyClosuresSameEnv~anonymous|1 $closure-stress/manyClosuresSameEnv~anonymous|2 $closure-stress/manyClosuresSameEnv~anonymous|3 $closure-stress/manyClosuresSameEnv~anonymous|4 $closure-stress/captureI32Param~anonymous|0 $closure-stress/manyCaptures~anonymous|0 $closure-stress/simpleIIFE~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/captureI32Param~anonymous|0 $closure-stress/testSharedMutation~anonymous|0 $closure-stress/interleavedClosures~anonymous|2 $closure-stress/interleavedClosures~anonymous|3 $closure-stress/captureString~anonymous|0 $closure-stress/mutateStringRef~anonymous|0 $closure-stress/captureString~anonymous|0 $closure-stress/makeCounter~anonymous|0 $closure-stress/testNestedClosureFunctions~anonymous|0 $closure-stress/testRangeWithClosure~anonymous|0 $closure-stress/testReduceWithClosure~anonymous|1 $closure-stress/captureI32Param~anonymous|0 $closure-stress/makeCounter~anonymous|0 $closure-stress/testDeeplyNestedClosures~anonymous|0~anonymous|0~anonymous|0 $closure-stress/testDeeplyNestedClosures~anonymous|0~anonymous|0 $closure-stress/testDeeplyNestedClosures~anonymous|0 $closure-stress/makeCounter~anonymous|0 $closure-stress/captureI32Param~anonymous|0)
  (export "memory" (memory $0))
  (start $~start)
  (func $closure-stress/captureI32Param~anonymous|0 (result i32)
@@ -311,7 +311,7 @@
    local.get $1
    global.set $~lib/rt/itcms/iter
   end
-  block $__inlined_func$~lib/rt/itcms/Object#unlink$369
+  block $__inlined_func$~lib/rt/itcms/Object#unlink$368
    local.get $0
    i32.load offset=4
    i32.const -4
@@ -335,7 +335,7 @@
      call $~lib/builtins/abort
      unreachable
     end
-    br $__inlined_func$~lib/rt/itcms/Object#unlink$369
+    br $__inlined_func$~lib/rt/itcms/Object#unlink$368
    end
    local.get $0
    i32.load offset=8
@@ -2196,9 +2196,9 @@
   (local $0 i32)
   global.get $~lib/__closure_env
   local.tee $0
-  i32.load offset=8
-  local.get $0
   i32.load offset=4
+  local.get $0
+  i32.load offset=8
   i32.add
  )
  (func $closure-stress/makeAdder~anonymous|0 (param $0 i32) (result i32)
@@ -2280,15 +2280,6 @@
  )
  (func $closure-stress/emptyClosure~anonymous|0 (result i32)
   i32.const 42
- )
- (func $closure-stress/captureOnlyNoParams~anonymous|0 (result i32)
-  (local $0 i32)
-  global.get $~lib/__closure_env
-  local.tee $0
-  i32.load offset=4
-  local.get $0
-  i32.load offset=8
-  i32.add
  )
  (func $closure-stress/multipleClosureReturns (param $0 i32) (result i32)
   (local $1 i32)
@@ -2498,22 +2489,6 @@
   global.get $~lib/__closure_env
   i32.load offset=4
  )
- (func $closure-stress/testNestedClosureFunctions~anonymous|0~anonymous|0 (result i32)
-  (local $0 i32)
-  (local $1 i32)
-  global.get $~lib/__closure_env
-  local.tee $0
-  i32.load
-  local.tee $1
-  local.get $1
-  i32.load offset=4
-  i32.const 1
-  i32.add
-  i32.store offset=4
-  local.get $0
-  i32.load
-  i32.load offset=4
- )
  (func $closure-stress/testRangeWithClosure~anonymous|0 (param $0 i32)
   (local $1 i32)
   global.get $~lib/__closure_env
@@ -2532,12 +2507,12 @@
   i32.load
   local.set $0
   local.get $1
-  i32.load offset=12
+  i32.load offset=4
   local.get $0
   i32.load
   i32.load offset=4
   local.get $0
-  i32.load offset=8
+  i32.load offset=4
   i32.add
   i32.add
  )
@@ -2881,7 +2856,7 @@
    global.get $~lib/memory/__stack_pointer
    local.get $0
    i32.store
-   block $__inlined_func$~lib/rt/itcms/__renew$311
+   block $__inlined_func$~lib/rt/itcms/__renew$310
     i32.const 1073741820
     local.get $2
     i32.const 1
@@ -2924,7 +2899,7 @@
      i32.store offset=16
      local.get $2
      local.set $1
-     br $__inlined_func$~lib/rt/itcms/__renew$311
+     br $__inlined_func$~lib/rt/itcms/__renew$310
     end
     local.get $3
     local.get $4
@@ -4053,7 +4028,7 @@
    global.get $~lib/memory/__stack_pointer
    global.get $~lib/__closure_env
    local.tee $2
-   i32.load offset=8
+   i32.load offset=4
    local.tee $1
    i32.store
    global.get $~lib/memory/__stack_pointer
@@ -4111,7 +4086,7 @@
    if
     global.get $~lib/memory/__stack_pointer
     local.get $2
-    i32.load offset=8
+    i32.load offset=4
     local.tee $2
     i32.store
     global.get $~lib/memory/__stack_pointer
@@ -4172,7 +4147,7 @@
    end
    global.get $~lib/memory/__stack_pointer
    local.get $2
-   i32.load offset=4
+   i32.load offset=8
    local.tee $1
    i32.store offset=4
    local.get $1
@@ -4185,7 +4160,7 @@
    local.set $1
    global.get $~lib/memory/__stack_pointer
    local.get $2
-   i32.load offset=8
+   i32.load offset=4
    local.tee $2
    i32.store
    local.get $2
@@ -4437,7 +4412,7 @@
    local.get $0
    local.tee $1
    i32.store
-   block $__inlined_func$~lib/string/String#concat$377
+   block $__inlined_func$~lib/string/String#concat$376
     local.get $0
     i32.const 20
     i32.sub
@@ -4456,7 +4431,7 @@
      global.set $~lib/memory/__stack_pointer
      i32.const 3936
      local.set $0
-     br $__inlined_func$~lib/string/String#concat$377
+     br $__inlined_func$~lib/string/String#concat$376
     end
     global.get $~lib/memory/__stack_pointer
     local.get $0
@@ -6631,7 +6606,7 @@
    call $~lib/array/Array<i32>#constructor
    local.tee $0
    i32.store
-   loop $for-loop|01
+   loop $for-loop|1
     local.get $1
     i32.const 10
     i32.lt_s
@@ -6647,7 +6622,7 @@
      i32.const 1
      i32.add
      local.set $1
-     br $for-loop|01
+     br $for-loop|1
     end
    end
    global.get $~lib/memory/__stack_pointer
@@ -6687,7 +6662,7 @@
    call $~lib/array/Array<i32>#constructor
    local.tee $4
    i32.store
-   loop $for-loop|03
+   loop $for-loop|02
     global.get $~lib/memory/__stack_pointer
     local.get $0
     i32.store offset=4
@@ -6770,7 +6745,7 @@
      i32.const 1
      i32.add
      local.set $2
-     br $for-loop|03
+     br $for-loop|02
     end
    end
    global.get $~lib/memory/__stack_pointer
@@ -6831,7 +6806,7 @@
    i32.store offset=4
    local.get $2
    i32.const 100
-   i32.store offset=8
+   i32.store offset=12
    global.get $~lib/memory/__stack_pointer
    i32.const 5
    call $~lib/array/Array<i32>#constructor
@@ -6889,7 +6864,7 @@
    global.get $~lib/memory/__stack_pointer
    i64.const 0
    i64.store
-   loop $for-loop|05
+   loop $for-loop|04
     global.get $~lib/memory/__stack_pointer
     local.get $4
     i32.store
@@ -6921,7 +6896,7 @@
      i32.const 1
      i32.add
      local.set $0
-     br $for-loop|05
+     br $for-loop|04
     end
    end
    global.get $~lib/memory/__stack_pointer
@@ -6930,7 +6905,7 @@
    global.set $~lib/memory/__stack_pointer
    local.get $2
    local.get $1
-   i32.store offset=12
+   i32.store offset=8
    global.get $~lib/memory/__stack_pointer
    i32.const 8
    i32.const 4
@@ -7218,7 +7193,7 @@
    i32.store offset=4
    local.get $1
    i32.const 2928
-   i32.store offset=8
+   i32.store offset=12
    global.get $~lib/memory/__stack_pointer
    i32.const 12
    i32.sub
@@ -7301,7 +7276,7 @@
    global.set $~lib/memory/__stack_pointer
    local.get $1
    local.get $3
-   i32.store offset=12
+   i32.store offset=8
    i32.const 8
    i32.const 11
    call $~lib/rt/itcms/__new
@@ -8095,7 +8070,7 @@
    i32.store
    i32.const 0
    local.set $0
-   loop $for-loop|00
+   loop $for-loop|05
     local.get $0
     i32.const 10
     i32.lt_s
@@ -8141,14 +8116,14 @@
      i32.const 1
      i32.add
      local.set $0
-     br $for-loop|00
+     br $for-loop|05
     end
    end
    i32.const 0
    local.set $0
    i32.const 0
    local.set $1
-   loop $for-loop|1
+   loop $for-loop|10
     local.get $1
     i32.const 10
     i32.lt_s
@@ -8175,7 +8150,7 @@
      i32.const 1
      i32.add
      local.set $1
-     br $for-loop|1
+     br $for-loop|10
     end
    end
    global.get $~lib/memory/__stack_pointer
@@ -8643,7 +8618,7 @@
    global.get $~lib/memory/__stack_pointer
    i32.const 0
    i32.store
-   loop $for-loop|016
+   loop $for-loop|01
     local.get $1
     i32.const 10
     i32.lt_s
@@ -8662,7 +8637,7 @@
      i32.const 1
      i32.add
      local.set $1
-     br $for-loop|016
+     br $for-loop|01
     end
    end
    global.get $~lib/memory/__stack_pointer
@@ -9308,7 +9283,6 @@
   (local $0 i32)
   (local $1 i32)
   (local $2 i32)
-  (local $3 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.sub
@@ -9328,22 +9302,8 @@
   i64.const 0
   i64.store
   global.get $~lib/__closure_env
-  local.set $3
-  global.get $~lib/rt/tlsf/ROOT
-  i32.eqz
-  if
-   call $~lib/rt/tlsf/initialize
-  end
-  global.get $~lib/rt/tlsf/ROOT
-  i32.const 8
-  call $~lib/rt/tlsf/allocateBlock
-  i32.const 4
-  i32.add
-  local.tee $0
-  local.get $3
-  i32.store
-  local.get $3
-  local.get $3
+  local.tee $2
+  local.get $2
   i32.load offset=4
   i32.const 1
   i32.add
@@ -9352,25 +9312,25 @@
   i32.const 8
   i32.const 4
   call $~lib/rt/itcms/__new
-  local.tee $2
+  local.tee $1
   i32.const 64
   i32.store
+  local.get $1
   local.get $2
-  local.get $0
   i32.store offset=4
-  local.get $2
+  local.get $1
   i32.store
   global.get $~lib/memory/__stack_pointer
-  local.get $2
+  local.get $1
   i32.store offset=4
-  local.get $2
+  local.get $1
   i32.load offset=4
   global.set $~lib/__closure_env
-  local.get $2
+  local.get $1
   i32.load
   call_indirect (type $0)
   drop
-  local.get $3
+  local.get $2
   i32.load offset=4
   global.get $~lib/memory/__stack_pointer
   i32.const 8
@@ -9407,7 +9367,7 @@
    call $~lib/rt/tlsf/initialize
   end
   global.get $~lib/rt/tlsf/ROOT
-  i32.const 16
+  i32.const 8
   call $~lib/rt/tlsf/allocateBlock
   local.tee $1
   i32.const 4
@@ -9417,7 +9377,7 @@
   i32.store
   local.get $1
   i32.const 100
-  i32.store offset=16
+  i32.store offset=8
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.const 4
@@ -9474,7 +9434,7 @@
    call $~lib/rt/tlsf/initialize
   end
   global.get $~lib/rt/tlsf/ROOT
-  i32.const 12
+  i32.const 8
   call $~lib/rt/tlsf/allocateBlock
   local.tee $1
   i32.const 4
@@ -9484,7 +9444,7 @@
   i32.store
   local.get $1
   i32.const 10
-  i32.store offset=12
+  i32.store offset=8
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.const 4

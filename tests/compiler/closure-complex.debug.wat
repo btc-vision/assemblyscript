@@ -1,17 +1,16 @@
 (module
- (type $0 (func (result i32)))
- (type $1 (func (param i32) (result i32)))
- (type $2 (func (param i32 i32)))
- (type $3 (func))
+ (type $0 (func (param i32) (result i32)))
+ (type $1 (func (param i32 i32)))
+ (type $2 (func (result i32)))
+ (type $3 (func (param i32)))
  (type $4 (func (param i32 i32) (result i32)))
- (type $5 (func (param i32)))
+ (type $5 (func))
  (type $6 (func (param i32 i32 i32)))
  (type $7 (func (param i32 i32 i32 i32)))
  (type $8 (func (param i32 i32 i64) (result i32)))
  (type $9 (func (param i32 i32 i32) (result i32)))
  (type $10 (func (param i32 i32 i32 i32) (result i32)))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
- (global $~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/total (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/threshold (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/state (mut i32) (i32.const 0))
@@ -26,71 +25,52 @@
  (global $~lib/rt/itcms/fromSpace (mut i32) (i32.const 0))
  (global $~lib/rt/tlsf/ROOT (mut i32) (i32.const 0))
  (global $~lib/native/ASC_LOW_MEMORY_LIMIT i32 (i32.const 0))
- (global $closure/fn1 (mut i32) (i32.const 0))
+ (global $~lib/__closure_env (mut i32) (i32.const 0))
  (global $~argumentsLength (mut i32) (i32.const 0))
- (global $closure/fn2 (mut i32) (i32.const 0))
- (global $closure/fn3 (mut i32) (i32.const 0))
- (global $closure/fn5 (mut i32) (i32.const 0))
  (global $~lib/native/ASC_RUNTIME i32 (i32.const 2))
- (global $closure/counter1 (mut i32) (i32.const 0))
- (global $closure/counter2 (mut i32) (i32.const 0))
- (global $~lib/rt/__rtti_base i32 (i32.const 1584))
- (global $~lib/memory/__data_end i32 (i32.const 1648))
- (global $~lib/memory/__stack_pointer (mut i32) (i32.const 34416))
- (global $~lib/memory/__heap_base i32 (i32.const 34416))
+ (global $~lib/rt/__rtti_base i32 (i32.const 1408))
+ (global $~lib/memory/__data_end i32 (i32.const 1480))
+ (global $~lib/memory/__stack_pointer (mut i32) (i32.const 34248))
+ (global $~lib/memory/__heap_base i32 (i32.const 34248))
  (memory $0 1)
- (data $0 (i32.const 12) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00")
- (data $1 (i32.const 44) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e\00\00\00\00\00")
- (data $2 (i32.const 108) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00 \00\00\00~\00l\00i\00b\00/\00r\00t\00/\00i\00t\00c\00m\00s\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $0 (i32.const 12) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e\00\00\00\00\00")
+ (data $1 (i32.const 76) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00 \00\00\00~\00l\00i\00b\00/\00r\00t\00/\00i\00t\00c\00m\00s\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $2 (i32.const 144) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
  (data $3 (i32.const 176) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $4 (i32.const 208) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $5 (i32.const 236) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00$\00\00\00I\00n\00d\00e\00x\00 \00o\00u\00t\00 \00o\00f\00 \00r\00a\00n\00g\00e\00\00\00\00\00\00\00\00\00")
- (data $6 (i32.const 300) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\14\00\00\00~\00l\00i\00b\00/\00r\00t\00.\00t\00s\00\00\00\00\00\00\00\00\00")
- (data $7 (i32.const 352) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $8 (i32.const 380) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1e\00\00\00~\00l\00i\00b\00/\00r\00t\00/\00t\00l\00s\00f\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $9 (i32.const 444) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\14\00\00\00c\00l\00o\00s\00u\00r\00e\00.\00t\00s\00\00\00\00\00\00\00\00\00")
- (data $10 (i32.const 492) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\02\00\00\00\00\00\00\00\00\00\00\00")
- (data $11 (i32.const 524) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\03\00\00\00\00\00\00\00\00\00\00\00")
- (data $12 (i32.const 556) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\04\00\00\00\00\00\00\00\00\00\00\00")
- (data $13 (i32.const 588) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\05\00\00\00\00\00\00\00\00\00\00\00")
- (data $14 (i32.const 620) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\06\00\00\00\00\00\00\00\00\00\00\00")
- (data $15 (i32.const 652) "\1c\00\00\00\00\00\00\00\00\00\00\00\06\00\00\00\08\00\00\00\07\00\00\00\00\00\00\00\00\00\00\00")
- (data $16 (i32.const 684) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\08\00\00\00\00\00\00\00\00\00\00\00")
- (data $17 (i32.const 716) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\t\00\00\00\00\00\00\00\00\00\00\00")
- (data $18 (i32.const 748) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\n\00\00\00\00\00\00\00\00\00\00\00")
- (data $19 (i32.const 780) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0b\00\00\00\00\00\00\00\00\00\00\00")
- (data $20 (i32.const 812) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0c\00\00\00\00\00\00\00\00\00\00\00")
- (data $21 (i32.const 844) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\r\00\00\00\00\00\00\00\00\00\00\00")
- (data $22 (i32.const 876) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0e\00\00\00\00\00\00\00\00\00\00\00")
- (data $23 (i32.const 908) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\0f\00\00\00\00\00\00\00\00\00\00\00")
- (data $24 (i32.const 940) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\10\00\00\00\00\00\00\00\00\00\00\00")
- (data $25 (i32.const 972) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\11\00\00\00\00\00\00\00\00\00\00\00")
- (data $26 (i32.const 1004) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1a\00\00\00~\00l\00i\00b\00/\00a\00r\00r\00a\00y\00.\00t\00s\00\00\00")
- (data $27 (i32.const 1052) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1c\00\00\00I\00n\00v\00a\00l\00i\00d\00 \00l\00e\00n\00g\00t\00h\00")
- (data $28 (i32.const 1100) "|\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00^\00\00\00E\00l\00e\00m\00e\00n\00t\00 \00t\00y\00p\00e\00 \00m\00u\00s\00t\00 \00b\00e\00 \00n\00u\00l\00l\00a\00b\00l\00e\00 \00i\00f\00 \00a\00r\00r\00a\00y\00 \00i\00s\00 \00h\00o\00l\00e\00y\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $29 (i32.const 1228) "\1c\00\00\00\00\00\00\00\00\00\00\00\t\00\00\00\08\00\00\00\12\00\00\00\00\00\00\00\00\00\00\00")
- (data $30 (i32.const 1260) "\1c\00\00\00\00\00\00\00\00\00\00\00\n\00\00\00\08\00\00\00\13\00\00\00\00\00\00\00\00\00\00\00")
- (data $31 (i32.const 1292) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $32 (i32.const 1324) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\14\00\00\00\00\00\00\00\00\00\00\00")
- (data $33 (i32.const 1356) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $34 (i32.const 1388) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\15\00\00\00\00\00\00\00\00\00\00\00")
- (data $35 (i32.const 1420) "\1c\00\00\00\00\00\00\00\00\00\00\00\0c\00\00\00\08\00\00\00\16\00\00\00\00\00\00\00\00\00\00\00")
- (data $36 (i32.const 1452) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\17\00\00\00\00\00\00\00\00\00\00\00")
- (data $37 (i32.const 1484) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\18\00\00\00\00\00\00\00\00\00\00\00")
- (data $38 (i32.const 1516) "\1c\00\00\00\00\00\00\00\00\00\00\00\r\00\00\00\08\00\00\00\19\00\00\00\00\00\00\00\00\00\00\00")
- (data $39 (i32.const 1548) "\1c\00\00\00\00\00\00\00\00\00\00\00\0e\00\00\00\08\00\00\00\1a\00\00\00\00\00\00\00\00\00\00\00")
- (data $40 (i32.const 1584) "\0f\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\02A\00\00\02\t\00\00\00\00\00\00\00\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (table $0 27 27 funcref)
- (elem $0 (i32.const 1) $closure/testCaptureParam~anonymous|0 $closure/testCaptureVar~anonymous|0 $closure/testCaptureLet~anonymous|0 $closure/testClosureWrite~anonymous|0 $closure/testClosureWrite~anonymous|1 $closure/testMultipleCaptures~anonymous|0 $closure/testSharedEnvironment~anonymous|0 $closure/testSharedEnvironment~anonymous|1 $closure/testCaptureInWhile~anonymous|0 $closure/testCaptureInDoWhile~anonymous|0 $closure/testCaptureInFor~anonymous|0 $closure/testCaptureInSwitch~anonymous|0 $closure/testCaptureInSwitch~anonymous|1 $closure/testCaptureInSwitch~anonymous|2 $closure/testCaptureInArrayLiteral~anonymous|0 $closure/testCaptureInArrayLiteral~anonymous|1 $closure/testCaptureInArrayLiteral~anonymous|2 $closure/testNestedClosureCapture~anonymous|0~anonymous|0 $closure/testNestedClosureCapture~anonymous|0 $closure/testMultipleClosuresInArray~anonymous|0 $closure/testCaptureInTernary~anonymous|0 $closure/testCaptureFromCondition~anonymous|0 $closure/testDeepLoopCapture~anonymous|0 $closure/makeCounter~anonymous|0 $closure/testDefaultParamCapture~anonymous|0@varargs $closure/testDefaultParamWithOtherParam~anonymous|0@varargs)
+ (data $4 (i32.const 204) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00$\00\00\00I\00n\00d\00e\00x\00 \00o\00u\00t\00 \00o\00f\00 \00r\00a\00n\00g\00e\00\00\00\00\00\00\00\00\00")
+ (data $5 (i32.const 268) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\14\00\00\00~\00l\00i\00b\00/\00r\00t\00.\00t\00s\00\00\00\00\00\00\00\00\00")
+ (data $6 (i32.const 320) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $7 (i32.const 348) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1e\00\00\00~\00l\00i\00b\00/\00r\00t\00/\00t\00l\00s\00f\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $8 (i32.const 412) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00")
+ (data $9 (i32.const 444) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\02\00\00\00\00\00\00\00\00\00\00\00")
+ (data $10 (i32.const 476) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00$\00\00\00c\00l\00o\00s\00u\00r\00e\00-\00c\00o\00m\00p\00l\00e\00x\00.\00t\00s\00\00\00\00\00\00\00\00\00")
+ (data $11 (i32.const 540) "\1c\00\00\00\00\00\00\00\00\00\00\00\07\00\00\00\08\00\00\00\03\00\00\00\00\00\00\00\00\00\00\00")
+ (data $12 (i32.const 572) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $13 (i32.const 604) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\04\00\00\00\00\00\00\00\00\00\00\00")
+ (data $14 (i32.const 636) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1c\00\00\00I\00n\00v\00a\00l\00i\00d\00 \00l\00e\00n\00g\00t\00h\00")
+ (data $15 (i32.const 684) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1a\00\00\00~\00l\00i\00b\00/\00a\00r\00r\00a\00y\00.\00t\00s\00\00\00")
+ (data $16 (i32.const 732) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\05\00\00\00\00\00\00\00\00\00\00\00")
+ (data $17 (i32.const 764) "|\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00^\00\00\00E\00l\00e\00m\00e\00n\00t\00 \00t\00y\00p\00e\00 \00m\00u\00s\00t\00 \00b\00e\00 \00n\00u\00l\00l\00a\00b\00l\00e\00 \00i\00f\00 \00a\00r\00r\00a\00y\00 \00i\00s\00 \00h\00o\00l\00e\00y\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $18 (i32.const 892) "\1c\00\00\00\00\00\00\00\00\00\00\00\n\00\00\00\08\00\00\00\06\00\00\00\00\00\00\00\00\00\00\00")
+ (data $19 (i32.const 924) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\07\00\00\00\00\00\00\00\00\00\00\00")
+ (data $20 (i32.const 956) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\08\00\00\00\00\00\00\00\00\00\00\00")
+ (data $21 (i32.const 988) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\t\00\00\00\00\00\00\00\00\00\00\00")
+ (data $22 (i32.const 1020) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $23 (i32.const 1052) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\n\00\00\00\00\00\00\00\00\00\00\00")
+ (data $24 (i32.const 1084) "\1c\00\00\00\00\00\00\00\00\00\00\00\r\00\00\00\08\00\00\00\0b\00\00\00\00\00\00\00\00\00\00\00")
+ (data $25 (i32.const 1116) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0c\00\00\00\00\00\00\00\00\00\00\00")
+ (data $26 (i32.const 1148) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\r\00\00\00\00\00\00\00\00\00\00\00")
+ (data $27 (i32.const 1180) "\1c\00\00\00\00\00\00\00\00\00\00\00\0e\00\00\00\08\00\00\00\0e\00\00\00\00\00\00\00\00\00\00\00")
+ (data $28 (i32.const 1212) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\14\00\00\00\01\00\00\00\02\00\00\00\03\00\00\00\04\00\00\00\05\00\00\00\00\00\00\00\00\00\00\00")
+ (data $29 (i32.const 1260) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0f\00\00\00\00\00\00\00\00\00\00\00")
+ (data $30 (i32.const 1292) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\14\00\00\00\01\00\00\00\02\00\00\00\03\00\00\00\04\00\00\00\05\00\00\00\00\00\00\00\00\00\00\00")
+ (data $31 (i32.const 1340) "\1c\00\00\00\00\00\00\00\00\00\00\00\0f\00\00\00\08\00\00\00\10\00\00\00\00\00\00\00\00\00\00\00")
+ (data $32 (i32.const 1372) "\1c\00\00\00\00\00\00\00\00\00\00\00\10\00\00\00\08\00\00\00\11\00\00\00\00\00\00\00\00\00\00\00")
+ (data $33 (i32.const 1408) "\11\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00\02A\00\00\02\t\00\00\00\00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (table $0 18 18 funcref)
+ (elem $0 (i32.const 1) $closure-complex/testNestedArrowsWithClassCapture~anonymous|0 $closure-complex/testNestedArrowsWithClassCapture~anonymous|1 $closure-complex/testArrowClosureWithClass~anonymous|0 $closure-complex/createCounterOperations~anonymous|0 $closure-complex/createCounterOperations~anonymous|1 $closure-complex/testDeeplyNestedClassCreation~anonymous|0~anonymous|0~anonymous|0 $closure-complex/testDeeplyNestedClassCreation~anonymous|0~anonymous|0 $closure-complex/testDeeplyNestedClassCreation~anonymous|0 $closure-complex/ClosureFactory#createAdder~anonymous|0 $closure-complex/SelfReferencing#addCallback~anonymous|0 $closure-complex/testMultipleClosuresSharing~anonymous|0 $closure-complex/testMultipleClosuresSharing~anonymous|1 $closure-complex/testNestedArrowFunctions~anonymous|0~anonymous|0 $closure-complex/testNestedArrowFunctions~anonymous|0 $closure-complex/testComplexPipeline~anonymous|0 $closure-complex/testCurriedWithClass~anonymous|0~anonymous|0 $closure-complex/testCurriedWithClass~anonymous|0)
  (export "memory" (memory $0))
  (start $~start)
- (func $closure/testCaptureParam~anonymous|0 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
- )
  (func $~lib/rt/itcms/Object#set:nextWithColor (param $this i32) (param $nextWithColor i32)
   local.get $this
   local.get $nextWithColor
@@ -155,7 +135,7 @@
     i32.eqz
     if
      i32.const 0
-     i32.const 128
+     i32.const 96
      i32.const 160
      i32.const 16
      call $~lib/builtins/abort
@@ -225,7 +205,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 128
+    i32.const 96
     i32.const 128
     i32.const 18
     call $~lib/builtins/abort
@@ -242,7 +222,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 128
+   i32.const 96
    i32.const 132
    i32.const 16
    call $~lib/builtins/abort
@@ -272,8 +252,8 @@
   i32.load
   i32.gt_u
   if
-   i32.const 256
-   i32.const 320
+   i32.const 224
+   i32.const 288
    i32.const 21
    i32.const 28
    call $~lib/builtins/abort
@@ -341,7 +321,7 @@
    i32.eqz
    if (result i32)
     i32.const 0
-    i32.const 128
+    i32.const 96
     i32.const 148
     i32.const 30
     call $~lib/builtins/abort
@@ -493,7 +473,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 268
    i32.const 14
    call $~lib/builtins/abort
@@ -513,7 +493,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 270
    i32.const 14
    call $~lib/builtins/abort
@@ -576,7 +556,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 284
    i32.const 14
    call $~lib/builtins/abort
@@ -729,7 +709,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 201
    i32.const 14
    call $~lib/builtins/abort
@@ -746,7 +726,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 203
    i32.const 14
    call $~lib/builtins/abort
@@ -835,7 +815,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 400
+    i32.const 368
     i32.const 221
     i32.const 16
     call $~lib/builtins/abort
@@ -878,7 +858,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 233
    i32.const 14
    call $~lib/builtins/abort
@@ -896,7 +876,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 234
    i32.const 14
    call $~lib/builtins/abort
@@ -964,7 +944,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 251
    i32.const 14
    call $~lib/builtins/abort
@@ -1081,7 +1061,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 382
    i32.const 14
    call $~lib/builtins/abort
@@ -1127,7 +1107,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 400
+    i32.const 368
     i32.const 389
     i32.const 16
     call $~lib/builtins/abort
@@ -1159,7 +1139,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 400
+    i32.const 368
     i32.const 402
     i32.const 5
     call $~lib/builtins/abort
@@ -1403,7 +1383,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 562
    i32.const 3
    call $~lib/builtins/abort
@@ -1623,7 +1603,7 @@
     i32.eqz
     if
      i32.const 0
-     i32.const 128
+     i32.const 96
      i32.const 229
      i32.const 20
      call $~lib/builtins/abort
@@ -1731,8 +1711,8 @@
   i32.const 1073741820
   i32.gt_u
   if
-   i32.const 64
-   i32.const 400
+   i32.const 32
+   i32.const 368
    i32.const 461
    i32.const 29
    call $~lib/builtins/abort
@@ -1834,7 +1814,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 334
    i32.const 14
    call $~lib/builtins/abort
@@ -1905,7 +1885,7 @@
     i32.eqz
     if
      i32.const 0
-     i32.const 400
+     i32.const 368
      i32.const 347
      i32.const 18
      call $~lib/builtins/abort
@@ -2062,7 +2042,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 361
    i32.const 14
    call $~lib/builtins/abort
@@ -2177,7 +2157,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 400
+    i32.const 368
     i32.const 499
     i32.const 16
     call $~lib/builtins/abort
@@ -2197,7 +2177,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 368
    i32.const 501
    i32.const 14
    call $~lib/builtins/abort
@@ -2245,8 +2225,8 @@
   i32.const 1073741804
   i32.ge_u
   if
-   i32.const 64
-   i32.const 128
+   i32.const 32
+   i32.const 96
    i32.const 261
    i32.const 31
    call $~lib/builtins/abort
@@ -2291,258 +2271,23 @@
   local.get $ptr
   return
  )
- (func $closure/testCaptureParam (param $x i32) (result i32)
-  (local $$env i32)
-  (local $2 i32)
-  i32.const 8
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
+ (func $closure-complex/Counter#set:count (param $this i32) (param $count i32)
+  local.get $this
+  local.get $count
   i32.store
-  local.get $$env
-  local.get $x
-  i32.store offset=4
-  i32.const 8
-  i32.const 4
-  call $~lib/rt/itcms/__new
-  local.set $2
-  local.get $2
-  i32.const 1
+ )
+ (func $closure-complex/Counter#get:count (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $closure-complex/Calculator#set:result (param $this i32) (param $result i32)
+  local.get $this
+  local.get $result
   i32.store
-  local.get $2
-  local.get $$env
-  i32.store offset=4
-  local.get $2
-  return
  )
- (func $closure/testCaptureVar~anonymous|0 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
- )
- (func $closure/testCaptureVar (result i32)
-  (local $$env i32)
-  (local $x i32)
-  (local $2 i32)
-  i32.const 8
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  i32.const 100
-  i32.store offset=4
-  i32.const 8
-  i32.const 4
-  call $~lib/rt/itcms/__new
-  local.set $2
-  local.get $2
-  i32.const 2
-  i32.store
-  local.get $2
-  local.get $$env
-  i32.store offset=4
-  local.get $2
-  return
- )
- (func $closure/testCaptureLet~anonymous|0 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
- )
- (func $closure/testCaptureLet (result i32)
-  (local $$env i32)
-  (local $x i32)
-  (local $2 i32)
-  i32.const 8
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  i32.const 200
-  i32.store offset=4
-  i32.const 8
-  i32.const 4
-  call $~lib/rt/itcms/__new
-  local.set $2
-  local.get $2
-  i32.const 3
-  i32.store
-  local.get $2
-  local.get $$env
-  i32.store offset=4
-  local.get $2
-  return
- )
- (func $closure/testClosureWrite~anonymous|0
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
-  i32.const 1
-  i32.add
-  i32.store offset=4
- )
- (func $closure/testClosureWrite~anonymous|1 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
- )
- (func $closure/testMultipleCaptures~anonymous|0 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
-  local.get $$closureEnv
-  i32.load offset=8
-  i32.add
-  local.get $$closureEnv
-  i32.load offset=12
-  i32.add
- )
- (func $closure/testMultipleCaptures (param $a i32) (param $b i32) (result i32)
-  (local $$env i32)
-  (local $c i32)
-  (local $4 i32)
-  i32.const 16
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  local.get $a
-  i32.store offset=4
-  local.get $$env
-  local.get $b
-  i32.store offset=8
-  local.get $$env
-  i32.const 10
-  i32.store offset=12
-  i32.const 8
-  i32.const 4
-  call $~lib/rt/itcms/__new
-  local.set $4
-  local.get $4
-  i32.const 6
-  i32.store
-  local.get $4
-  local.get $$env
-  i32.store offset=4
-  local.get $4
-  return
- )
- (func $closure/testSharedEnvironment~anonymous|0 (param $x i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  local.get $x
-  i32.store offset=4
- )
- (func $closure/testSharedEnvironment~anonymous|1 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
- )
- (func $closure/testCaptureInWhile~anonymous|0
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
-  local.get $$closureEnv
-  i32.load offset=8
-  i32.add
-  i32.store offset=4
- )
- (func $closure/testCaptureInDoWhile~anonymous|0
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
-  local.get $$closureEnv
-  i32.load offset=8
-  i32.mul
-  i32.store offset=4
- )
- (func $closure/testCaptureInFor~anonymous|0
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
-  local.get $$closureEnv
-  i32.load offset=8
-  i32.add
-  i32.store offset=4
- )
- (func $closure/testCaptureInSwitch~anonymous|0
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.const 10
-  i32.store offset=4
- )
- (func $closure/testCaptureInSwitch~anonymous|1
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.const 20
-  i32.store offset=4
- )
- (func $closure/testCaptureInSwitch~anonymous|2
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.const 99
-  i32.store offset=4
- )
- (func $closure/testCaptureInArrayLiteral~anonymous|0 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
- )
- (func $closure/testCaptureInArrayLiteral~anonymous|1 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=8
- )
- (func $closure/testCaptureInArrayLiteral~anonymous|2 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
-  local.get $$closureEnv
-  i32.load offset=8
-  i32.add
+ (func $closure-complex/Calculator#get:result (param $this i32) (result i32)
+  local.get $this
+  i32.load
  )
  (func $~lib/rt/__newBuffer (param $size i32) (param $id i32) (param $data i32) (result i32)
   (local $buffer i32)
@@ -2575,7 +2320,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 128
+   i32.const 96
    i32.const 295
    i32.const 14
    call $~lib/builtins/abort
@@ -2690,122 +2435,124 @@
   local.get $newPtr
   return
  )
+ (func $~lib/array/Array<%28%29=>i32>#get:dataStart (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
  (func $~lib/array/Array<%28%29=>i32>#set:length_ (param $this i32) (param $length_ i32)
   local.get $this
   local.get $length_
   i32.store offset=12
  )
- (func $~lib/array/Array<%28%29=>i32>#get:dataStart (param $this i32) (result i32)
+ (func $closure-complex/ClosureFactory#set:baseValue (param $this i32) (param $baseValue i32)
+  local.get $this
+  local.get $baseValue
+  i32.store
+ )
+ (func $closure-complex/ClosureFactory#get:baseValue (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $closure-complex/ClosureFactory#createAdder~anonymous|0 (result i32)
+  (local $$closureEnv i32)
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  i32.const 1
+  i32.add
+  i32.store offset=4
+  local.get $$closureEnv
+  i32.load offset=8
+  local.get $$closureEnv
+  i32.load offset=12
+  i32.add
+  local.get $$closureEnv
+  i32.load offset=4
+  i32.add
+  return
+ )
+ (func $closure-complex/SelfReferencing#set:value (param $this i32) (param $value i32)
+  local.get $this
+  local.get $value
+  i32.store
+ )
+ (func $closure-complex/SelfReferencing#set:callbacks (param $this i32) (param $callbacks i32)
+  local.get $this
+  local.get $callbacks
+  i32.store offset=4
+  local.get $this
+  local.get $callbacks
+  i32.const 0
+  call $~lib/rt/itcms/__link
+ )
+ (func $closure-complex/SelfReferencing#get:callbacks (param $this i32) (result i32)
   local.get $this
   i32.load offset=4
  )
- (func $closure/testNestedClosureCapture~anonymous|0~anonymous|0 (param $y i32) (result i32)
+ (func $closure-complex/SelfReferencing#get:value (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $closure-complex/testMultipleClosuresSharing~anonymous|1 (result i32)
   (local $$closureEnv i32)
   global.get $~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
   i32.load offset=4
-  local.get $y
-  i32.add
  )
- (func $closure/testNestedClosureCapture~anonymous|0 (result i32)
+ (func $closure-complex/testNestedArrowFunctions~anonymous|0~anonymous|0 (result i32)
   (local $$closureEnv i32)
-  (local $1 i32)
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  i32.const 2
+  i32.mul
+ )
+ (func $closure-complex/testNestedArrowFunctions~anonymous|0 (param $x i32) (result i32)
+  (local $$closureEnv i32)
+  (local $$env i32)
+  (local $captured i32)
+  (local $4 i32)
   global.get $~lib/__closure_env
   local.set $$closureEnv
   i32.const 8
-  i32.const 9
-  call $~lib/rt/itcms/__new
-  local.set $1
-  local.get $1
-  i32.const 18
+  call $~lib/rt/tlsf/__alloc
+  local.set $$env
+  local.get $$env
+  local.get $$closureEnv
   i32.store
-  local.get $1
-  local.get $$closureEnv
-  i32.store offset=4
-  local.get $1
-  return
- )
- (func $closure/testMultipleClosuresInArray~anonymous|0
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
+  local.get $$env
+  local.get $x
   local.get $$closureEnv
   i32.load offset=4
-  i32.const 1
   i32.add
   i32.store offset=4
+  i32.const 8
+  i32.const 5
+  call $~lib/rt/itcms/__new
+  local.set $4
+  local.get $4
+  i32.const 13
+  i32.store
+  local.get $4
+  local.get $$env
+  i32.store offset=4
+  local.get $4
+  return
  )
- (func $~lib/array/Array<%28%29=>void>#get:length_ (param $this i32) (result i32)
+ (func $~lib/array/Array<i32>#get:length_ (param $this i32) (result i32)
   local.get $this
   i32.load offset=12
  )
- (func $~lib/array/Array<%28%29=>void>#get:dataStart (param $this i32) (result i32)
+ (func $~lib/array/Array<i32>#get:dataStart (param $this i32) (result i32)
   local.get $this
   i32.load offset=4
  )
- (func $~lib/array/Array<%28%29=>void>#set:length_ (param $this i32) (param $length_ i32)
-  local.get $this
-  local.get $length_
-  i32.store offset=12
- )
- (func $closure/testCaptureInTernary~anonymous|0 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load8_u offset=4
-  if (result i32)
-   local.get $$closureEnv
-   i32.load offset=8
-  else
-   local.get $$closureEnv
-   i32.load offset=12
-  end
- )
- (func $closure/testCaptureFromCondition~anonymous|0 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
-  local.get $$closureEnv
-  i32.load offset=8
-  i32.gt_s
- )
- (func $closure/testDeepLoopCapture~anonymous|0
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
-  local.get $$closureEnv
-  i32.load offset=8
-  i32.add
-  local.get $$closureEnv
-  i32.load offset=12
-  i32.add
-  i32.store offset=4
- )
- (func $closure/makeCounter~anonymous|0 (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $$closureEnv
-  local.get $$closureEnv
-  i32.load offset=4
-  i32.const 1
-  i32.add
-  i32.store offset=4
-  local.get $$closureEnv
-  i32.load offset=4
-  return
- )
- (func $closure/makeCounter (result i32)
+ (func $closure-complex/testCurriedWithClass~anonymous|0 (param $c i32) (result i32)
   (local $$env i32)
-  (local $count i32)
   (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
@@ -2814,14 +2561,14 @@
   i32.const 0
   i32.store
   local.get $$env
-  i32.const 0
+  local.get $c
   i32.store offset=4
   i32.const 8
-  i32.const 4
+  i32.const 15
   call $~lib/rt/itcms/__new
   local.set $2
   local.get $2
-  i32.const 24
+  i32.const 16
   i32.store
   local.get $2
   local.get $$env
@@ -2829,37 +2576,7 @@
   local.get $2
   return
  )
- (func $closure/testDefaultParamCapture~anonymous|0 (param $x i32) (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $x
- )
- (func $closure/testDefaultParamWithOtherParam~anonymous|0 (param $a i32) (param $b i32) (result i32)
-  (local $$closureEnv i32)
-  global.get $~lib/__closure_env
-  local.set $$closureEnv
-  local.get $b
- )
- (func $start:closure
-  (local $0 i32)
-  (local $1 i32)
-  (local $2 i32)
-  (local $3 i32)
-  (local $4 i32)
-  (local $5 i32)
-  (local $6 i32)
-  (local $7 i32)
-  (local $8 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 36
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.const 36
-  memory.fill
+ (func $start:closure-complex
   memory.size
   i32.const 16
   i32.shl
@@ -2868,486 +2585,148 @@
   i32.const 1
   i32.shr_u
   global.set $~lib/rt/itcms/threshold
-  i32.const 176
+  i32.const 144
   call $~lib/rt/itcms/initLazy
   global.set $~lib/rt/itcms/pinSpace
-  i32.const 208
+  i32.const 176
   call $~lib/rt/itcms/initLazy
   global.set $~lib/rt/itcms/toSpace
-  i32.const 352
+  i32.const 320
   call $~lib/rt/itcms/initLazy
   global.set $~lib/rt/itcms/fromSpace
-  i32.const 42
-  call $closure/testCaptureParam
-  global.set $closure/fn1
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $closure/fn1
-  local.tee $0
-  i32.store
-  local.get $0
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $0
-  i32.load
-  call_indirect (type $0)
-  i32.const 42
+  call $closure-complex/testNestedArrowsWithClassCapture
+  i32.const 12
   i32.eq
   i32.eqz
   if
    i32.const 0
-   i32.const 464
-   i32.const 6
+   i32.const 496
+   i32.const 61
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
-  call $closure/testCaptureVar
-  global.set $closure/fn2
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $closure/fn2
-  local.tee $1
-  i32.store offset=4
-  local.get $1
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $1
-  i32.load
-  call_indirect (type $0)
-  i32.const 100
+  call $closure-complex/testArrowClosureWithClass
+  i32.const 40
   i32.eq
   i32.eqz
   if
    i32.const 0
-   i32.const 464
-   i32.const 14
+   i32.const 496
+   i32.const 80
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
-  call $closure/testCaptureLet
-  global.set $closure/fn3
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $closure/fn3
-  local.tee $2
-  i32.store offset=8
-  local.get $2
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $2
-  i32.load
-  call_indirect (type $0)
-  i32.const 200
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 22
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/testClosureWrite
+  call $closure-complex/testFactoryWithClassMethods
   i32.const 3
   i32.eq
   i32.eqz
   if
    i32.const 0
-   i32.const 464
-   i32.const 34
+   i32.const 496
+   i32.const 101
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
-  i32.const 1
-  i32.const 2
-  call $closure/testMultipleCaptures
-  global.set $closure/fn5
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $closure/fn5
-  local.tee $3
-  i32.store offset=12
-  local.get $3
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $3
-  i32.load
-  call_indirect (type $0)
-  i32.const 13
+  call $closure-complex/testDeeplyNestedClassCreation
+  i32.const 222
   i32.eq
   i32.eqz
   if
    i32.const 0
-   i32.const 464
-   i32.const 42
+   i32.const 496
+   i32.const 130
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
-  call $closure/testSharedEnvironment
-  i32.const 50
+  call $closure-complex/testClassReturningClosures
+  i32.const 223
   i32.eq
   i32.eqz
   if
    i32.const 0
-   i32.const 464
-   i32.const 53
+   i32.const 496
+   i32.const 162
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
-  call $closure/testCaptureInWhile
-  i32.const 3
+  call $closure-complex/testThisCaptureInClosures
+  i32.const 120
   i32.eq
   i32.eqz
   if
    i32.const 0
-   i32.const 464
-   i32.const 70
+   i32.const 496
+   i32.const 206
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
-  call $closure/testCaptureInDoWhile
-  i32.const 24
+  call $closure-complex/testMultipleClosuresSharing
+  i32.const 6
   i32.eq
   i32.eqz
   if
    i32.const 0
-   i32.const 464
-   i32.const 83
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/testCaptureInFor
-  i32.const 15
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 94
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  i32.const 1
-  call $closure/testCaptureInSwitch
-  i32.const 10
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 118
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  i32.const 2
-  call $closure/testCaptureInSwitch
-  i32.const 20
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 119
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  i32.const 3
-  call $closure/testCaptureInSwitch
-  i32.const 99
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 120
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/testCaptureInArrayLiteral
-  i32.const 30
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 133
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/testNestedClosureCapture
-  i32.const 123
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 144
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/testMultipleClosuresInArray
-  i32.const 3
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 161
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/testCaptureInTernary
-  i32.const 20
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 174
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/testCaptureFromCondition
-  i32.const 0
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 186
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/testDeepLoopCapture
-  i32.const 4
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 200
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/makeCounter
-  global.set $closure/counter1
-  call $closure/makeCounter
-  global.set $closure/counter2
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $closure/counter1
-  local.tee $4
-  i32.store offset=16
-  local.get $4
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $4
-  i32.load
-  call_indirect (type $0)
-  i32.const 1
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 212
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $closure/counter1
-  local.tee $5
-  i32.store offset=20
-  local.get $5
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $5
-  i32.load
-  call_indirect (type $0)
-  i32.const 2
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 213
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $closure/counter2
-  local.tee $6
-  i32.store offset=24
-  local.get $6
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $6
-  i32.load
-  call_indirect (type $0)
-  i32.const 1
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 214
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $closure/counter1
-  local.tee $7
-  i32.store offset=28
-  local.get $7
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $7
-  i32.load
-  call_indirect (type $0)
-  i32.const 3
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 215
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  global.get $closure/counter2
-  local.tee $8
-  i32.store offset=32
-  local.get $8
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $8
-  i32.load
-  call_indirect (type $0)
-  i32.const 2
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 216
-   i32.const 1
-   call $~lib/builtins/abort
-   unreachable
-  end
-  call $closure/testDefaultParamCapture
-  i32.const 42
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
+   i32.const 496
    i32.const 224
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
-  call $closure/testDefaultParamWithOtherParam
-  i32.const 30
+  call $closure-complex/testNestedArrowFunctions
+  i32.const 70
   i32.eq
   i32.eqz
   if
    i32.const 0
-   i32.const 464
-   i32.const 232
+   i32.const 496
+   i32.const 242
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
-  global.get $~lib/memory/__stack_pointer
-  i32.const 36
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $closure/testDefaultParamCapture~anonymous|0@varargs (param $x i32) (result i32)
-  block $1of1
-   block $0of1
-    block $outOfRange
-     global.get $~argumentsLength
-     br_table $0of1 $1of1 $outOfRange
-    end
-    unreachable
-   end
-   global.get $~lib/__closure_env
-   i32.load offset=4
-   local.set $x
+  call $closure-complex/testComplexPipeline
+  i32.const 35
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 496
+   i32.const 264
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
   end
-  local.get $x
-  call $closure/testDefaultParamCapture~anonymous|0
- )
- (func $closure/testDefaultParamWithOtherParam~anonymous|0@varargs (param $a i32) (param $b i32) (result i32)
-  block $1of1
-   block $0of1
-    block $outOfRange
-     global.get $~argumentsLength
-     i32.const 1
-     i32.sub
-     br_table $0of1 $1of1 $outOfRange
-    end
-    unreachable
-   end
-   local.get $a
-   global.get $~lib/__closure_env
-   i32.load offset=4
-   i32.mul
-   local.set $b
+  call $closure-complex/testCurriedWithClass
+  i32.const 60
+  i32.eq
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 496
+   i32.const 286
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
   end
-  local.get $a
-  local.get $b
-  call $closure/testDefaultParamWithOtherParam~anonymous|0
  )
  (func $~lib/rt/__visit_globals (param $0 i32)
   (local $1 i32)
-  i32.const 256
+  i32.const 224
   local.get $0
   call $~lib/rt/itcms/__visit
-  i32.const 1072
+  i32.const 656
   local.get $0
   call $~lib/rt/itcms/__visit
-  i32.const 1120
+  i32.const 784
   local.get $0
   call $~lib/rt/itcms/__visit
-  i32.const 64
+  i32.const 32
   local.get $0
   call $~lib/rt/itcms/__visit
  )
@@ -3374,18 +2753,6 @@
   local.get $0
   local.get $1
   call $~lib/function/Function<%28%29=>i32>#__visit
- )
- (func $~lib/function/Function<%28%29=>void>#get:_env (param $this i32) (result i32)
-  local.get $this
-  i32.load offset=4
- )
- (func $~lib/function/Function<%28%29=>void>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/function/Function<%28%29=>void>#__visit
  )
  (func $~lib/function/Function<%28i32%29=>void>#get:_env (param $this i32) (result i32)
   local.get $this
@@ -3423,184 +2790,575 @@
   local.get $1
   call $~lib/array/Array<i32>#__visit
  )
- (func $~lib/function/Function<%28i32%29=>i32>#get:_env (param $this i32) (result i32)
+ (func $~lib/function/Function<%28%29=>closure-complex/Calculator>#get:_env (param $this i32) (result i32)
   local.get $this
   i32.load offset=4
  )
- (func $~lib/function/Function<%28i32%29=>i32>~visit (param $0 i32) (param $1 i32)
+ (func $~lib/function/Function<%28%29=>closure-complex/Calculator>~visit (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   call $~lib/object/Object~visit
   local.get $0
   local.get $1
-  call $~lib/function/Function<%28i32%29=>i32>#__visit
+  call $~lib/function/Function<%28%29=>closure-complex/Calculator>#__visit
  )
- (func $~lib/function/Function<%28%29=>%28i32%29=>i32>#get:_env (param $this i32) (result i32)
+ (func $closure-complex/SelfReferencing~visit (param $0 i32) (param $1 i32)
+  (local $2 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  i32.load offset=4
+  local.get $1
+  call $~lib/rt/itcms/__visit
+ )
+ (func $~lib/function/Function<%28%29=>void>#get:_env (param $this i32) (result i32)
   local.get $this
   i32.load offset=4
  )
- (func $~lib/function/Function<%28%29=>%28i32%29=>i32>~visit (param $0 i32) (param $1 i32)
+ (func $~lib/function/Function<%28%29=>void>~visit (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   call $~lib/object/Object~visit
   local.get $0
   local.get $1
-  call $~lib/function/Function<%28%29=>%28i32%29=>i32>#__visit
+  call $~lib/function/Function<%28%29=>void>#__visit
  )
- (func $~lib/array/Array<%28%29=>void>#get:buffer (param $this i32) (result i32)
-  local.get $this
-  i32.load
- )
- (func $~lib/array/Array<%28%29=>void>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/array/Array<%28%29=>void>#__visit
- )
- (func $~lib/function/Function<%28%29=>bool>#get:_env (param $this i32) (result i32)
+ (func $~lib/function/Function<%28i32%29=>%28%29=>i32>#get:_env (param $this i32) (result i32)
   local.get $this
   i32.load offset=4
  )
- (func $~lib/function/Function<%28%29=>bool>~visit (param $0 i32) (param $1 i32)
+ (func $~lib/function/Function<%28i32%29=>%28%29=>i32>~visit (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   call $~lib/object/Object~visit
   local.get $0
   local.get $1
-  call $~lib/function/Function<%28%29=>bool>#__visit
+  call $~lib/function/Function<%28i32%29=>%28%29=>i32>#__visit
  )
- (func $~lib/function/Function<%28i32?%29=>i32>#get:_env (param $this i32) (result i32)
+ (func $~lib/function/Function<%28i32%29=>closure-complex/Calculator>#get:_env (param $this i32) (result i32)
   local.get $this
   i32.load offset=4
  )
- (func $~lib/function/Function<%28i32?%29=>i32>~visit (param $0 i32) (param $1 i32)
+ (func $~lib/function/Function<%28i32%29=>closure-complex/Calculator>~visit (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   call $~lib/object/Object~visit
   local.get $0
   local.get $1
-  call $~lib/function/Function<%28i32?%29=>i32>#__visit
+  call $~lib/function/Function<%28i32%29=>closure-complex/Calculator>#__visit
  )
- (func $~lib/function/Function<%28i32%2Ci32?%29=>i32>#get:_env (param $this i32) (result i32)
+ (func $~lib/function/Function<%28closure-complex/Calculator%29=>%28i32%29=>closure-complex/Calculator>#get:_env (param $this i32) (result i32)
   local.get $this
   i32.load offset=4
  )
- (func $~lib/function/Function<%28i32%2Ci32?%29=>i32>~visit (param $0 i32) (param $1 i32)
+ (func $~lib/function/Function<%28closure-complex/Calculator%29=>%28i32%29=>closure-complex/Calculator>~visit (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   call $~lib/object/Object~visit
   local.get $0
   local.get $1
-  call $~lib/function/Function<%28i32%2Ci32?%29=>i32>#__visit
+  call $~lib/function/Function<%28closure-complex/Calculator%29=>%28i32%29=>closure-complex/Calculator>#__visit
  )
  (func $~lib/rt/__visit_members (param $0 i32) (param $1 i32)
   block $invalid
-   block $~lib/function/Function<%28i32%2Ci32?%29=>i32>
-    block $~lib/function/Function<%28i32?%29=>i32>
-     block $~lib/function/Function<%28%29=>bool>
-      block $~lib/array/Array<%28%29=>void>
-       block $~lib/function/Function<%28%29=>%28i32%29=>i32>
-        block $~lib/function/Function<%28i32%29=>i32>
-         block $~lib/array/Array<i32>
-          block $~lib/array/Array<%28%29=>i32>
-           block $~lib/function/Function<%28i32%29=>void>
-            block $~lib/function/Function<%28%29=>void>
-             block $~lib/function/Function<%28%29=>i32>
-              block $~lib/arraybuffer/ArrayBufferView
-               block $~lib/string/String
-                block $~lib/arraybuffer/ArrayBuffer
-                 block $~lib/object/Object
-                  local.get $0
-                  i32.const 8
-                  i32.sub
-                  i32.load
-                  br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $~lib/function/Function<%28%29=>i32> $~lib/function/Function<%28%29=>void> $~lib/function/Function<%28i32%29=>void> $~lib/array/Array<%28%29=>i32> $~lib/array/Array<i32> $~lib/function/Function<%28i32%29=>i32> $~lib/function/Function<%28%29=>%28i32%29=>i32> $~lib/array/Array<%28%29=>void> $~lib/function/Function<%28%29=>bool> $~lib/function/Function<%28i32?%29=>i32> $~lib/function/Function<%28i32%2Ci32?%29=>i32> $invalid
+   block $~lib/function/Function<%28closure-complex/Calculator%29=>%28i32%29=>closure-complex/Calculator>
+    block $~lib/function/Function<%28i32%29=>closure-complex/Calculator>
+     block $~lib/function/Function<%28i32%29=>%28%29=>i32>
+      block $~lib/function/Function<%28%29=>void>
+       block $closure-complex/SelfReferencing
+        block $closure-complex/ClosureFactory
+         block $~lib/function/Function<%28%29=>closure-complex/Calculator>
+          block $~lib/array/Array<i32>
+           block $~lib/array/Array<%28%29=>i32>
+            block $~lib/function/Function<%28i32%29=>void>
+             block $closure-complex/Calculator
+              block $~lib/function/Function<%28%29=>i32>
+               block $closure-complex/Counter
+                block $~lib/arraybuffer/ArrayBufferView
+                 block $~lib/string/String
+                  block $~lib/arraybuffer/ArrayBuffer
+                   block $~lib/object/Object
+                    local.get $0
+                    i32.const 8
+                    i32.sub
+                    i32.load
+                    br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $closure-complex/Counter $~lib/function/Function<%28%29=>i32> $closure-complex/Calculator $~lib/function/Function<%28i32%29=>void> $~lib/array/Array<%28%29=>i32> $~lib/array/Array<i32> $~lib/function/Function<%28%29=>closure-complex/Calculator> $closure-complex/ClosureFactory $closure-complex/SelfReferencing $~lib/function/Function<%28%29=>void> $~lib/function/Function<%28i32%29=>%28%29=>i32> $~lib/function/Function<%28i32%29=>closure-complex/Calculator> $~lib/function/Function<%28closure-complex/Calculator%29=>%28i32%29=>closure-complex/Calculator> $invalid
+                   end
+                   return
+                  end
+                  return
                  end
                  return
                 end
+                local.get $0
+                local.get $1
+                call $~lib/arraybuffer/ArrayBufferView~visit
                 return
                end
                return
               end
               local.get $0
               local.get $1
-              call $~lib/arraybuffer/ArrayBufferView~visit
+              call $~lib/function/Function<%28%29=>i32>~visit
               return
              end
-             local.get $0
-             local.get $1
-             call $~lib/function/Function<%28%29=>i32>~visit
              return
             end
             local.get $0
             local.get $1
-            call $~lib/function/Function<%28%29=>void>~visit
+            call $~lib/function/Function<%28i32%29=>void>~visit
             return
            end
            local.get $0
            local.get $1
-           call $~lib/function/Function<%28i32%29=>void>~visit
+           call $~lib/array/Array<%28%29=>i32>~visit
            return
           end
           local.get $0
           local.get $1
-          call $~lib/array/Array<%28%29=>i32>~visit
+          call $~lib/array/Array<i32>~visit
           return
          end
          local.get $0
          local.get $1
-         call $~lib/array/Array<i32>~visit
+         call $~lib/function/Function<%28%29=>closure-complex/Calculator>~visit
          return
         end
-        local.get $0
-        local.get $1
-        call $~lib/function/Function<%28i32%29=>i32>~visit
         return
        end
        local.get $0
        local.get $1
-       call $~lib/function/Function<%28%29=>%28i32%29=>i32>~visit
+       call $closure-complex/SelfReferencing~visit
        return
       end
       local.get $0
       local.get $1
-      call $~lib/array/Array<%28%29=>void>~visit
+      call $~lib/function/Function<%28%29=>void>~visit
       return
      end
      local.get $0
      local.get $1
-     call $~lib/function/Function<%28%29=>bool>~visit
+     call $~lib/function/Function<%28i32%29=>%28%29=>i32>~visit
      return
     end
     local.get $0
     local.get $1
-    call $~lib/function/Function<%28i32?%29=>i32>~visit
+    call $~lib/function/Function<%28i32%29=>closure-complex/Calculator>~visit
     return
    end
    local.get $0
    local.get $1
-   call $~lib/function/Function<%28i32%2Ci32?%29=>i32>~visit
+   call $~lib/function/Function<%28closure-complex/Calculator%29=>%28i32%29=>closure-complex/Calculator>~visit
    return
   end
   unreachable
  )
  (func $~start
-  call $start:closure
+  call $start:closure-complex
  )
  (func $~stack_check
   global.get $~lib/memory/__stack_pointer
   global.get $~lib/memory/__data_end
   i32.lt_s
   if
-   i32.const 34448
-   i32.const 34496
+   i32.const 34272
+   i32.const 34320
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
+ )
+ (func $closure-complex/Counter#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.const 4
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  global.get $~lib/memory/__stack_pointer
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $~lib/object/Object#constructor
+  local.tee $this
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 0
+  call $closure-complex/Counter#set:count
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $closure-complex/Counter#increment (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $closure-complex/Counter#get:count
+  i32.const 1
+  i32.add
+  call $closure-complex/Counter#set:count
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $closure-complex/Counter#get:count
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+  return
+ )
+ (func $closure-complex/testNestedArrowsWithClassCapture~anonymous|0 (result i32)
+  (local $$closureEnv i32)
+  (local $result i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $closure-complex/Counter#increment
+  local.set $result
+  local.get $result
+  local.get $$closureEnv
+  i32.load offset=8
+  i32.mul
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+  return
+ )
+ (func $closure-complex/Calculator#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.const 6
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  global.get $~lib/memory/__stack_pointer
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $~lib/object/Object#constructor
+  local.tee $this
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 0
+  call $closure-complex/Calculator#set:result
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $closure-complex/Calculator#add (param $this i32) (param $x i32) (result i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=4
+  local.get $2
+  call $closure-complex/Calculator#get:result
+  local.get $x
+  i32.add
+  call $closure-complex/Calculator#set:result
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+  return
+ )
+ (func $closure-complex/testArrowClosureWithClass~anonymous|0 (param $x i32)
+  (local $$closureEnv i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  local.get $x
+  call $closure-complex/Calculator#add
+  drop
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $closure-complex/Calculator#getResult (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $closure-complex/Calculator#get:result
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+  return
+ )
+ (func $closure-complex/testArrowClosureWithClass (result i32)
+  (local $$env i32)
+  (local $calc i32)
+  (local $2 i32)
+  (local $addToCalc i32)
+  (local $4 i32)
+  (local $5 i32)
+  (local $6 i32)
+  (local $7 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 20
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 20
+  memory.fill
+  i32.const 8
+  call $~lib/rt/tlsf/__alloc
+  local.set $$env
+  local.get $$env
+  i32.const 0
+  i32.store
+  local.get $$env
+  i32.const 0
+  call $closure-complex/Calculator#constructor
+  i32.store offset=4
+  local.get $$env
+  i32.load offset=4
+  local.set $7
+  global.get $~lib/memory/__stack_pointer
+  local.get $7
+  i32.store
+  local.get $7
+  i32.const 10
+  call $closure-complex/Calculator#set:result
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.const 7
+  call $~lib/rt/itcms/__new
+  local.set $2
+  local.get $2
+  i32.const 3
+  i32.store
+  local.get $2
+  local.get $$env
+  i32.store offset=4
+  local.get $2
+  local.tee $addToCalc
+  i32.store offset=4
+  i32.const 5
+  global.get $~lib/memory/__stack_pointer
+  i32.const 1
+  global.set $~argumentsLength
+  local.get $addToCalc
+  local.tee $4
+  i32.store offset=8
+  local.get $4
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $4
+  i32.load
+  call_indirect (type $3)
+  i32.const 10
+  global.get $~lib/memory/__stack_pointer
+  i32.const 1
+  global.set $~argumentsLength
+  local.get $addToCalc
+  local.tee $5
+  i32.store offset=12
+  local.get $5
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $5
+  i32.load
+  call_indirect (type $3)
+  i32.const 15
+  global.get $~lib/memory/__stack_pointer
+  i32.const 1
+  global.set $~argumentsLength
+  local.get $addToCalc
+  local.tee $6
+  i32.store offset=16
+  local.get $6
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $6
+  i32.load
+  call_indirect (type $3)
+  local.get $$env
+  i32.load offset=4
+  local.set $7
+  global.get $~lib/memory/__stack_pointer
+  local.get $7
+  i32.store
+  local.get $7
+  call $closure-complex/Calculator#getResult
+  local.set $7
+  global.get $~lib/memory/__stack_pointer
+  i32.const 20
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $7
+  return
+ )
+ (func $closure-complex/createCounterOperations~anonymous|0 (result i32)
+  (local $$closureEnv i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $closure-complex/Counter#increment
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
  )
  (func $~lib/array/ensureCapacity (param $array i32) (param $newSize i32) (param $alignLog2 i32) (param $canGrow i32)
   (local $oldCapacity i32)
@@ -3642,8 +3400,8 @@
    i32.shr_u
    i32.gt_u
    if
-    i32.const 1072
-    i32.const 1024
+    i32.const 656
+    i32.const 704
     i32.const 19
     i32.const 48
     call $~lib/builtins/abort
@@ -3721,8 +3479,10 @@
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
- (func $~lib/array/Array<%28%29=>i32>#__set (param $this i32) (param $index i32) (param $value i32)
-  (local $3 i32)
+ (func $~lib/array/Array<%28%29=>i32>#push (param $this i32) (param $value i32) (result i32)
+  (local $oldLen i32)
+  (local $len i32)
+  (local $4 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 4
   i32.sub
@@ -3731,68 +3491,203 @@
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   i32.store
-  local.get $index
   local.get $this
-  local.set $3
+  local.set $4
   global.get $~lib/memory/__stack_pointer
-  local.get $3
+  local.get $4
   i32.store
-  local.get $3
+  local.get $4
   call $~lib/array/Array<%28%29=>i32>#get:length_
-  i32.ge_u
-  if
-   local.get $index
-   i32.const 0
-   i32.lt_s
-   if
-    i32.const 256
-    i32.const 1024
-    i32.const 130
-    i32.const 22
-    call $~lib/builtins/abort
-    unreachable
-   end
-   local.get $this
-   local.get $index
-   i32.const 1
-   i32.add
-   i32.const 2
-   i32.const 1
-   call $~lib/array/ensureCapacity
-   local.get $this
-   local.set $3
-   global.get $~lib/memory/__stack_pointer
-   local.get $3
-   i32.store
-   local.get $3
-   local.get $index
-   i32.const 1
-   i32.add
-   call $~lib/array/Array<%28%29=>i32>#set:length_
-  end
+  local.set $oldLen
+  local.get $oldLen
+  i32.const 1
+  i32.add
+  local.set $len
   local.get $this
-  local.set $3
+  local.get $len
+  i32.const 2
+  i32.const 1
+  call $~lib/array/ensureCapacity
+  i32.const 1
+  drop
+  local.get $this
+  local.set $4
   global.get $~lib/memory/__stack_pointer
-  local.get $3
+  local.get $4
   i32.store
-  local.get $3
+  local.get $4
   call $~lib/array/Array<%28%29=>i32>#get:dataStart
-  local.get $index
+  local.get $oldLen
   i32.const 2
   i32.shl
   i32.add
   local.get $value
   i32.store
-  i32.const 1
-  drop
   local.get $this
   local.get $value
   i32.const 1
   call $~lib/rt/itcms/__link
+  local.get $this
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store
+  local.get $4
+  local.get $len
+  call $~lib/array/Array<%28%29=>i32>#set:length_
+  local.get $len
+  local.set $4
   global.get $~lib/memory/__stack_pointer
   i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
+  local.get $4
+  return
+ )
+ (func $closure-complex/Counter#getCount (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $closure-complex/Counter#get:count
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+  return
+ )
+ (func $closure-complex/createCounterOperations~anonymous|1 (result i32)
+  (local $$closureEnv i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $closure-complex/Counter#getCount
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $closure-complex/createCounterOperations (param $counter i32) (result i32)
+  (local $1 i32)
+  (local $operations i32)
+  (local $$env i32)
+  (local $4 i32)
+  (local $5 i32)
+  (local $6 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
+  i32.const 8
+  call $~lib/rt/tlsf/__alloc
+  local.set $$env
+  local.get $$env
+  i32.const 0
+  i32.store
+  local.get $$env
+  local.get $counter
+  i32.store offset=4
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 2
+  i32.const 8
+  i32.const 592
+  call $~lib/rt/__newArray
+  local.tee $operations
+  i32.store
+  local.get $operations
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 8
+  i32.const 5
+  call $~lib/rt/itcms/__new
+  local.set $4
+  local.get $4
+  i32.const 4
+  i32.store
+  local.get $4
+  local.get $$env
+  i32.store offset=4
+  local.get $4
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=8
+  local.get $6
+  call $~lib/array/Array<%28%29=>i32>#push
+  drop
+  local.get $operations
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 8
+  i32.const 5
+  call $~lib/rt/itcms/__new
+  local.set $5
+  local.get $5
+  i32.const 5
+  i32.store
+  local.get $5
+  local.get $$env
+  i32.store offset=4
+  local.get $5
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=8
+  local.get $6
+  call $~lib/array/Array<%28%29=>i32>#push
+  drop
+  local.get $operations
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $6
+  return
  )
  (func $~lib/array/Array<%28%29=>i32>#__get (param $this i32) (param $index i32) (result i32)
   (local $value i32)
@@ -3815,8 +3710,8 @@
   call $~lib/array/Array<%28%29=>i32>#get:length_
   i32.ge_u
   if
-   i32.const 256
-   i32.const 1024
+   i32.const 224
+   i32.const 704
    i32.const 114
    i32.const 42
    call $~lib/builtins/abort
@@ -3845,8 +3740,8 @@
   local.get $value
   i32.eqz
   if
-   i32.const 1120
-   i32.const 1024
+   i32.const 784
+   i32.const 704
    i32.const 118
    i32.const 40
    call $~lib/builtins/abort
@@ -3861,165 +3756,616 @@
   local.get $3
   return
  )
- (func $closure/testCaptureInArrayLiteral (result i32)
-  (local $$env i32)
-  (local $x i32)
-  (local $y i32)
+ (func $closure-complex/testFactoryWithClassMethods (result i32)
+  (local $counter i32)
+  (local $ops i32)
+  (local $2 i32)
   (local $3 i32)
   (local $4 i32)
   (local $5 i32)
   (local $6 i32)
-  (local $fns i32)
-  (local $8 i32)
-  (local $9 i32)
-  (local $10 i32)
-  (local $11 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 24
+  i32.const 28
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
   i32.const 0
-  i32.const 24
+  i32.const 28
   memory.fill
-  i32.const 12
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  call $closure-complex/Counter#constructor
+  local.tee $counter
+  i32.store
+  global.get $~lib/memory/__stack_pointer
+  local.get $counter
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  call $closure-complex/createCounterOperations
+  local.tee $ops
+  i32.store offset=8
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $ops
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 0
+  call $~lib/array/Array<%28%29=>i32>#__get
+  local.tee $2
+  i32.store offset=12
+  local.get $2
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $2
+  i32.load
+  call_indirect (type $2)
+  drop
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $ops
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 0
+  call $~lib/array/Array<%28%29=>i32>#__get
+  local.tee $3
+  i32.store offset=16
+  local.get $3
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $3
+  i32.load
+  call_indirect (type $2)
+  drop
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $ops
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 0
+  call $~lib/array/Array<%28%29=>i32>#__get
+  local.tee $4
+  i32.store offset=20
+  local.get $4
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $4
+  i32.load
+  call_indirect (type $2)
+  drop
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $ops
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store offset=4
+  local.get $6
+  i32.const 1
+  call $~lib/array/Array<%28%29=>i32>#__get
+  local.tee $5
+  i32.store offset=24
+  local.get $5
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $5
+  i32.load
+  call_indirect (type $2)
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  i32.const 28
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $6
+  return
+ )
+ (func $closure-complex/testDeeplyNestedClassCreation~anonymous|0~anonymous|0~anonymous|0 (result i32)
+  (local $$closureEnv i32)
+  (local $calc i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  call $closure-complex/Calculator#constructor
+  local.tee $calc
+  i32.store
+  local.get $calc
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=4
+  local.get $2
+  local.get $$closureEnv
+  i32.load
+  i32.load
+  i32.load offset=4
+  local.get $$closureEnv
+  i32.load
+  i32.load offset=4
+  i32.add
+  local.get $$closureEnv
+  i32.load offset=4
+  i32.add
+  call $closure-complex/Calculator#set:result
+  local.get $calc
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+  return
+ )
+ (func $closure-complex/Calculator#multiply (param $this i32) (param $x i32) (result i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=4
+  local.get $2
+  call $closure-complex/Calculator#get:result
+  local.get $x
+  i32.mul
+  call $closure-complex/Calculator#set:result
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+  return
+ )
+ (func $closure-complex/testDeeplyNestedClassCreation~anonymous|0~anonymous|0 (result i32)
+  (local $$closureEnv i32)
+  (local $$env i32)
+  (local $level2Value i32)
+  (local $3 i32)
+  (local $level3 i32)
+  (local $5 i32)
+  (local $calculator i32)
+  (local $7 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 20
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 20
+  memory.fill
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  i32.const 8
+  call $~lib/rt/tlsf/__alloc
+  local.set $$env
+  local.get $$env
+  local.get $$closureEnv
+  i32.store
+  local.get $$env
+  i32.const 1
+  i32.store offset=4
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.const 10
+  call $~lib/rt/itcms/__new
+  local.set $3
+  local.get $3
+  i32.const 6
+  i32.store
+  local.get $3
+  local.get $$env
+  i32.store offset=4
+  local.get $3
+  local.tee $level3
+  i32.store
+  global.get $~lib/memory/__stack_pointer
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $level3
+  local.tee $5
+  i32.store offset=4
+  local.get $5
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $5
+  i32.load
+  call_indirect (type $2)
+  local.tee $calculator
+  i32.store offset=8
+  local.get $calculator
+  local.set $7
+  global.get $~lib/memory/__stack_pointer
+  local.get $7
+  i32.store offset=16
+  local.get $7
+  i32.const 2
+  call $closure-complex/Calculator#multiply
+  local.set $7
+  global.get $~lib/memory/__stack_pointer
+  local.get $7
+  i32.store offset=12
+  local.get $7
+  call $closure-complex/Calculator#getResult
+  local.set $7
+  global.get $~lib/memory/__stack_pointer
+  i32.const 20
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $7
+  return
+ )
+ (func $closure-complex/ClosureFactory#constructor (param $this i32) (param $baseValue i32) (result i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.const 11
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=4
+  local.get $2
+  i32.const 0
+  call $closure-complex/ClosureFactory#set:baseValue
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=4
+  local.get $2
+  local.get $baseValue
+  call $closure-complex/ClosureFactory#set:baseValue
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+ )
+ (func $closure-complex/ClosureFactory#createAdder (param $this i32) (param $amount i32) (result i32)
+  (local $$env i32)
+  (local $base i32)
+  (local $counter i32)
+  (local $5 i32)
+  (local $6 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  i32.const 16
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
   i32.const 0
   i32.store
   local.get $$env
-  i32.const 5
-  i32.store offset=4
+  local.get $amount
+  i32.store offset=12
   local.get $$env
-  i32.const 10
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store
+  local.get $6
+  call $closure-complex/ClosureFactory#get:baseValue
   i32.store offset=8
-  global.get $~lib/memory/__stack_pointer
-  global.get $~lib/memory/__stack_pointer
-  i32.const 3
-  i32.const 2
-  i32.const 7
-  i32.const 0
-  call $~lib/rt/__newArray
-  local.tee $3
-  i32.store
-  local.get $3
-  i32.const 0
-  i32.const 8
-  i32.const 4
-  call $~lib/rt/itcms/__new
-  local.set $4
-  local.get $4
-  i32.const 15
-  i32.store
-  local.get $4
   local.get $$env
+  i32.const 0
   i32.store offset=4
-  local.get $4
-  call $~lib/array/Array<%28%29=>i32>#__set
-  local.get $3
-  i32.const 1
   i32.const 8
-  i32.const 4
+  i32.const 5
   call $~lib/rt/itcms/__new
   local.set $5
   local.get $5
-  i32.const 16
+  i32.const 9
   i32.store
   local.get $5
   local.get $$env
   i32.store offset=4
   local.get $5
-  call $~lib/array/Array<%28%29=>i32>#__set
-  local.get $3
-  i32.const 2
-  i32.const 8
-  i32.const 4
-  call $~lib/rt/itcms/__new
   local.set $6
-  local.get $6
-  i32.const 17
-  i32.store
-  local.get $6
-  local.get $$env
-  i32.store offset=4
-  local.get $6
-  call $~lib/array/Array<%28%29=>i32>#__set
-  local.get $3
-  local.tee $fns
-  i32.store offset=4
   global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $fns
-  local.set $11
-  global.get $~lib/memory/__stack_pointer
-  local.get $11
-  i32.store offset=8
-  local.get $11
-  i32.const 0
-  call $~lib/array/Array<%28%29=>i32>#__get
-  local.tee $8
-  i32.store offset=12
-  local.get $8
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $8
-  i32.load
-  call_indirect (type $0)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $fns
-  local.set $11
-  global.get $~lib/memory/__stack_pointer
-  local.get $11
-  i32.store offset=8
-  local.get $11
-  i32.const 1
-  call $~lib/array/Array<%28%29=>i32>#__get
-  local.tee $9
-  i32.store offset=16
-  local.get $9
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $9
-  i32.load
-  call_indirect (type $0)
-  i32.add
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $fns
-  local.set $11
-  global.get $~lib/memory/__stack_pointer
-  local.get $11
-  i32.store offset=8
-  local.get $11
-  i32.const 2
-  call $~lib/array/Array<%28%29=>i32>#__get
-  local.tee $10
-  i32.store offset=20
-  local.get $10
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $10
-  i32.load
-  call_indirect (type $0)
-  i32.add
-  local.set $11
-  global.get $~lib/memory/__stack_pointer
-  i32.const 24
+  i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $11
+  local.get $6
   return
  )
- (func $~lib/array/Array<%28%29=>void>#push (param $this i32) (param $value i32) (result i32)
-  (local $oldLen i32)
-  (local $len i32)
+ (func $closure-complex/testClassReturningClosures (result i32)
+  (local $factory i32)
+  (local $adder i32)
+  (local $sum i32)
+  (local $3 i32)
   (local $4 i32)
+  (local $5 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 20
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 20
+  memory.fill
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 100
+  call $closure-complex/ClosureFactory#constructor
+  local.tee $factory
+  i32.store
+  global.get $~lib/memory/__stack_pointer
+  local.get $factory
+  local.set $5
+  global.get $~lib/memory/__stack_pointer
+  local.get $5
+  i32.store offset=4
+  local.get $5
+  i32.const 10
+  call $closure-complex/ClosureFactory#createAdder
+  local.tee $adder
+  i32.store offset=8
+  i32.const 0
+  local.set $sum
+  local.get $sum
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $adder
+  local.tee $3
+  i32.store offset=12
+  local.get $3
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $3
+  i32.load
+  call_indirect (type $2)
+  i32.add
+  local.set $sum
+  local.get $sum
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $adder
+  local.tee $4
+  i32.store offset=16
+  local.get $4
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $4
+  i32.load
+  call_indirect (type $2)
+  i32.add
+  local.set $sum
+  local.get $sum
+  local.set $5
+  global.get $~lib/memory/__stack_pointer
+  i32.const 20
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $5
+  return
+ )
+ (func $closure-complex/SelfReferencing#constructor (param $this i32) (param $value i32) (result i32)
+  (local $2 i32)
+  (local $3 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.const 12
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
+  end
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store offset=4
+  local.get $3
+  i32.const 0
+  call $closure-complex/SelfReferencing#set:value
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store offset=4
+  local.get $3
+  i32.const 0
+  i32.const 2
+  i32.const 8
+  i32.const 1040
+  call $~lib/rt/__newArray
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store offset=8
+  local.get $3
+  call $closure-complex/SelfReferencing#set:callbacks
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  local.get $3
+  i32.store offset=4
+  local.get $3
+  local.get $value
+  call $closure-complex/SelfReferencing#set:value
+  local.get $this
+  local.set $3
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $3
+ )
+ (func $closure-complex/SelfReferencing#addCallback~anonymous|0 (result i32)
+  (local $$closureEnv i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $closure-complex/SelfReferencing#get:value
+  i32.const 2
+  i32.mul
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+  return
+ )
+ (func $closure-complex/SelfReferencing#addCallback (param $this i32)
+  (local $$env i32)
+  (local $self i32)
+  (local $3 i32)
+  (local $4 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
+  i32.const 8
+  call $~lib/rt/tlsf/__alloc
+  local.set $$env
+  local.get $$env
+  i32.const 0
+  i32.store
+  local.get $$env
+  local.get $this
+  i32.store offset=4
+  local.get $this
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store offset=8
+  local.get $4
+  call $closure-complex/SelfReferencing#get:callbacks
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store
+  local.get $4
+  i32.const 8
+  i32.const 5
+  call $~lib/rt/itcms/__new
+  local.set $3
+  local.get $3
+  i32.const 10
+  i32.store
+  local.get $3
+  local.get $$env
+  i32.store offset=4
+  local.get $3
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store offset=4
+  local.get $4
+  call $~lib/array/Array<%28%29=>i32>#push
+  drop
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $closure-complex/SelfReferencing#setValue (param $this i32) (param $newValue i32)
+  (local $2 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 4
   i32.sub
@@ -4029,59 +4375,19 @@
   i32.const 0
   i32.store
   local.get $this
-  local.set $4
+  local.set $2
   global.get $~lib/memory/__stack_pointer
-  local.get $4
+  local.get $2
   i32.store
-  local.get $4
-  call $~lib/array/Array<%28%29=>void>#get:length_
-  local.set $oldLen
-  local.get $oldLen
-  i32.const 1
-  i32.add
-  local.set $len
-  local.get $this
-  local.get $len
-  i32.const 2
-  i32.const 1
-  call $~lib/array/ensureCapacity
-  i32.const 1
-  drop
-  local.get $this
-  local.set $4
-  global.get $~lib/memory/__stack_pointer
-  local.get $4
-  i32.store
-  local.get $4
-  call $~lib/array/Array<%28%29=>void>#get:dataStart
-  local.get $oldLen
-  i32.const 2
-  i32.shl
-  i32.add
-  local.get $value
-  i32.store
-  local.get $this
-  local.get $value
-  i32.const 1
-  call $~lib/rt/itcms/__link
-  local.get $this
-  local.set $4
-  global.get $~lib/memory/__stack_pointer
-  local.get $4
-  i32.store
-  local.get $4
-  local.get $len
-  call $~lib/array/Array<%28%29=>void>#set:length_
-  local.get $len
-  local.set $4
+  local.get $2
+  local.get $newValue
+  call $closure-complex/SelfReferencing#set:value
   global.get $~lib/memory/__stack_pointer
   i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $4
-  return
  )
- (func $~lib/array/Array<%28%29=>void>#get:length (param $this i32) (result i32)
+ (func $~lib/array/Array<%28%29=>i32>#get:length (param $this i32) (result i32)
   (local $1 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 4
@@ -4097,7 +4403,7 @@
   local.get $1
   i32.store
   local.get $1
-  call $~lib/array/Array<%28%29=>void>#get:length_
+  call $~lib/array/Array<%28%29=>i32>#get:length_
   local.set $1
   global.get $~lib/memory/__stack_pointer
   i32.const 4
@@ -4106,9 +4412,90 @@
   local.get $1
   return
  )
- (func $~lib/array/Array<%28%29=>void>#__get (param $this i32) (param $index i32) (result i32)
-  (local $value i32)
+ (func $closure-complex/SelfReferencing#executeCallbacks (param $this i32) (result i32)
+  (local $sum i32)
+  (local $i i32)
   (local $3 i32)
+  (local $4 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store offset=8
+  i32.const 0
+  local.set $sum
+  i32.const 0
+  local.set $i
+  loop $for-loop|0
+   local.get $i
+   local.get $this
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   local.get $4
+   i32.store offset=4
+   local.get $4
+   call $closure-complex/SelfReferencing#get:callbacks
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   local.get $4
+   i32.store
+   local.get $4
+   call $~lib/array/Array<%28%29=>i32>#get:length
+   i32.lt_s
+   if
+    local.get $sum
+    global.get $~lib/memory/__stack_pointer
+    i32.const 0
+    global.set $~argumentsLength
+    local.get $this
+    local.set $4
+    global.get $~lib/memory/__stack_pointer
+    local.get $4
+    i32.store offset=4
+    local.get $4
+    call $closure-complex/SelfReferencing#get:callbacks
+    local.set $4
+    global.get $~lib/memory/__stack_pointer
+    local.get $4
+    i32.store
+    local.get $4
+    local.get $i
+    call $~lib/array/Array<%28%29=>i32>#__get
+    local.tee $3
+    i32.store offset=8
+    local.get $3
+    i32.load offset=4
+    global.set $~lib/__closure_env
+    local.get $3
+    i32.load
+    call_indirect (type $2)
+    i32.add
+    local.set $sum
+    local.get $i
+    i32.const 1
+    i32.add
+    local.set $i
+    br $for-loop|0
+   end
+  end
+  local.get $sum
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  i32.const 12
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $4
+  return
+ )
+ (func $closure-complex/testThisCaptureInClosures (result i32)
+  (local $obj i32)
+  (local $1 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.sub
@@ -4117,6 +4504,123 @@
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 10
+  call $closure-complex/SelfReferencing#constructor
+  local.tee $obj
+  i32.store
+  local.get $obj
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $closure-complex/SelfReferencing#addCallback
+  local.get $obj
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $closure-complex/SelfReferencing#addCallback
+  local.get $obj
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  i32.const 20
+  call $closure-complex/SelfReferencing#setValue
+  local.get $obj
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $closure-complex/SelfReferencing#addCallback
+  local.get $obj
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $1
+  call $closure-complex/SelfReferencing#executeCallbacks
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+  return
+ )
+ (func $closure-complex/testMultipleClosuresSharing~anonymous|0
+  (local $$closureEnv i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  local.get $$closureEnv
+  i32.load offset=8
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $closure-complex/Counter#increment
+  i32.add
+  i32.store offset=4
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/array/Array<i32>#get:length (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $~lib/array/Array<i32>#get:length_
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+  return
+ )
+ (func $~lib/array/Array<i32>#__get (param $this i32) (param $index i32) (result i32)
+  (local $value i32)
+  (local $3 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
   local.get $index
   local.get $this
   local.set $3
@@ -4124,65 +4628,88 @@
   local.get $3
   i32.store
   local.get $3
-  call $~lib/array/Array<%28%29=>void>#get:length_
+  call $~lib/array/Array<i32>#get:length_
   i32.ge_u
   if
-   i32.const 256
-   i32.const 1024
+   i32.const 224
+   i32.const 704
    i32.const 114
    i32.const 42
    call $~lib/builtins/abort
    unreachable
   end
-  global.get $~lib/memory/__stack_pointer
   local.get $this
   local.set $3
   global.get $~lib/memory/__stack_pointer
   local.get $3
   i32.store
   local.get $3
-  call $~lib/array/Array<%28%29=>void>#get:dataStart
+  call $~lib/array/Array<i32>#get:dataStart
   local.get $index
   i32.const 2
   i32.shl
   i32.add
   i32.load
-  local.tee $value
-  i32.store offset=4
-  i32.const 1
-  drop
+  local.set $value
   i32.const 0
-  i32.eqz
   drop
-  local.get $value
-  i32.eqz
-  if
-   i32.const 1120
-   i32.const 1024
-   i32.const 118
-   i32.const 40
-   call $~lib/builtins/abort
-   unreachable
-  end
   local.get $value
   local.set $3
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
   local.get $3
   return
  )
- (func $closure/testMultipleClosuresInArray (result i32)
+ (func $closure-complex/testComplexPipeline~anonymous|0 (result i32)
+  (local $$closureEnv i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store
+  local.get $1
+  call $closure-complex/Counter#increment
+  drop
+  local.get $$closureEnv
+  i32.load offset=8
+  local.get $$closureEnv
+  i32.load offset=12
+  i32.mul
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+  return
+ )
+ (func $closure-complex/testComplexPipeline (result i32)
   (local $$env i32)
-  (local $shared i32)
+  (local $counter i32)
   (local $2 i32)
-  (local $incrementers i32)
+  (local $data i32)
+  (local $multiplier i32)
+  (local $result i32)
   (local $i i32)
-  (local $5 i32)
-  (local $i|6 i32)
-  (local $7 i32)
+  (local $value i32)
   (local $8 i32)
+  (local $process i32)
+  (local $10 i32)
+  (local $11 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 16
   i32.sub
@@ -4194,7 +4721,7 @@
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store offset=8
-  i32.const 8
+  i32.const 16
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
@@ -4202,97 +4729,242 @@
   i32.store
   local.get $$env
   i32.const 0
+  call $closure-complex/Counter#constructor
   i32.store offset=4
   global.get $~lib/memory/__stack_pointer
-  i32.const 0
+  i32.const 5
   i32.const 2
-  i32.const 11
-  i32.const 1376
+  i32.const 9
+  i32.const 1312
   call $~lib/rt/__newArray
-  local.tee $incrementers
+  local.tee $data
   i32.store
+  local.get $$env
+  i32.const 2
+  i32.store offset=12
+  i32.const 0
+  local.set $result
   i32.const 0
   local.set $i
-  loop $for-loop|2
+  loop $for-loop|1
    local.get $i
-   i32.const 3
+   local.get $data
+   local.set $11
+   global.get $~lib/memory/__stack_pointer
+   local.get $11
+   i32.store offset=4
+   local.get $11
+   call $~lib/array/Array<i32>#get:length
    i32.lt_s
    if
-    local.get $incrementers
-    local.set $8
+    local.get $$env
+    local.get $data
+    local.set $11
     global.get $~lib/memory/__stack_pointer
-    local.get $8
+    local.get $11
     i32.store offset=4
-    local.get $8
+    local.get $11
+    local.get $i
+    call $~lib/array/Array<i32>#__get
+    i32.store offset=8
+    global.get $~lib/memory/__stack_pointer
     i32.const 8
     i32.const 5
     call $~lib/rt/itcms/__new
-    local.set $5
-    local.get $5
-    i32.const 20
+    local.set $8
+    local.get $8
+    i32.const 15
     i32.store
-    local.get $5
+    local.get $8
     local.get $$env
     i32.store offset=4
-    local.get $5
-    local.set $8
-    global.get $~lib/memory/__stack_pointer
     local.get $8
+    local.tee $process
     i32.store offset=8
-    local.get $8
-    call $~lib/array/Array<%28%29=>void>#push
-    drop
+    local.get $result
+    global.get $~lib/memory/__stack_pointer
+    i32.const 0
+    global.set $~argumentsLength
+    local.get $process
+    local.tee $10
+    i32.store offset=12
+    local.get $10
+    i32.load offset=4
+    global.set $~lib/__closure_env
+    local.get $10
+    i32.load
+    call_indirect (type $2)
+    i32.add
+    local.set $result
     local.get $i
     i32.const 1
     i32.add
     local.set $i
-    br $for-loop|2
+    br $for-loop|1
    end
   end
-  i32.const 0
-  local.set $i|6
-  loop $for-loop|3
-   local.get $i|6
-   local.get $incrementers
-   local.set $8
-   global.get $~lib/memory/__stack_pointer
-   local.get $8
-   i32.store offset=4
-   local.get $8
-   call $~lib/array/Array<%28%29=>void>#get:length
-   i32.lt_s
-   if
-    global.get $~lib/memory/__stack_pointer
-    i32.const 0
-    global.set $~argumentsLength
-    local.get $incrementers
-    local.set $8
-    global.get $~lib/memory/__stack_pointer
-    local.get $8
-    i32.store offset=4
-    local.get $8
-    local.get $i|6
-    call $~lib/array/Array<%28%29=>void>#__get
-    local.tee $7
-    i32.store offset=12
-    local.get $7
-    i32.load offset=4
-    global.set $~lib/__closure_env
-    local.get $7
-    i32.load
-    call_indirect (type $3)
-    local.get $i|6
-    i32.const 1
-    i32.add
-    local.set $i|6
-    br $for-loop|3
-   end
-  end
+  local.get $result
   local.get $$env
   i32.load offset=4
-  local.set $8
+  local.set $11
+  global.get $~lib/memory/__stack_pointer
+  local.get $11
+  i32.store offset=4
+  local.get $11
+  call $closure-complex/Counter#getCount
+  i32.add
+  local.set $11
   global.get $~lib/memory/__stack_pointer
   i32.const 16
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $11
+  return
+ )
+ (func $closure-complex/testCurriedWithClass~anonymous|0~anonymous|0 (param $x i32) (result i32)
+  (local $$closureEnv i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  local.get $$closureEnv
+  i32.load offset=4
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  local.get $x
+  call $closure-complex/Calculator#add
+  drop
+  local.get $$closureEnv
+  i32.load offset=4
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+  return
+ )
+ (func $closure-complex/testCurriedWithClass (result i32)
+  (local $calc i32)
+  (local $1 i32)
+  (local $addTo i32)
+  (local $3 i32)
+  (local $adder i32)
+  (local $5 i32)
+  (local $6 i32)
+  (local $7 i32)
+  (local $8 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 32
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 32
+  memory.fill
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  call $closure-complex/Calculator#constructor
+  local.tee $calc
+  i32.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.const 16
+  call $~lib/rt/itcms/__new
+  local.set $1
+  local.get $1
+  i32.const 17
+  i32.store
+  local.get $1
+  i32.const 0
+  i32.store offset=4
+  local.get $1
+  local.tee $addTo
+  i32.store offset=4
+  global.get $~lib/memory/__stack_pointer
+  local.get $calc
+  local.set $8
+  global.get $~lib/memory/__stack_pointer
+  local.get $8
+  i32.store offset=8
+  local.get $8
+  global.get $~lib/memory/__stack_pointer
+  i32.const 1
+  global.set $~argumentsLength
+  local.get $addTo
+  local.tee $3
+  i32.store offset=12
+  local.get $3
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $3
+  i32.load
+  call_indirect (type $0)
+  local.tee $adder
+  i32.store offset=16
+  i32.const 10
+  global.get $~lib/memory/__stack_pointer
+  i32.const 1
+  global.set $~argumentsLength
+  local.get $adder
+  local.tee $5
+  i32.store offset=20
+  local.get $5
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $5
+  i32.load
+  call_indirect (type $0)
+  drop
+  i32.const 20
+  global.get $~lib/memory/__stack_pointer
+  i32.const 1
+  global.set $~argumentsLength
+  local.get $adder
+  local.tee $6
+  i32.store offset=24
+  local.get $6
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $6
+  i32.load
+  call_indirect (type $0)
+  drop
+  i32.const 30
+  global.get $~lib/memory/__stack_pointer
+  i32.const 1
+  global.set $~argumentsLength
+  local.get $adder
+  local.tee $7
+  i32.store offset=28
+  local.get $7
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $7
+  i32.load
+  call_indirect (type $0)
+  drop
+  local.get $calc
+  local.set $8
+  global.get $~lib/memory/__stack_pointer
+  local.get $8
+  i32.store offset=8
+  local.get $8
+  call $closure-complex/Calculator#getResult
+  local.set $8
+  global.get $~lib/memory/__stack_pointer
+  i32.const 32
   i32.add
   global.set $~lib/memory/__stack_pointer
   local.get $8
@@ -4315,30 +4987,6 @@
   i32.store
   local.get $2
   call $~lib/function/Function<%28%29=>i32>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28%29=>void>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28%29=>void>#get:_env
   local.get $cookie
   call $~lib/rt/itcms/__visit
   global.get $~lib/memory/__stack_pointer
@@ -4466,7 +5114,7 @@
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
- (func $~lib/function/Function<%28i32%29=>i32>#__visit (param $this i32) (param $cookie i32)
+ (func $~lib/function/Function<%28%29=>closure-complex/Calculator>#__visit (param $this i32) (param $cookie i32)
   (local $2 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 4
@@ -4482,7 +5130,7 @@
   local.get $2
   i32.store
   local.get $2
-  call $~lib/function/Function<%28i32%29=>i32>#get:_env
+  call $~lib/function/Function<%28%29=>closure-complex/Calculator>#get:_env
   local.get $cookie
   call $~lib/rt/itcms/__visit
   global.get $~lib/memory/__stack_pointer
@@ -4490,7 +5138,7 @@
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
- (func $~lib/function/Function<%28%29=>%28i32%29=>i32>#__visit (param $this i32) (param $cookie i32)
+ (func $~lib/function/Function<%28%29=>void>#__visit (param $this i32) (param $cookie i32)
   (local $2 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 4
@@ -4506,7 +5154,7 @@
   local.get $2
   i32.store
   local.get $2
-  call $~lib/function/Function<%28%29=>%28i32%29=>i32>#get:_env
+  call $~lib/function/Function<%28%29=>void>#get:_env
   local.get $cookie
   call $~lib/rt/itcms/__visit
   global.get $~lib/memory/__stack_pointer
@@ -4514,11 +5162,8 @@
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
- (func $~lib/array/Array<%28%29=>void>#__visit (param $this i32) (param $cookie i32)
-  (local $cur i32)
-  (local $end i32)
-  (local $val i32)
-  (local $5 i32)
+ (func $~lib/function/Function<%28i32%29=>%28%29=>i32>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 4
   i32.sub
@@ -4527,599 +5172,172 @@
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   i32.store
-  i32.const 1
-  drop
   local.get $this
-  local.set $5
+  local.set $2
   global.get $~lib/memory/__stack_pointer
-  local.get $5
+  local.get $2
   i32.store
-  local.get $5
-  call $~lib/array/Array<%28%29=>void>#get:dataStart
-  local.set $cur
-  local.get $cur
-  local.get $this
-  local.set $5
+  local.get $2
+  call $~lib/function/Function<%28i32%29=>%28%29=>i32>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
   global.get $~lib/memory/__stack_pointer
-  local.get $5
-  i32.store
-  local.get $5
-  call $~lib/array/Array<%28%29=>void>#get:length_
-  i32.const 2
-  i32.shl
+  i32.const 4
   i32.add
-  local.set $end
-  loop $while-continue|0
-   local.get $cur
-   local.get $end
-   i32.lt_u
-   if
-    local.get $cur
-    i32.load
-    local.set $val
-    local.get $val
-    if
-     local.get $val
-     local.get $cookie
-     call $~lib/rt/itcms/__visit
-    end
-    local.get $cur
-    i32.const 4
-    i32.add
-    local.set $cur
-    br $while-continue|0
-   end
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/function/Function<%28i32%29=>closure-complex/Calculator>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28i32%29=>closure-complex/Calculator>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/function/Function<%28closure-complex/Calculator%29=>%28i32%29=>closure-complex/Calculator>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28closure-complex/Calculator%29=>%28i32%29=>closure-complex/Calculator>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/object/Object#constructor (param $this i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  i32.eqz
+  if
+   global.get $~lib/memory/__stack_pointer
+   i32.const 0
+   i32.const 0
+   call $~lib/rt/itcms/__new
+   local.tee $this
+   i32.store
   end
   local.get $this
-  local.set $5
-  global.get $~lib/memory/__stack_pointer
-  local.get $5
-  i32.store
-  local.get $5
-  call $~lib/array/Array<%28%29=>void>#get:buffer
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
+  local.set $1
   global.get $~lib/memory/__stack_pointer
   i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
+  local.get $1
  )
- (func $~lib/function/Function<%28%29=>bool>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28%29=>bool>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28i32?%29=>i32>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28i32?%29=>i32>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28i32%2Ci32?%29=>i32>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28i32%2Ci32?%29=>i32>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $closure/testClosureWrite (result i32)
-  (local $$env i32)
-  (local $counter i32)
-  (local $2 i32)
-  (local $increment i32)
-  (local $4 i32)
-  (local $getCounter i32)
-  (local $6 i32)
-  (local $7 i32)
-  (local $8 i32)
-  (local $9 i32)
-  (local $10 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 24
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.const 24
-  memory.fill
-  i32.const 8
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  i32.const 0
-  i32.store offset=4
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.const 5
-  call $~lib/rt/itcms/__new
-  local.set $2
-  local.get $2
-  i32.const 4
-  i32.store
-  local.get $2
-  local.get $$env
-  i32.store offset=4
-  local.get $2
-  local.tee $increment
-  i32.store
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.const 4
-  call $~lib/rt/itcms/__new
-  local.set $4
-  local.get $4
-  i32.const 5
-  i32.store
-  local.get $4
-  local.get $$env
-  i32.store offset=4
-  local.get $4
-  local.tee $getCounter
-  i32.store offset=4
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $increment
-  local.tee $6
-  i32.store offset=8
-  local.get $6
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $6
-  i32.load
-  call_indirect (type $3)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $increment
-  local.tee $7
-  i32.store offset=12
-  local.get $7
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $7
-  i32.load
-  call_indirect (type $3)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $increment
-  local.tee $8
-  i32.store offset=16
-  local.get $8
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $8
-  i32.load
-  call_indirect (type $3)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $getCounter
-  local.tee $9
-  i32.store offset=20
-  local.get $9
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $9
-  i32.load
-  call_indirect (type $0)
-  local.set $10
-  global.get $~lib/memory/__stack_pointer
-  i32.const 24
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $10
-  return
- )
- (func $closure/testSharedEnvironment (result i32)
-  (local $$env i32)
-  (local $value i32)
-  (local $2 i32)
-  (local $setter i32)
-  (local $4 i32)
-  (local $getter i32)
-  (local $6 i32)
-  (local $7 i32)
-  (local $8 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 16
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store offset=8
-  i32.const 8
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  i32.const 0
-  i32.store offset=4
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.const 6
-  call $~lib/rt/itcms/__new
-  local.set $2
-  local.get $2
-  i32.const 7
-  i32.store
-  local.get $2
-  local.get $$env
-  i32.store offset=4
-  local.get $2
-  local.tee $setter
-  i32.store
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.const 4
-  call $~lib/rt/itcms/__new
-  local.set $4
-  local.get $4
-  i32.const 8
-  i32.store
-  local.get $4
-  local.get $$env
-  i32.store offset=4
-  local.get $4
-  local.tee $getter
-  i32.store offset=4
-  i32.const 50
-  global.get $~lib/memory/__stack_pointer
-  i32.const 1
-  global.set $~argumentsLength
-  local.get $setter
-  local.tee $6
-  i32.store offset=8
-  local.get $6
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $6
-  i32.load
-  call_indirect (type $5)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $getter
-  local.tee $7
-  i32.store offset=12
-  local.get $7
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $7
-  i32.load
-  call_indirect (type $0)
-  local.set $8
-  global.get $~lib/memory/__stack_pointer
-  i32.const 16
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $8
-  return
- )
- (func $closure/testCaptureInWhile (result i32)
-  (local $$env i32)
+ (func $closure-complex/testNestedArrowsWithClassCapture~anonymous|1 (result i32)
+  (local $$closureEnv i32)
   (local $sum i32)
   (local $i i32)
   (local $3 i32)
-  (local $adder i32)
-  (local $5 i32)
-  (local $6 i32)
+  (local $4 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 4
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  i32.const 12
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
   i32.const 0
   i32.store
-  local.get $$env
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
   i32.const 0
-  i32.store offset=4
-  local.get $$env
+  local.set $sum
   i32.const 0
-  i32.store offset=8
-  loop $while-continue|1
-   local.get $$env
-   i32.load offset=8
+  local.set $i
+  loop $for-loop|0
+   local.get $i
    i32.const 3
    i32.lt_s
    if
-    global.get $~lib/memory/__stack_pointer
-    i32.const 8
-    i32.const 5
-    call $~lib/rt/itcms/__new
-    local.set $3
-    local.get $3
-    i32.const 9
-    i32.store
-    local.get $3
-    local.get $$env
-    i32.store offset=4
-    local.get $3
-    local.tee $adder
-    i32.store
+    local.get $sum
     global.get $~lib/memory/__stack_pointer
     i32.const 0
     global.set $~argumentsLength
-    local.get $adder
-    local.tee $5
-    i32.store offset=4
-    local.get $5
+    local.get $$closureEnv
+    i32.load offset=12
+    local.tee $3
+    i32.store
+    local.get $3
     i32.load offset=4
     global.set $~lib/__closure_env
-    local.get $5
+    local.get $3
     i32.load
-    call_indirect (type $3)
-    local.get $$env
-    local.get $$env
-    i32.load offset=8
+    call_indirect (type $2)
+    i32.add
+    local.set $sum
+    local.get $i
     i32.const 1
     i32.add
-    i32.store offset=8
-    br $while-continue|1
+    local.set $i
+    br $for-loop|0
    end
   end
-  local.get $$env
-  i32.load offset=4
-  local.set $6
+  local.get $sum
+  local.set $4
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $6
+  local.get $4
   return
  )
- (func $closure/testCaptureInDoWhile (result i32)
+ (func $closure-complex/testNestedArrowsWithClassCapture (result i32)
   (local $$env i32)
-  (local $product i32)
-  (local $i i32)
-  (local $3 i32)
+  (local $counter i32)
   (local $multiplier i32)
-  (local $5 i32)
-  (local $6 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  i32.const 12
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  i32.const 1
-  i32.store offset=4
-  local.get $$env
-  i32.const 1
-  i32.store offset=8
-  loop $do-loop|1
-   global.get $~lib/memory/__stack_pointer
-   i32.const 8
-   i32.const 5
-   call $~lib/rt/itcms/__new
-   local.set $3
-   local.get $3
-   i32.const 10
-   i32.store
-   local.get $3
-   local.get $$env
-   i32.store offset=4
-   local.get $3
-   local.tee $multiplier
-   i32.store
-   global.get $~lib/memory/__stack_pointer
-   i32.const 0
-   global.set $~argumentsLength
-   local.get $multiplier
-   local.tee $5
-   i32.store offset=4
-   local.get $5
-   i32.load offset=4
-   global.set $~lib/__closure_env
-   local.get $5
-   i32.load
-   call_indirect (type $3)
-   local.get $$env
-   local.get $$env
-   i32.load offset=8
-   i32.const 1
-   i32.add
-   i32.store offset=8
-   local.get $$env
-   i32.load offset=8
-   i32.const 4
-   i32.le_s
-   br_if $do-loop|1
-  end
-  local.get $$env
-  i32.load offset=4
-  local.set $6
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $6
-  return
- )
- (func $closure/testCaptureInFor (result i32)
-  (local $$env i32)
-  (local $result i32)
-  (local $i i32)
   (local $3 i32)
-  (local $addI i32)
+  (local $innerIncrement i32)
   (local $5 i32)
-  (local $6 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  i32.const 12
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  i32.const 0
-  i32.store offset=4
-  local.get $$env
-  i32.const 1
-  i32.store offset=8
-  loop $for-loop|1
-   local.get $$env
-   i32.load offset=8
-   i32.const 5
-   i32.le_s
-   if
-    global.get $~lib/memory/__stack_pointer
-    i32.const 8
-    i32.const 5
-    call $~lib/rt/itcms/__new
-    local.set $3
-    local.get $3
-    i32.const 11
-    i32.store
-    local.get $3
-    local.get $$env
-    i32.store offset=4
-    local.get $3
-    local.tee $addI
-    i32.store
-    global.get $~lib/memory/__stack_pointer
-    i32.const 0
-    global.set $~argumentsLength
-    local.get $addI
-    local.tee $5
-    i32.store offset=4
-    local.get $5
-    i32.load offset=4
-    global.set $~lib/__closure_env
-    local.get $5
-    i32.load
-    call_indirect (type $3)
-    local.get $$env
-    local.get $$env
-    i32.load offset=8
-    i32.const 1
-    i32.add
-    i32.store offset=8
-    br $for-loop|1
-   end
-  end
-  local.get $$env
-  i32.load offset=4
-  local.set $6
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $6
-  return
- )
- (func $closure/testCaptureInSwitch (param $x i32) (result i32)
-  (local $$env i32)
-  (local $captured i32)
-  (local $3 i32)
-  (local $4 i32)
-  (local $setCaptured i32)
-  (local $6 i32)
+  (local $innerProcess i32)
   (local $7 i32)
-  (local $setCaptured|8 i32)
-  (local $9 i32)
-  (local $10 i32)
-  (local $setCaptured|11 i32)
-  (local $12 i32)
-  (local $13 i32)
+  (local $8 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 24
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.const 24
-  memory.fill
-  i32.const 8
+  i64.const 0
+  i64.store
+  i32.const 16
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
@@ -5127,115 +5345,56 @@
   i32.store
   local.get $$env
   i32.const 0
+  call $closure-complex/Counter#constructor
   i32.store offset=4
-  block $break|1
-   block $case2|1
-    block $case1|1
-     block $case0|1
-      local.get $x
-      local.set $3
-      local.get $3
-      i32.const 1
-      i32.eq
-      br_if $case0|1
-      local.get $3
-      i32.const 2
-      i32.eq
-      br_if $case1|1
-      br $case2|1
-     end
-     global.get $~lib/memory/__stack_pointer
-     i32.const 8
-     i32.const 5
-     call $~lib/rt/itcms/__new
-     local.set $4
-     local.get $4
-     i32.const 12
-     i32.store
-     local.get $4
-     local.get $$env
-     i32.store offset=4
-     local.get $4
-     local.tee $setCaptured
-     i32.store
-     global.get $~lib/memory/__stack_pointer
-     i32.const 0
-     global.set $~argumentsLength
-     local.get $setCaptured
-     local.tee $6
-     i32.store offset=4
-     local.get $6
-     i32.load offset=4
-     global.set $~lib/__closure_env
-     local.get $6
-     i32.load
-     call_indirect (type $3)
-     br $break|1
-    end
-    global.get $~lib/memory/__stack_pointer
-    i32.const 8
-    i32.const 5
-    call $~lib/rt/itcms/__new
-    local.set $7
-    local.get $7
-    i32.const 13
-    i32.store
-    local.get $7
-    local.get $$env
-    i32.store offset=4
-    local.get $7
-    local.tee $setCaptured|8
-    i32.store offset=8
-    global.get $~lib/memory/__stack_pointer
-    i32.const 0
-    global.set $~argumentsLength
-    local.get $setCaptured|8
-    local.tee $9
-    i32.store offset=12
-    local.get $9
-    i32.load offset=4
-    global.set $~lib/__closure_env
-    local.get $9
-    i32.load
-    call_indirect (type $3)
-    br $break|1
-   end
-   global.get $~lib/memory/__stack_pointer
-   i32.const 8
-   i32.const 5
-   call $~lib/rt/itcms/__new
-   local.set $10
-   local.get $10
-   i32.const 14
-   i32.store
-   local.get $10
-   local.get $$env
-   i32.store offset=4
-   local.get $10
-   local.tee $setCaptured|11
-   i32.store offset=16
-   global.get $~lib/memory/__stack_pointer
-   i32.const 0
-   global.set $~argumentsLength
-   local.get $setCaptured|11
-   local.tee $12
-   i32.store offset=20
-   local.get $12
-   i32.load offset=4
-   global.set $~lib/__closure_env
-   local.get $12
-   i32.load
-   call_indirect (type $3)
-   br $break|1
-  end
   local.get $$env
-  i32.load offset=4
-  local.set $13
+  i32.const 2
+  i32.store offset=8
+  local.get $$env
+  i32.const 8
+  i32.const 5
+  call $~lib/rt/itcms/__new
+  local.set $3
+  local.get $3
+  i32.const 1
+  i32.store
+  local.get $3
+  local.get $$env
+  i32.store offset=4
+  local.get $3
+  i32.store offset=12
   global.get $~lib/memory/__stack_pointer
-  i32.const 24
+  i32.const 8
+  i32.const 5
+  call $~lib/rt/itcms/__new
+  local.set $5
+  local.get $5
+  i32.const 2
+  i32.store
+  local.get $5
+  local.get $$env
+  i32.store offset=4
+  local.get $5
+  local.tee $innerProcess
+  i32.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $innerProcess
+  local.tee $7
+  i32.store offset=4
+  local.get $7
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $7
+  i32.load
+  call_indirect (type $2)
+  local.set $8
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $13
+  local.get $8
   return
  )
  (func $~lib/rt/__newArray (param $length i32) (param $alignLog2 i32) (param $id i32) (param $data i32) (result i32)
@@ -5291,26 +5450,82 @@
   local.get $7
   return
  )
- (func $closure/testNestedClosureCapture (result i32)
+ (func $closure-complex/testDeeplyNestedClassCreation~anonymous|0 (result i32)
+  (local $$closureEnv i32)
   (local $$env i32)
-  (local $outer i32)
-  (local $2 i32)
-  (local $makeAdder i32)
-  (local $4 i32)
-  (local $adder i32)
+  (local $level1Value i32)
+  (local $3 i32)
+  (local $level2 i32)
+  (local $5 i32)
   (local $6 i32)
-  (local $7 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 16
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store
+  global.get $~lib/__closure_env
+  local.set $$closureEnv
+  i32.const 8
+  call $~lib/rt/tlsf/__alloc
+  local.set $$env
+  local.get $$env
+  local.get $$closureEnv
+  i32.store
+  local.get $$env
+  i32.const 10
+  i32.store offset=4
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.const 5
+  call $~lib/rt/itcms/__new
+  local.set $3
+  local.get $3
+  i32.const 7
+  i32.store
+  local.get $3
+  local.get $$env
+  i32.store offset=4
+  local.get $3
+  local.tee $level2
+  i32.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $level2
+  local.tee $5
+  i32.store offset=4
+  local.get $5
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $5
+  i32.load
+  call_indirect (type $2)
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $6
+  return
+ )
+ (func $closure-complex/testDeeplyNestedClassCreation (result i32)
+  (local $$env i32)
+  (local $outerValue i32)
+  (local $2 i32)
+  (local $level1 i32)
+  (local $4 i32)
+  (local $5 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
   global.get $~lib/memory/__stack_pointer
   i64.const 0
-  i64.store offset=8
+  i64.store
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -5322,23 +5537,22 @@
   i32.store offset=4
   global.get $~lib/memory/__stack_pointer
   i32.const 8
-  i32.const 10
+  i32.const 5
   call $~lib/rt/itcms/__new
   local.set $2
   local.get $2
-  i32.const 19
+  i32.const 8
   i32.store
   local.get $2
   local.get $$env
   i32.store offset=4
   local.get $2
-  local.tee $makeAdder
+  local.tee $level1
   i32.store
-  global.get $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
-  local.get $makeAdder
+  local.get $level1
   local.tee $4
   i32.store offset=4
   local.get $4
@@ -5346,110 +5560,82 @@
   global.set $~lib/__closure_env
   local.get $4
   i32.load
-  call_indirect (type $0)
-  local.tee $adder
-  i32.store offset=8
-  i32.const 23
+  call_indirect (type $2)
+  local.set $5
   global.get $~lib/memory/__stack_pointer
-  i32.const 1
-  global.set $~argumentsLength
-  local.get $adder
-  local.tee $6
-  i32.store offset=12
-  local.get $6
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $6
-  i32.load
-  call_indirect (type $1)
-  local.set $7
-  global.get $~lib/memory/__stack_pointer
-  i32.const 16
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $7
+  local.get $5
   return
  )
- (func $closure/testCaptureInTernary (result i32)
+ (func $closure-complex/testMultipleClosuresSharing (result i32)
   (local $$env i32)
-  (local $flag i32)
-  (local $a i32)
-  (local $b i32)
-  (local $4 i32)
-  (local $chooser i32)
-  (local $6 i32)
+  (local $shared i32)
+  (local $counter i32)
+  (local $3 i32)
+  (local $incrementShared i32)
+  (local $5 i32)
+  (local $getShared i32)
   (local $7 i32)
   (local $8 i32)
+  (local $9 i32)
+  (local $10 i32)
+  (local $11 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
+  i32.const 24
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  global.get $~lib/memory/__stack_pointer
   i32.const 0
-  i32.store offset=8
-  i32.const 16
+  i32.const 24
+  memory.fill
+  i32.const 12
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
   i32.const 0
   i32.store
   local.get $$env
-  i32.const 1
-  i32.store8 offset=4
+  i32.const 0
+  i32.store offset=4
   local.get $$env
-  i32.const 10
+  i32.const 0
+  call $closure-complex/Counter#constructor
   i32.store offset=8
-  local.get $$env
-  i32.const 20
-  i32.store offset=12
   global.get $~lib/memory/__stack_pointer
   i32.const 8
-  i32.const 4
+  i32.const 13
   call $~lib/rt/itcms/__new
-  local.set $4
-  local.get $4
-  i32.const 21
+  local.set $3
+  local.get $3
+  i32.const 11
   i32.store
-  local.get $4
+  local.get $3
   local.get $$env
   i32.store offset=4
-  local.get $4
-  local.tee $chooser
+  local.get $3
+  local.tee $incrementShared
   i32.store
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.const 5
+  call $~lib/rt/itcms/__new
+  local.set $5
+  local.get $5
+  i32.const 12
+  i32.store
+  local.get $5
+  local.get $$env
+  i32.store offset=4
+  local.get $5
+  local.tee $getShared
+  i32.store offset=4
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
-  local.get $chooser
-  local.tee $6
-  i32.store offset=4
-  local.get $6
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $6
-  i32.load
-  call_indirect (type $0)
-  i32.const 10
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 170
-   i32.const 3
-   call $~lib/builtins/abort
-   unreachable
-  end
-  local.get $$env
-  i32.const 0
-  i32.store8 offset=4
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $chooser
+  local.get $incrementShared
   local.tee $7
   i32.store offset=8
   local.get $7
@@ -5457,227 +5643,72 @@
   global.set $~lib/__closure_env
   local.get $7
   i32.load
-  call_indirect (type $0)
-  local.set $8
+  call_indirect (type $5)
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
-  i32.add
-  global.set $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $incrementShared
+  local.tee $8
+  i32.store offset=12
   local.get $8
-  return
- )
- (func $closure/testCaptureFromCondition (result i32)
-  (local $$env i32)
-  (local $threshold i32)
-  (local $value i32)
-  (local $3 i32)
-  (local $isAboveThreshold i32)
-  (local $5 i32)
-  (local $6 i32)
-  (local $7 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 12
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store offset=8
-  i32.const 12
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  i32.const 50
-  i32.store offset=8
-  local.get $$env
-  i32.const 75
-  i32.store offset=4
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.const 12
-  call $~lib/rt/itcms/__new
-  local.set $3
-  local.get $3
-  i32.const 22
-  i32.store
-  local.get $3
-  local.get $$env
-  i32.store offset=4
-  local.get $3
-  local.tee $isAboveThreshold
-  i32.store
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $8
+  i32.load
+  call_indirect (type $5)
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
-  local.get $isAboveThreshold
-  local.tee $5
-  i32.store offset=4
-  local.get $5
+  local.get $incrementShared
+  local.tee $9
+  i32.store offset=16
+  local.get $9
   i32.load offset=4
   global.set $~lib/__closure_env
-  local.get $5
+  local.get $9
   i32.load
-  call_indirect (type $0)
-  i32.const 0
-  i32.ne
-  i32.const 1
-  i32.eq
-  i32.eqz
-  if
-   i32.const 0
-   i32.const 464
-   i32.const 182
-   i32.const 3
-   call $~lib/builtins/abort
-   unreachable
-  end
-  local.get $$env
-  i32.const 25
-  i32.store offset=4
+  call_indirect (type $5)
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
-  local.get $isAboveThreshold
-  local.tee $6
-  i32.store offset=8
-  local.get $6
+  local.get $getShared
+  local.tee $10
+  i32.store offset=20
+  local.get $10
   i32.load offset=4
   global.set $~lib/__closure_env
-  local.get $6
+  local.get $10
   i32.load
-  call_indirect (type $0)
-  if (result i32)
-   i32.const 1
-  else
-   i32.const 0
-  end
-  local.set $7
+  call_indirect (type $2)
+  local.set $11
   global.get $~lib/memory/__stack_pointer
-  i32.const 12
+  i32.const 24
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $7
+  local.get $11
   return
  )
- (func $closure/testDeepLoopCapture (result i32)
+ (func $closure-complex/testNestedArrowFunctions (result i32)
   (local $$env i32)
-  (local $total i32)
-  (local $i i32)
-  (local $j i32)
-  (local $4 i32)
-  (local $addBoth i32)
-  (local $6 i32)
-  (local $7 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  i32.const 16
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  i32.const 0
-  i32.store offset=4
-  local.get $$env
-  i32.const 0
-  i32.store offset=8
-  loop $for-loop|2
-   local.get $$env
-   i32.load offset=8
-   i32.const 2
-   i32.lt_s
-   if
-    local.get $$env
-    i32.const 0
-    i32.store offset=12
-    loop $for-loop|3
-     local.get $$env
-     i32.load offset=12
-     i32.const 2
-     i32.lt_s
-     if
-      global.get $~lib/memory/__stack_pointer
-      i32.const 8
-      i32.const 5
-      call $~lib/rt/itcms/__new
-      local.set $4
-      local.get $4
-      i32.const 23
-      i32.store
-      local.get $4
-      local.get $$env
-      i32.store offset=4
-      local.get $4
-      local.tee $addBoth
-      i32.store
-      global.get $~lib/memory/__stack_pointer
-      i32.const 0
-      global.set $~argumentsLength
-      local.get $addBoth
-      local.tee $6
-      i32.store offset=4
-      local.get $6
-      i32.load offset=4
-      global.set $~lib/__closure_env
-      local.get $6
-      i32.load
-      call_indirect (type $3)
-      local.get $$env
-      local.get $$env
-      i32.load offset=12
-      i32.const 1
-      i32.add
-      i32.store offset=12
-      br $for-loop|3
-     end
-    end
-    local.get $$env
-    local.get $$env
-    i32.load offset=8
-    i32.const 1
-    i32.add
-    i32.store offset=8
-    br $for-loop|2
-   end
-  end
-  local.get $$env
-  i32.load offset=4
-  local.set $7
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $7
-  return
- )
- (func $closure/testDefaultParamCapture (result i32)
-  (local $$env i32)
-  (local $defaultVal i32)
+  (local $base i32)
   (local $2 i32)
-  (local $fn i32)
+  (local $outer i32)
   (local $4 i32)
-  (local $5 i32)
+  (local $fn1 i32)
+  (local $6 i32)
+  (local $fn2 i32)
+  (local $8 i32)
+  (local $9 i32)
+  (local $10 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 28
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
+  i32.const 0
+  i32.const 28
+  memory.fill
   i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
@@ -5685,66 +5716,7 @@
   i32.const 0
   i32.store
   local.get $$env
-  i32.const 42
-  i32.store offset=4
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.const 13
-  call $~lib/rt/itcms/__new
-  local.set $2
-  local.get $2
-  i32.const 25
-  i32.store
-  local.get $2
-  local.get $$env
-  i32.store offset=4
-  local.get $2
-  local.tee $fn
-  i32.store
-  i32.const 0
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  global.set $~argumentsLength
-  local.get $fn
-  local.tee $4
-  i32.store offset=4
-  local.get $4
-  i32.load offset=4
-  global.set $~lib/__closure_env
-  local.get $4
-  i32.load
-  call_indirect (type $1)
-  local.set $5
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $5
-  return
- )
- (func $closure/testDefaultParamWithOtherParam (result i32)
-  (local $$env i32)
-  (local $multiplier i32)
-  (local $2 i32)
-  (local $fn i32)
-  (local $4 i32)
-  (local $5 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i64.const 0
-  i64.store
-  i32.const 8
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  i32.const 0
-  i32.store
-  local.get $$env
-  i32.const 3
+  i32.const 10
   i32.store offset=4
   global.get $~lib/memory/__stack_pointer
   i32.const 8
@@ -5752,20 +5724,20 @@
   call $~lib/rt/itcms/__new
   local.set $2
   local.get $2
-  i32.const 26
+  i32.const 14
   i32.store
   local.get $2
   local.get $$env
   i32.store offset=4
   local.get $2
-  local.tee $fn
+  local.tee $outer
   i32.store
-  i32.const 10
-  i32.const 0
+  global.get $~lib/memory/__stack_pointer
+  i32.const 5
   global.get $~lib/memory/__stack_pointer
   i32.const 1
   global.set $~argumentsLength
-  local.get $fn
+  local.get $outer
   local.tee $4
   i32.store offset=4
   local.get $4
@@ -5773,13 +5745,56 @@
   global.set $~lib/__closure_env
   local.get $4
   i32.load
-  call_indirect (type $4)
-  local.set $5
+  call_indirect (type $0)
+  local.tee $fn1
+  i32.store offset=8
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 10
+  global.get $~lib/memory/__stack_pointer
+  i32.const 1
+  global.set $~argumentsLength
+  local.get $outer
+  local.tee $6
+  i32.store offset=12
+  local.get $6
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $6
+  i32.load
+  call_indirect (type $0)
+  local.tee $fn2
+  i32.store offset=16
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $fn1
+  local.tee $8
+  i32.store offset=20
+  local.get $8
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $8
+  i32.load
+  call_indirect (type $2)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  global.set $~argumentsLength
+  local.get $fn2
+  local.tee $9
+  i32.store offset=24
+  local.get $9
+  i32.load offset=4
+  global.set $~lib/__closure_env
+  local.get $9
+  i32.load
+  call_indirect (type $2)
+  i32.add
+  local.set $10
+  global.get $~lib/memory/__stack_pointer
+  i32.const 28
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $5
+  local.get $10
   return
  )
 )

@@ -2753,8 +2753,8 @@
   return
  )
  (func $closure-stress/makeCounter (result i32)
-  (local $count i32)
   (local $$env i32)
+  (local $count i32)
   (local $2 i32)
   i32.const 8
   call $~lib/rt/tlsf/__alloc
@@ -3177,9 +3177,9 @@
   global.get $~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load offset=8
-  local.get $$closureEnv
   i32.load offset=4
+  local.get $$closureEnv
+  i32.load offset=8
   i32.add
  )
  (func $closure-stress/makeAdder~anonymous|0 (param $x i32) (result i32)
@@ -3457,11 +3457,11 @@
   i32.store
   local.get $$env
   local.get $fn
-  i32.store offset=4
+  i32.store offset=8
   local.get $$env
   i32.const 0
   call $"~lib/map/Map<i32,i32>#constructor"
-  i32.store offset=8
+  i32.store offset=4
   i32.const 8
   i32.const 11
   call $~lib/rt/itcms/__new
@@ -3517,8 +3517,8 @@
   i32.load offset=12
  )
  (func $closure-stress/multipleClosureReturns (param $which i32) (result i32)
-  (local $a i32)
   (local $$env i32)
+  (local $a i32)
   (local $b i32)
   (local $c i32)
   (local $5 i32)
@@ -3956,15 +3956,12 @@
   global.get $~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load
   local.get $$closureEnv
-  i32.load
   i32.load offset=4
   i32.const 1
   i32.add
   i32.store offset=4
   local.get $$closureEnv
-  i32.load
   i32.load offset=4
   return
  )
@@ -4091,10 +4088,10 @@
   i32.load offset=4
   local.get $$closureEnv
   i32.load
-  i32.load offset=8
+  i32.load offset=4
   i32.add
   local.get $$closureEnv
-  i32.load offset=12
+  i32.load offset=4
   i32.add
   return
  )
@@ -4857,9 +4854,9 @@
   return
  )
  (func $closure-stress/simpleClosureArray (result i32)
+  (local $$env i32)
   (local $fns i32)
   (local $v0 i32)
-  (local $$env i32)
   (local $3 i32)
   (local $v1 i32)
   (local $5 i32)
@@ -5347,8 +5344,8 @@
   local.get $1
  )
  (func $closure-stress/captureArray (result i32)
-  (local $arr i32)
   (local $$env i32)
+  (local $arr i32)
   (local $2 i32)
   (local $sum i32)
   (local $4 i32)
@@ -5567,8 +5564,8 @@
   local.get $1
  )
  (func $closure-stress/mutateCapturedArray (result i32)
-  (local $arr i32)
   (local $$env i32)
+  (local $arr i32)
   (local $2 i32)
   (local $doubleAll i32)
   (local $4 i32)
@@ -5968,8 +5965,8 @@
   return
  )
  (func $closure-stress/testMapWithClosure (result i32)
-  (local $multiplier i32)
   (local $$env i32)
+  (local $multiplier i32)
   (local $arr i32)
   (local $3 i32)
   (local $result i32)
@@ -6238,8 +6235,8 @@
   return
  )
  (func $closure-stress/testFilterWithClosure (result i32)
-  (local $threshold i32)
   (local $$env i32)
+  (local $threshold i32)
   (local $arr i32)
   (local $i i32)
   (local $4 i32)
@@ -6273,7 +6270,7 @@
   i32.store
   i32.const 0
   local.set $i
-  loop $for-loop|0
+  loop $for-loop|1
    local.get $i
    i32.const 10
    i32.lt_s
@@ -6291,7 +6288,7 @@
     i32.const 1
     i32.add
     local.set $i
-    br $for-loop|0
+    br $for-loop|1
    end
   end
   global.get $~lib/memory/__stack_pointer
@@ -6402,8 +6399,8 @@
   return
  )
  (func $closure-stress/testReduceWithClosure (result i32)
-  (local $bonus i32)
   (local $$env i32)
+  (local $bonus i32)
   (local $arr i32)
   (local $result i32)
   (local $4 i32)
@@ -6427,7 +6424,7 @@
   i32.store
   local.get $$env
   i32.const 100
-  i32.store offset=4
+  i32.store offset=8
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   i32.const 5
@@ -6494,7 +6491,7 @@
   local.get $7
   i32.const 0
   call $closure-stress/reduceArray
-  i32.store offset=8
+  i32.store offset=4
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.const 4
@@ -7201,7 +7198,7 @@
   global.get $~lib/__closure_env
   local.set $$closureEnv
   local.get $$closureEnv
-  i32.load offset=8
+  i32.load offset=4
   local.set $4
   global.get $~lib/memory/__stack_pointer
   local.get $4
@@ -7211,7 +7208,7 @@
   call $"~lib/map/Map<i32,i32>#has"
   if
    local.get $$closureEnv
-   i32.load offset=8
+   i32.load offset=4
    local.set $4
    global.get $~lib/memory/__stack_pointer
    local.get $4
@@ -7232,7 +7229,7 @@
   i32.const 1
   global.set $~argumentsLength
   local.get $$closureEnv
-  i32.load offset=4
+  i32.load offset=8
   local.tee $2
   i32.store offset=4
   local.get $2
@@ -7243,7 +7240,7 @@
   call_indirect (type $1)
   local.set $result
   local.get $$closureEnv
-  i32.load offset=8
+  i32.load offset=4
   local.set $4
   global.get $~lib/memory/__stack_pointer
   local.get $4
@@ -7786,8 +7783,8 @@
   global.set $~lib/memory/__stack_pointer
  )
  (func $closure-stress/testRangeWithClosure (result i32)
-  (local $sum i32)
   (local $$env i32)
+  (local $sum i32)
   (local $n i32)
   (local $3 i32)
   (local $4 i32)
@@ -7840,8 +7837,8 @@
   return
  )
  (func $closure-stress/makeAdderPair (param $initial i32) (result i32)
-  (local $value i32)
   (local $$env i32)
+  (local $value i32)
   (local $arr i32)
   (local $4 i32)
   (local $5 i32)
@@ -10050,8 +10047,8 @@
   global.set $~lib/memory/__stack_pointer
  )
  (func $closure-stress/testBidirectionalMutation (result i32)
-  (local $value i32)
   (local $$env i32)
+  (local $value i32)
   (local $2 i32)
   (local $setter i32)
   (local $4 i32)
@@ -10201,8 +10198,8 @@
   return
  )
  (func $closure-stress/testSharedMutation (result i32)
-  (local $value i32)
   (local $$env i32)
+  (local $value i32)
   (local $2 i32)
   (local $inc i32)
   (local $4 i32)
@@ -10370,8 +10367,8 @@
   return
  )
  (func $closure-stress/testOuterScopeMutation (result i32)
-  (local $value i32)
   (local $$env i32)
+  (local $value i32)
   (local $2 i32)
   (local $double i32)
   (local $4 i32)
@@ -10519,8 +10516,8 @@
   return
  )
  (func $closure-stress/closureInConditional (param $useFirst i32) (result i32)
-  (local $a i32)
   (local $$env i32)
+  (local $a i32)
   (local $b i32)
   (local $getter i32)
   (local $5 i32)
@@ -10600,10 +10597,10 @@
   return
  )
  (func $closure-stress/closureEscapingBlock (result i32)
+  (local $$env i32)
   (local $value i32)
   (local $captured i32)
   (local $inner i32)
-  (local $$env i32)
   (local $4 i32)
   (local $5 i32)
   (local $6 i32)
@@ -10706,8 +10703,8 @@
   local.get $1
  )
  (func $closure-stress/captureClassInstance (result i32)
-  (local $c i32)
   (local $$env i32)
+  (local $c i32)
   (local $2 i32)
   (local $inc i32)
   (local $4 i32)
@@ -10911,8 +10908,8 @@
   return
  )
  (func $closure-stress/captureOnlyNoParams (result i32)
-  (local $x i32)
   (local $$env i32)
+  (local $x i32)
   (local $y i32)
   (local $3 i32)
   (local $fn i32)
@@ -11012,8 +11009,8 @@
   return
  )
  (func $closure-stress/captureSmallTypes (result i32)
-  (local $a i32)
   (local $$env i32)
+  (local $a i32)
   (local $b i32)
   (local $c i32)
   (local $d i32)
@@ -11082,8 +11079,8 @@
   return
  )
  (func $closure-stress/manyClosuresSameEnv (result i32)
-  (local $value i32)
   (local $$env i32)
+  (local $value i32)
   (local $2 i32)
   (local $inc1 i32)
   (local $4 i32)
@@ -11286,8 +11283,8 @@
   return
  )
  (func $closure-stress/manyCaptures (result i32)
-  (local $a i32)
   (local $$env i32)
+  (local $a i32)
   (local $b i32)
   (local $c i32)
   (local $d i32)
@@ -11388,8 +11385,8 @@
   return
  )
  (func $closure-stress/simpleIIFE (result i32)
-  (local $v1 i32)
   (local $$env i32)
+  (local $v1 i32)
   (local $2 i32)
   (local $3 i32)
   (local $result i32)
@@ -11444,8 +11441,8 @@
   return
  )
  (func $closure-stress/interleavedClosures (result i32)
-  (local $total i32)
   (local $$env i32)
+  (local $total i32)
   (local $2 i32)
   (local $get i32)
   (local $4 i32)
@@ -11629,8 +11626,8 @@
   return
  )
  (func $closure-stress/captureString (result i32)
-  (local $s i32)
   (local $$env i32)
+  (local $s i32)
   (local $2 i32)
   (local $fn i32)
   (local $4 i32)
@@ -11687,8 +11684,8 @@
   return
  )
  (func $closure-stress/mutateStringRef (result i32)
-  (local $s i32)
   (local $$env i32)
+  (local $s i32)
   (local $2 i32)
   (local $append i32)
   (local $4 i32)
@@ -11805,11 +11802,10 @@
  )
  (func $closure-stress/testNestedClosureFunctions~anonymous|0 (result i32)
   (local $$closureEnv i32)
-  (local $$env i32)
-  (local $2 i32)
+  (local $1 i32)
   (local $innerInner i32)
+  (local $3 i32)
   (local $4 i32)
-  (local $5 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.sub
@@ -11820,12 +11816,6 @@
   i64.store
   global.get $~lib/__closure_env
   local.set $$closureEnv
-  i32.const 8
-  call $~lib/rt/tlsf/__alloc
-  local.set $$env
-  local.get $$env
-  local.get $$closureEnv
-  i32.store
   local.get $$closureEnv
   local.get $$closureEnv
   i32.load offset=4
@@ -11836,42 +11826,42 @@
   i32.const 8
   i32.const 4
   call $~lib/rt/itcms/__new
-  local.set $2
-  local.get $2
+  local.set $1
+  local.get $1
   i32.const 64
   i32.store
-  local.get $2
-  local.get $$env
+  local.get $1
+  local.get $$closureEnv
   i32.store offset=4
-  local.get $2
+  local.get $1
   local.tee $innerInner
   i32.store
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   global.set $~argumentsLength
   local.get $innerInner
-  local.tee $4
+  local.tee $3
   i32.store offset=4
-  local.get $4
+  local.get $3
   i32.load offset=4
   global.set $~lib/__closure_env
-  local.get $4
+  local.get $3
   i32.load
   call_indirect (type $0)
   drop
   local.get $$closureEnv
   i32.load offset=4
-  local.set $5
+  local.set $4
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
-  local.get $5
+  local.get $4
   return
  )
  (func $closure-stress/testNestedClosureFunctions (result i32)
-  (local $x i32)
   (local $$env i32)
+  (local $x i32)
   (local $2 i32)
   (local $inner i32)
   (local $4 i32)
@@ -11928,8 +11918,8 @@
   return
  )
  (func $closure-stress/testTwoClosuresSameVar (result i32)
-  (local $a i32)
   (local $$env i32)
+  (local $a i32)
   (local $2 i32)
   (local $b i32)
   (local $4 i32)
@@ -12062,8 +12052,8 @@
  )
  (func $closure-stress/testDeeplyNestedClosures~anonymous|0~anonymous|0 (result i32)
   (local $$closureEnv i32)
-  (local $level3 i32)
   (local $$env i32)
+  (local $level3 i32)
   (local $3 i32)
   (local $fn3 i32)
   (local $5 i32)
@@ -12078,7 +12068,7 @@
   i64.store
   global.get $~lib/__closure_env
   local.set $$closureEnv
-  i32.const 16
+  i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
@@ -12086,7 +12076,7 @@
   i32.store
   local.get $$env
   i32.const 100
-  i32.store offset=12
+  i32.store offset=4
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.const 4
@@ -12123,8 +12113,8 @@
  )
  (func $closure-stress/testDeeplyNestedClosures~anonymous|0 (result i32)
   (local $$closureEnv i32)
-  (local $level2 i32)
   (local $$env i32)
+  (local $level2 i32)
   (local $3 i32)
   (local $fn2 i32)
   (local $5 i32)
@@ -12139,7 +12129,7 @@
   i64.store
   global.get $~lib/__closure_env
   local.set $$closureEnv
-  i32.const 12
+  i32.const 8
   call $~lib/rt/tlsf/__alloc
   local.set $$env
   local.get $$env
@@ -12147,7 +12137,7 @@
   i32.store
   local.get $$env
   i32.const 10
-  i32.store offset=8
+  i32.store offset=4
   global.get $~lib/memory/__stack_pointer
   i32.const 8
   i32.const 4
@@ -12183,8 +12173,8 @@
   return
  )
  (func $closure-stress/testDeeplyNestedClosures (result i32)
-  (local $level1 i32)
   (local $$env i32)
+  (local $level1 i32)
   (local $2 i32)
   (local $fn1 i32)
   (local $4 i32)
