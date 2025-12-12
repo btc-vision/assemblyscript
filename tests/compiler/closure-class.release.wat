@@ -20,7 +20,7 @@
  (global $~lib/rt/itcms/white (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/fromSpace (mut i32) (i32.const 0))
  (global $~lib/rt/tlsf/ROOT (mut i32) (i32.const 0))
- (global $$~lib/__closure_env (mut i32) (i32.const 0))
+ (global $~lib/__closure_env (mut i32) (i32.const 0))
  (global $~lib/memory/__stack_pointer (mut i32) (i32.const 36860))
  (memory $0 1)
  (data $0 (i32.const 1036) "<")
@@ -1986,14 +1986,14 @@
   local.get $0
  )
  (func $closure-class/testTaskCallbacks~anonymous|0 (param $0 i32)
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.get $0
   i32.const 1
   i32.shl
   i32.store offset=4
  )
  (func $closure-class/testTaskCallbackAfterComplete~anonymous|0 (param $0 i32)
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.get $0
   i32.store offset=4
  )
@@ -2210,7 +2210,7 @@
    i32.store offset=16
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    i32.load
    call_indirect (type $3)
@@ -2219,7 +2219,7 @@
    i32.store offset=20
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    i32.load
    call_indirect (type $3)
@@ -2228,7 +2228,7 @@
    i32.store offset=24
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    i32.load
    call_indirect (type $3)
@@ -2237,7 +2237,7 @@
    i32.store offset=28
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -2312,7 +2312,7 @@
    i32.store offset=28
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $3)
@@ -2321,7 +2321,7 @@
    i32.store offset=32
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $3)
@@ -2330,7 +2330,7 @@
    i32.store offset=36
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $3)
@@ -2339,7 +2339,7 @@
    i32.store offset=40
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    i32.load
    call_indirect (type $3)
@@ -2348,7 +2348,7 @@
    i32.store offset=44
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    i32.load
    call_indirect (type $3)
@@ -2357,7 +2357,7 @@
    i32.store offset=48
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -2369,7 +2369,7 @@
    i32.store offset=52
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    i32.load
    call_indirect (type $0)
@@ -2485,7 +2485,7 @@
    i32.store offset=20
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -2495,7 +2495,7 @@
    i32.store offset=24
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -2505,7 +2505,7 @@
    i32.store offset=28
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -2515,7 +2515,7 @@
    i32.store offset=32
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    i32.load
    call_indirect (type $0)
@@ -2713,7 +2713,7 @@
    i32.store offset=16
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    i32.load
    call_indirect (type $0)
@@ -2732,7 +2732,7 @@
    i32.store offset=20
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 20
    local.get $1
    i32.load
@@ -2742,7 +2742,7 @@
    i32.store offset=24
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    i32.load
    call_indirect (type $0)
@@ -2761,7 +2761,7 @@
    i32.store offset=28
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    i32.load
    call_indirect (type $0)
@@ -3011,7 +3011,7 @@
    i32.store offset=20
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    i32.load
    call_indirect (type $0)
@@ -3030,7 +3030,7 @@
    i32.store offset=24
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -3055,7 +3055,7 @@
    i32.store offset=28
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    i32.load
    call_indirect (type $3)
@@ -3064,7 +3064,7 @@
    i32.store offset=32
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    i32.load
    call_indirect (type $3)
@@ -3073,7 +3073,7 @@
    i32.store offset=36
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    i32.load
    call_indirect (type $0)
@@ -3305,7 +3305,7 @@
    i32.store offset=24
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 2576
    local.get $3
    i32.load
@@ -3315,7 +3315,7 @@
    i32.store offset=28
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 2624
    local.get $4
    i32.load
@@ -3325,7 +3325,7 @@
    i32.store offset=32
    local.get $5
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 2656
    local.get $5
    i32.load
@@ -3335,7 +3335,7 @@
    i32.store offset=36
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    global.get $~lib/memory/__stack_pointer
    local.get $1
    i32.load
@@ -3468,7 +3468,7 @@
    i32.store offset=16
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 3200
    local.get $3
    i32.load
@@ -3481,7 +3481,7 @@
    i32.store offset=20
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 3232
    local.get $3
    i32.load
@@ -3494,7 +3494,7 @@
    i32.store offset=24
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 3264
    local.get $3
    i32.load
@@ -3504,7 +3504,7 @@
    i32.store offset=28
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -3578,7 +3578,7 @@
    i32.store offset=12
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    global.get $~lib/memory/__stack_pointer
    i32.const 3328
    local.get $0
@@ -3712,7 +3712,7 @@
    i32.store offset=20
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -3722,7 +3722,7 @@
    i32.store offset=24
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -3732,7 +3732,7 @@
    i32.store offset=28
    local.get $5
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $5
    i32.load
    call_indirect (type $0)
@@ -3742,7 +3742,7 @@
    i32.store offset=32
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -3831,7 +3831,7 @@
    i32.store offset=16
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    local.get $2
    i32.load
@@ -3851,7 +3851,7 @@
    i32.store offset=20
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 21
    local.get $3
    i32.load
@@ -3964,7 +3964,7 @@
    i32.store offset=16
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 50
    local.get $1
    i32.load
@@ -3991,7 +3991,7 @@
    i32.store offset=20
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    local.get $2
    i32.load
@@ -4131,7 +4131,7 @@
    i32.store offset=40
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    i32.load
    call_indirect (type $0)
@@ -4150,7 +4150,7 @@
    i32.store offset=44
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -4169,7 +4169,7 @@
    i32.store offset=48
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    i32.load
    call_indirect (type $0)
@@ -4181,7 +4181,7 @@
    i32.store offset=52
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -4244,7 +4244,7 @@
     i32.store offset=16
     local.get $1
     i32.load offset=4
-    global.set $$~lib/__closure_env
+    global.set $~lib/__closure_env
     local.get $1
     i32.load
     call_indirect (type $0)
@@ -4254,7 +4254,7 @@
      i32.store offset=20
      local.get $2
      i32.load offset=4
-     global.set $$~lib/__closure_env
+     global.set $~lib/__closure_env
      local.get $2
      i32.load
      call_indirect (type $0)
@@ -4322,7 +4322,7 @@
     i32.store offset=16
     local.get $1
     i32.load offset=4
-    global.set $$~lib/__closure_env
+    global.set $~lib/__closure_env
     local.get $1
     i32.load
     call_indirect (type $0)
@@ -4332,7 +4332,7 @@
      i32.store offset=20
      local.get $2
      i32.load offset=4
-     global.set $$~lib/__closure_env
+     global.set $~lib/__closure_env
      local.get $2
      i32.load
      call_indirect (type $0)
@@ -4622,7 +4622,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $0
@@ -4664,7 +4664,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $0
   i32.store
@@ -4698,7 +4698,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $2
   i32.load offset=4
   local.tee $3
@@ -4758,7 +4758,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $2
@@ -4834,7 +4834,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $0
   i32.store
@@ -5041,7 +5041,7 @@
    i32.store offset=24
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 50
    local.get $4
    i32.load
@@ -5051,7 +5051,7 @@
    i32.store offset=28
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -5070,7 +5070,7 @@
    i32.store offset=32
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 30
    local.get $1
    i32.load
@@ -5089,7 +5089,7 @@
    i32.store offset=36
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -5108,7 +5108,7 @@
    i32.store offset=40
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 200
    local.get $1
    i32.load
@@ -5126,7 +5126,7 @@
    i32.store offset=44
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -5145,7 +5145,7 @@
    i32.store offset=48
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -5164,7 +5164,7 @@
    i32.store offset=52
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 100
    local.get $4
    i32.load
@@ -5174,7 +5174,7 @@
    i32.store offset=56
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 220
    local.get $1
    i32.load
@@ -5193,7 +5193,7 @@
    i32.store offset=60
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -5205,7 +5205,7 @@
    i32.store offset=64
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -5246,7 +5246,7 @@
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $0
   i32.load offset=8
   local.tee $1
@@ -5350,7 +5350,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $0
   i32.load offset=4
   local.tee $1
@@ -5396,7 +5396,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $1
   i32.store offset=4
@@ -5435,7 +5435,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $0
@@ -5477,7 +5477,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $0
   i32.store
@@ -5832,7 +5832,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $2
   i32.load offset=4
   local.tee $1
@@ -6247,7 +6247,7 @@
     i32.store offset=8
     local.get $3
     i32.load offset=4
-    global.set $$~lib/__closure_env
+    global.set $~lib/__closure_env
     local.get $1
     local.get $3
     i32.load
@@ -6523,7 +6523,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $1
   i32.store
@@ -6563,7 +6563,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $1
   i32.store
@@ -6603,7 +6603,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $1
   i32.store
@@ -6751,7 +6751,7 @@
   memory.fill
   global.get $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $2
@@ -6862,7 +6862,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $0
   i32.load offset=4
   local.tee $1
@@ -6926,7 +6926,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $0
   i32.load offset=4
   local.tee $1
@@ -6979,7 +6979,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $0
   i32.load offset=4
   local.tee $1
@@ -7044,7 +7044,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $0
   i32.store
@@ -7281,7 +7281,7 @@
    i32.store offset=28
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    i32.load
    call_indirect (type $0)
@@ -7298,7 +7298,7 @@
    i32.store offset=32
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -7316,7 +7316,7 @@
    i32.store offset=36
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    i32.load
    call_indirect (type $0)
@@ -7335,7 +7335,7 @@
    i32.store offset=40
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -7352,7 +7352,7 @@
    i32.store offset=44
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    i32.load
    call_indirect (type $0)
@@ -7370,7 +7370,7 @@
    i32.store offset=48
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    i32.load
    call_indirect (type $0)
@@ -7389,7 +7389,7 @@
    i32.store offset=52
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -7407,7 +7407,7 @@
    i32.store offset=56
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    i32.load
    call_indirect (type $0)
@@ -7426,7 +7426,7 @@
    i32.store offset=60
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -7444,7 +7444,7 @@
    i32.store offset=64
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    i32.load
    call_indirect (type $0)
@@ -7463,7 +7463,7 @@
    i32.store offset=68
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -7480,7 +7480,7 @@
    i32.store offset=72
    local.get $3
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    i32.load
    call_indirect (type $3)
@@ -7489,7 +7489,7 @@
    i32.store offset=76
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    i32.load
    call_indirect (type $0)
@@ -7506,7 +7506,7 @@
    i32.store offset=80
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $4
    i32.load
    call_indirect (type $0)
@@ -7547,7 +7547,7 @@
   i32.const 0
   i32.store offset=8
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $1
   i32.store offset=8
@@ -7594,7 +7594,7 @@
   i32.const 0
   i32.store offset=8
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $3
@@ -7644,7 +7644,7 @@
     i32.store offset=8
     local.get $4
     i32.load offset=4
-    global.set $$~lib/__closure_env
+    global.set $~lib/__closure_env
     local.get $3
     local.get $0
     local.get $4
@@ -7682,7 +7682,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $0
@@ -7725,7 +7725,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $3
   i32.load offset=4
   local.tee $2
@@ -8086,7 +8086,7 @@
    i32.store offset=24
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    local.get $0
    i32.load
@@ -8128,7 +8128,7 @@
    i32.store offset=32
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $3
    local.get $0
    i32.load
@@ -8138,7 +8138,7 @@
    i32.store offset=36
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 10
    local.get $1
    i32.load
@@ -8148,7 +8148,7 @@
    i32.store offset=40
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 25
    local.get $1
    i32.load
@@ -8158,7 +8158,7 @@
    i32.store offset=44
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 20
    local.get $1
    i32.load
@@ -8168,7 +8168,7 @@
    i32.store offset=48
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -8217,7 +8217,7 @@
    i32.store offset=52
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -8315,7 +8315,7 @@
   i32.const 0
   i32.store offset=8
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $2
   i32.load offset=4
   local.tee $1
@@ -8333,7 +8333,7 @@
   i32.store offset=4
   local.get $0
   i32.load offset=4
-  global.set $$~lib/__closure_env
+  global.set $~lib/__closure_env
   local.get $1
   local.get $2
   local.get $0
@@ -8366,7 +8366,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   i32.load offset=4
   local.tee $1
   i32.store offset=4
@@ -8377,7 +8377,7 @@
   i32.store
   local.get $0
   i32.load offset=4
-  global.set $$~lib/__closure_env
+  global.set $~lib/__closure_env
   local.get $0
   i32.load
   call_indirect (type $2)
@@ -8409,7 +8409,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=8
   local.tee $2
@@ -8456,7 +8456,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=8
   local.tee $2
@@ -8576,7 +8576,7 @@
   i64.const 0
   i64.store offset=8
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $2
@@ -8596,7 +8596,7 @@
    i32.store offset=4
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $1)
@@ -8649,7 +8649,7 @@
   i32.const 0
   i32.store offset=8
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $3
@@ -8699,7 +8699,7 @@
     i32.store offset=8
     local.get $3
     i32.load offset=4
-    global.set $$~lib/__closure_env
+    global.set $~lib/__closure_env
     local.get $0
     local.get $3
     i32.load
@@ -8738,7 +8738,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $0
   i32.load offset=4
   local.tee $1
@@ -8790,7 +8790,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $0
   i32.load offset=4
   local.tee $1
@@ -8844,7 +8844,7 @@
   i32.const 0
   i32.store offset=8
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $2
@@ -8873,7 +8873,7 @@
    i32.store offset=8
    local.get $0
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $0
    i32.load
    call_indirect (type $0)
@@ -9086,7 +9086,7 @@
    i32.store offset=20
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 3648
    local.get $4
    i32.load
@@ -9106,7 +9106,7 @@
    i32.store offset=24
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    i32.load
    call_indirect (type $0)
@@ -9124,7 +9124,7 @@
    i32.store offset=28
    local.get $1
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $1
    i32.load
    call_indirect (type $0)
@@ -9144,7 +9144,7 @@
    i32.store offset=32
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 3680
    local.get $4
    i32.load
@@ -9167,7 +9167,7 @@
    i32.store offset=36
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 3712
    local.get $4
    i32.load
@@ -9190,7 +9190,7 @@
    i32.store offset=40
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 3744
    local.get $4
    i32.load
@@ -9225,7 +9225,7 @@
    i32.store offset=44
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -9243,7 +9243,7 @@
    i32.store offset=48
    local.get $2
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    local.get $2
    i32.load
    call_indirect (type $0)
@@ -9263,7 +9263,7 @@
    i32.store offset=52
    local.get $4
    i32.load offset=4
-   global.set $$~lib/__closure_env
+   global.set $~lib/__closure_env
    i32.const 3776
    local.get $4
    i32.load
@@ -9516,7 +9516,7 @@
   i32.const 20
   memory.fill
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $2
   i32.load offset=4
   local.tee $0
@@ -9567,7 +9567,7 @@
     i32.store offset=16
     local.get $3
     i32.load offset=4
-    global.set $$~lib/__closure_env
+    global.set $~lib/__closure_env
     local.get $3
     i32.load
     call_indirect (type $0)
@@ -9613,7 +9613,7 @@
   i32.const 20
   memory.fill
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $3
   i32.load offset=4
   local.tee $0
@@ -9677,7 +9677,7 @@
     i32.store offset=16
     local.get $0
     i32.load offset=4
-    global.set $$~lib/__closure_env
+    global.set $~lib/__closure_env
     local.get $1
     local.get $0
     i32.load
@@ -9793,7 +9793,7 @@
   i32.const 0
   i32.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $0
   i32.load offset=4
   local.tee $1
@@ -9864,7 +9864,7 @@
   i64.const 0
   i64.store
   global.get $~lib/memory/__stack_pointer
-  global.get $$~lib/__closure_env
+  global.get $~lib/__closure_env
   local.tee $1
   i32.load offset=4
   local.tee $0
