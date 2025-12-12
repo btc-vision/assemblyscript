@@ -7719,6 +7719,13 @@ export class Compiler extends DiagnosticEmitter {
         let funcExpr = <FunctionExpression>node;
         let decl = funcExpr.declaration;
         let params = decl.signature.parameters;
+        // Scan parameter default values for captures (before adding params to inner names)
+        for (let i = 0, k = params.length; i < k; i++) {
+          let paramInit = params[i].initializer;
+          if (paramInit) {
+            this.scanNodeForCaptures(paramInit, outerFlow, innerFunctionNames, captures);
+          }
+        }
         for (let i = 0, k = params.length; i < k; i++) {
           innerFunctionNames.add(params[i].name.text);
         }
@@ -7940,8 +7947,16 @@ export class Compiler extends DiagnosticEmitter {
     let captures = new Map<Local, i32>();
     let innerFunctionNames = new Set<string>();
 
-    // Add the function's own parameters to the inner names set
+    // Scan parameter default values for captures (before adding params to inner names)
     let params = declaration.signature.parameters;
+    for (let i = 0, k = params.length; i < k; i++) {
+      let paramInit = params[i].initializer;
+      if (paramInit) {
+        this.scanNodeForCaptures(paramInit, outerFlow, innerFunctionNames, captures);
+      }
+    }
+
+    // Add the function's own parameters to the inner names set
     for (let i = 0, k = params.length; i < k; i++) {
       innerFunctionNames.add(params[i].name.text);
     }
@@ -8415,8 +8430,9 @@ export class Compiler extends DiagnosticEmitter {
       case NodeKind.Empty:
         break;
 
-      // Class expression - scan members would be complex, but class expressions with closures are rare
+      // Class expressions are not supported (will error during compilation)
       case NodeKind.Class:
+      // Constructor keyword - not a capturable expression
       case NodeKind.Constructor:
         break;
 
@@ -8473,8 +8489,16 @@ export class Compiler extends DiagnosticEmitter {
     let capturedNames = new Map<string, null>();
     let innerFunctionNames = new Set<string>();
 
-    // Add the function's own parameters to the inner names set
+    // Scan parameter default values for captures (before adding params to inner names)
     let params = declaration.signature.parameters;
+    for (let i = 0, k = params.length; i < k; i++) {
+      let paramInit = params[i].initializer;
+      if (paramInit) {
+        this.collectCapturedNames(paramInit, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+      }
+    }
+
+    // Add the function's own parameters to the inner names set
     for (let i = 0, k = params.length; i < k; i++) {
       innerFunctionNames.add(params[i].name.text);
     }
@@ -8639,6 +8663,13 @@ export class Compiler extends DiagnosticEmitter {
         let funcExpr = <FunctionExpression>node;
         let decl = funcExpr.declaration;
         let params = decl.signature.parameters;
+        // Scan parameter default values for captures (before adding params to inner names)
+        for (let i = 0, k = params.length; i < k; i++) {
+          let paramInit = params[i].initializer;
+          if (paramInit) {
+            this.collectCapturedNames(paramInit, innerFunctionNames, outerFlow, declaredVars, capturedNames);
+          }
+        }
         // Add the nested function's params to inner names
         for (let i = 0, k = params.length; i < k; i++) {
           innerFunctionNames.add(params[i].name.text);
@@ -8788,8 +8819,9 @@ export class Compiler extends DiagnosticEmitter {
       case NodeKind.Empty:
         break;
 
-      // Class expression - would need to scan members, but rare in closure context
+      // Class expressions are not supported (will error during compilation)
       case NodeKind.Class:
+      // Constructor keyword - not a capturable expression
       case NodeKind.Constructor:
         break;
 
