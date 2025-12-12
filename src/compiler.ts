@@ -1526,7 +1526,7 @@ export class Compiler extends DiagnosticEmitter {
 
   private ensureEnumToString(enumElement: Enum, reportNode: Node): string | null {
     if (enumElement.toStringFunctionName) return enumElement.toStringFunctionName;
-    
+
     if (!this.compileEnum(enumElement)) return null;
     if (enumElement.is(CommonFlags.Const)) {
       this.errorRelated(
@@ -2695,7 +2695,7 @@ export class Compiler extends DiagnosticEmitter {
     //    (then                 │ │ (body)                       │
     //     (?block $continue    │ │ if loops: (incrementor) ─────┘
     //      (body)              │ │           recompile body?
-    //     )                    ├◄┘    
+    //     )                    ├◄┘
     //     (incrementor)      ┌◄┘
     //     (br $loop)
     //    )
@@ -2984,17 +2984,17 @@ export class Compiler extends DiagnosticEmitter {
     // Compile the condition (always executes)
     let condExpr = this.compileExpression(statement.condition, Type.auto);
     let condType = this.currentType;
-    
+
     // Shortcut if there are no cases
     if (!numCases) return module.drop(condExpr);
-    
+
     // Assign the condition to a temporary local as we compare it multiple times
     let outerFlow = this.currentFlow;
     let tempLocal = outerFlow.getTempLocal(condType);
     let tempLocalIndex = tempLocal.index;
     let breaks = new Array<ExpressionRef>(1 + numCases);
     breaks[0] = module.local_set(tempLocalIndex, condExpr, condType.isManaged);
-    
+
     // Make one br_if per labeled case and leave it to Binaryen to optimize the
     // sequence of br_ifs to a br_table according to optimization levels
     let breakIndex = 1;
@@ -3006,7 +3006,7 @@ export class Compiler extends DiagnosticEmitter {
         defaultIndex = i;
         continue;
       }
-      
+
       // Compile the equality expression for this case
       const left = statement.condition;
       const leftExpr = module.local_get(tempLocalIndex, condType.toRef());
@@ -3021,7 +3021,7 @@ export class Compiler extends DiagnosticEmitter {
         condType,
         statement
       );
-      
+
       // Add it to the list of breaks
       breaks[breakIndex++] = module.br(`case${i}|${label}`, equalityExpr);
     }
@@ -4012,7 +4012,7 @@ export class Compiler extends DiagnosticEmitter {
     expression: BinaryExpression,
     contextualType: Type,
   ): ExpressionRef {
-    
+
     const left = expression.left;
     const leftExpr = this.compileExpression(left, contextualType);
     const leftType = this.currentType;
@@ -4030,9 +4030,9 @@ export class Compiler extends DiagnosticEmitter {
     );
   }
 
-  /** 
+  /**
    * compile `==` `===` `!=` `!==` BinaryExpression, from previously compiled left and right expressions.
-   * 
+   *
    * This is split from `compileCommutativeCompareBinaryExpression` so that the logic can be reused
    * for switch cases in `compileSwitchStatement`, where the left expression only should be compiled once.
    */
@@ -4050,7 +4050,7 @@ export class Compiler extends DiagnosticEmitter {
 
     let module = this.module;
     let operatorString = operatorTokenToString(operator);
-    
+
     // check operator overload
     const operatorKind = OperatorKind.fromBinaryToken(operator);
     const leftOverload = leftType.lookupOverload(operatorKind, this.program);
@@ -4058,7 +4058,7 @@ export class Compiler extends DiagnosticEmitter {
     if (leftOverload && rightOverload && leftOverload != rightOverload) {
       this.error(
         DiagnosticCode.Ambiguous_operator_overload_0_conflicting_overloads_1_and_2,
-        reportNode.range, 
+        reportNode.range,
         operatorString,
         leftOverload.internalName,
         rightOverload.internalName
@@ -4148,7 +4148,7 @@ export class Compiler extends DiagnosticEmitter {
 
     leftExpr = this.compileExpression(left, contextualType);
     leftType = this.currentType;
-    
+
     // check operator overload
     const operatorKind = OperatorKind.fromBinaryToken(operator);
     const leftOverload = leftType.lookupOverload(operatorKind, this.program);
@@ -4219,7 +4219,7 @@ export class Compiler extends DiagnosticEmitter {
         return this.compileNonCommutativeCompareBinaryExpression(expression, contextualType);
       }
       case Token.Equals_Equals_Equals:
-      case Token.Equals_Equals: 
+      case Token.Equals_Equals:
       case Token.Exclamation_Equals_Equals:
       case Token.Exclamation_Equals: {
         return this.compileCommutativeCompareBinaryExpression(expression, contextualType);
@@ -6537,13 +6537,13 @@ export class Compiler extends DiagnosticEmitter {
     if (numArguments < numParams) {
       return argumentExpressions;
     }
-      
+
     // make an array literal expression from the rest args
     let elements = argumentExpressions.slice(numParams - 1);
     let range = new Range(elements[0].range.start, elements[elements.length - 1].range.end);
     range.source = reportNode.range.source;
     let arrExpr = new ArrayLiteralExpression(elements, range);
-    
+
     // return the original args, but replace the rest args with the array
     const exprs = argumentExpressions.slice(0, numParams - 1);
     exprs.push(arrExpr);
@@ -8333,8 +8333,7 @@ export class Compiler extends DiagnosticEmitter {
         case NodeKind.Function: {
           // Found a function expression - analyze its captures
           let funcExpr = <FunctionExpression>current;
-          let declaration = funcExpr.declaration;
-          let capturedNames = this.analyzeCapturedVariablesWithDeclared(declaration, flow, instance, declaredVars);
+          let capturedNames = this.analyzeCapturedVariablesWithDeclared(funcExpr.declaration, flow, declaredVars);
           if (capturedNames.size > 0) {
             // Check if closures feature is enabled
             if (!this.options.hasFeature(Feature.Closures)) {
@@ -8584,7 +8583,6 @@ export class Compiler extends DiagnosticEmitter {
   private analyzeCapturedVariablesWithDeclared(
     declaration: FunctionDeclaration,
     outerFlow: Flow,
-    outerFunc: Function,
     declaredVars: Map<string, Type | null>
   ): Set<string> {
     // For prescan, we just collect variable NAMES that are captured
@@ -8630,8 +8628,7 @@ export class Compiler extends DiagnosticEmitter {
       if (endOfSlot > maxEnd) maxEnd = endOfSlot;
     }
     // Ensure total size is aligned to pointer size
-    let size = (maxEnd + usizeSize - 1) & ~(usizeSize - 1);
-    return size;
+    return (maxEnd + usizeSize - 1) & ~(usizeSize - 1);
   }
 
   /** Ensures a closure environment is set up for the outer function. */
@@ -8648,7 +8645,7 @@ export class Compiler extends DiagnosticEmitter {
         for (let _keys = Map_keys(captures), i = 0, k = _keys.length; i < k; i++) {
           let local = _keys[i];
           if (!existingCaptures.has(local)) {
-            existingCaptures.set(local, captures.get(local)!);
+            existingCaptures.set(local, captures.get(local) as i32);
           }
         }
       }
@@ -8657,8 +8654,7 @@ export class Compiler extends DiagnosticEmitter {
 
     // Create a new environment local for the outer function
     let usizeType = this.options.usizeType;
-    let envLocal = flow.addScopedLocal("$env", usizeType);
-    outerFunc.envLocal = envLocal;
+    outerFunc.envLocal = flow.addScopedLocal("$env", usizeType);;
     outerFunc.capturedLocals = captures;
 
     // Compute the environment size
@@ -9495,7 +9491,7 @@ export class Compiler extends DiagnosticEmitter {
     stmts.length = 1;
     stmts.push(
       module.i32(1)
-    ); 
+    );
     module.removeFunction(name);
     module.addFunction(name, sizeType, TypeRef.I32, [ TypeRef.I32 ], module.block(null, stmts, TypeRef.I32));
   }
