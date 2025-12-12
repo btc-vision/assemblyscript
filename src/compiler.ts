@@ -1782,8 +1782,7 @@ export class Compiler extends DiagnosticEmitter {
     let preCapturedNames = instance.preCapturedNames;
     if (preCapturedNames && preCapturedNames.size > 0) {
       // Check if any parameters are captured
-      let parameterTypes = instance.signature.parameterTypes;
-      for (let i = 0, k = parameterTypes.length; i < k; i++) {
+      for (let i = 0, k = instance.signature.parameterTypes.length; i < k; i++) {
         let paramName = instance.getParameterName(i);
         if (preCapturedNames.has(paramName)) {
           let local = flow.lookupLocal(paramName);
@@ -1798,24 +1797,21 @@ export class Compiler extends DiagnosticEmitter {
             if (!capturedLocals.has(local)) {
               // Calculate proper byte offset with alignment
               // Reserve slot 0 for parent environment pointer (4 or 8 bytes depending on wasm32/64)
-              let ptrSize = this.options.usizeType.byteSize;
-              let currentOffset = ptrSize; // Start after parent pointer slot
+              let currentOffset = this.options.usizeType.byteSize; // Start after parent pointer slot
               for (let _keys = Map_keys(capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
                 let existingLocal = _keys[j];
                 let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
                 if (endOfSlot > currentOffset) currentOffset = endOfSlot;
               }
               // Align to the type's natural alignment
-              let typeSize = local.type.byteSize;
-              let align = typeSize;
+              let align = local.type.byteSize;
               currentOffset = (currentOffset + align - 1) & ~(align - 1);
               local.envSlotIndex = currentOffset;
               local.envOwner = instance; // Track which function owns this capture
               capturedLocals.set(local, local.envSlotIndex);
             }
             if (!instance.envLocal) {
-              let envLocal = flow.addScopedLocal("$env", this.options.usizeType);
-              instance.envLocal = envLocal;
+              instance.envLocal = flow.addScopedLocal("$env", this.options.usizeType);
             }
           }
         }
@@ -1832,23 +1828,20 @@ export class Compiler extends DiagnosticEmitter {
             instance.capturedLocals = capturedLocals;
           }
           if (!capturedLocals.has(thisLocal)) {
-            let ptrSize = this.options.usizeType.byteSize;
-            let currentOffset = ptrSize;
+            let currentOffset = this.options.usizeType.byteSize;
             for (let _keys = Map_keys(capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
               let existingLocal = _keys[j];
               let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
               if (endOfSlot > currentOffset) currentOffset = endOfSlot;
             }
-            let typeSize = thisLocal.type.byteSize;
-            let align = typeSize;
+            let align = thisLocal.type.byteSize;
             currentOffset = (currentOffset + align - 1) & ~(align - 1);
             thisLocal.envSlotIndex = currentOffset;
             thisLocal.envOwner = instance;
             capturedLocals.set(thisLocal, thisLocal.envSlotIndex);
           }
           if (!instance.envLocal) {
-            let envLocal = flow.addScopedLocal("$env", this.options.usizeType);
-            instance.envLocal = envLocal;
+            instance.envLocal = flow.addScopedLocal("$env", this.options.usizeType);
           }
         }
       }
@@ -1858,8 +1851,7 @@ export class Compiler extends DiagnosticEmitter {
     // the environment pointer. This is needed because indirect calls to other closures
     // can overwrite the global $~lib/__closure_env.
     if (instance.outerFunction && !instance.closureEnvLocal) {
-      let closureEnvLocal = flow.addScopedLocal("$closureEnv", this.options.usizeType);
-      instance.closureEnvLocal = closureEnvLocal;
+      instance.closureEnvLocal = flow.addScopedLocal("$closureEnv", this.options.usizeType);
     }
 
     // compile statements
@@ -2005,8 +1997,7 @@ export class Compiler extends DiagnosticEmitter {
       valueTypeRef, property.memoryOffset
     );
     let flowBefore = this.currentFlow;
-    let flow = getterInstance.flow;
-    this.currentFlow = flow;
+    this.currentFlow = getterInstance.flow;
     if (property.is(CommonFlags.DefinitelyAssigned) && valueType.isReference && !valueType.isNullableReference) {
       body = this.makeRuntimeNonNullCheck(body, valueType, getterInstance.identifierNode);
     }
