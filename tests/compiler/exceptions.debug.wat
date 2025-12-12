@@ -5331,8 +5331,6 @@
   end
   call $exceptions/testFinally
   global.get $exceptions/finallyRan
-  i32.const 1
-  i32.eq
   i32.eqz
   if
    i32.const 0
@@ -5367,8 +5365,6 @@
    unreachable
   end
   global.get $exceptions/returnInCatchFinallyRan
-  i32.const 1
-  i32.eq
   i32.eqz
   if
    i32.const 0
@@ -5392,8 +5388,6 @@
    unreachable
   end
   global.get $exceptions/tryCatchFinallyRan
-  i32.const 1
-  i32.eq
   i32.eqz
   if
    i32.const 0
@@ -5994,7 +5988,7 @@
   if
    i32.const 0
    i32.const 480
-   i32.const 473
+   i32.const 474
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -6006,7 +6000,7 @@
   if
    i32.const 0
    i32.const 480
-   i32.const 485
+   i32.const 487
    i32.const 1
    call $~lib/builtins/abort
    unreachable
@@ -6018,19 +6012,17 @@
   if
    i32.const 0
    i32.const 480
-   i32.const 497
+   i32.const 500
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
   global.get $exceptions/finallyReturnSuppressedExceptionRan
-  i32.const 1
-  i32.eq
   i32.eqz
   if
    i32.const 0
    i32.const 480
-   i32.const 498
+   i32.const 501
    i32.const 1
    call $~lib/builtins/abort
    unreachable

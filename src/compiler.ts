@@ -3022,9 +3022,8 @@ export class Compiler extends DiagnosticEmitter {
 
     // If exception handling feature is enabled, use actual throw instruction
     if (this.options.hasFeature(Feature.ExceptionHandling)) {
-      let value = statement.value;
       // Compile the thrown value - should be Error or subclass
-      let valueExpr = this.compileExpression(value, Type.auto);
+      let valueExpr = this.compileExpression(statement.value, Type.auto);
 
       // Ensure exception tag exists
       let tagName = this.ensureExceptionTag();

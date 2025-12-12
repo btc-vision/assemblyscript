@@ -3153,8 +3153,7 @@
    unreachable
   end
   global.get $exceptions/tryCatchFinallyRan
-  i32.const 1
-  i32.ne
+  i32.eqz
   if
    i32.const 0
    i32.const 1504
@@ -4334,12 +4333,11 @@
    unreachable
   end
   global.get $exceptions/finallyReturnSuppressedExceptionRan
-  i32.const 1
-  i32.ne
+  i32.eqz
   if
    i32.const 0
    i32.const 1504
-   i32.const 498
+   i32.const 501
    i32.const 1
    call $~lib/builtins/abort
    unreachable

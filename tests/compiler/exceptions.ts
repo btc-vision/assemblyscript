@@ -19,7 +19,7 @@ function testCatchVar(): string {
   try {
     throw new Error("msg");
   } catch (e) {
-    return e.message;
+    return (e as Error).message;
   }
   return "";
 }
@@ -45,7 +45,7 @@ function testFinally(): void {
   }
 }
 testFinally();
-assert(finallyRan == true);
+assert(finallyRan);
 
 // Nested try-catch
 function testNested(): i32 {
@@ -74,7 +74,7 @@ function testReturnInCatchFinally(): i32 {
   }
 }
 assert(testReturnInCatchFinally() == 10);
-assert(returnInCatchFinallyRan == true);
+assert(returnInCatchFinallyRan);
 
 // Try-catch-finally (without return in catch)
 let tryCatchFinallyRan = false;
@@ -90,7 +90,7 @@ function testTryCatchFinally(): void {
 }
 testTryCatchFinally();
 assert(tryCatchFinallyResult == 10);
-assert(tryCatchFinallyRan == true);
+assert(tryCatchFinallyRan);
 
 // Finally with exception propagation
 let finallyWithExceptionRan = false;
@@ -302,7 +302,7 @@ function innerRethrow(): void {
     throw new Error("original");
   } catch (e) {
     rethrowFinallyRan = false;
-    throw new Error("rethrown: " + e.message);
+    throw new Error("rethrown: " + (e as Error).message);
   } finally {
     rethrowFinallyRan = true;
   }
@@ -467,6 +467,7 @@ function testReturnInFinally(): i32 {
   try {
     return 1;  // This return is overridden
   } finally {
+    // eslint-disable-next-line no-unsafe-finally
     return 2;  // This return wins
   }
 }
@@ -479,6 +480,7 @@ function testReturnInFinallyOverridesCatch(): i32 {
   } catch (e) {
     return 1;  // This return is overridden
   } finally {
+    // eslint-disable-next-line no-unsafe-finally
     return 2;  // This return wins
   }
 }
@@ -491,8 +493,9 @@ function testReturnInFinallySuppressesException(): i32 {
     throw new Error("should be suppressed");
   } finally {
     finallyReturnSuppressedExceptionRan = true;
+    // eslint-disable-next-line no-unsafe-finally
     return 42;  // This suppresses the exception
   }
 }
 assert(testReturnInFinallySuppressesException() == 42);
-assert(finallyReturnSuppressedExceptionRan == true);
+assert(finallyReturnSuppressedExceptionRan);
