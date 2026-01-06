@@ -1774,84 +1774,44 @@ export class Compiler extends DiagnosticEmitter {
       : null;
     let bodyStartIndex = stmts.length;
 
-    // Pre-scan the body to identify captured variables before compiling
-    // This ensures we know which locals need to be stored in the environment
-    this.prescanForClosures(bodyNode, instance, flow);
+    // Track locals before body compilation for potential recompilation
+    let numLocalsBeforeBody = instance.localsByIndex.length;
 
-    // Mark captured parameters and set up environment if needed
-    let preCapturedNames = instance.preCapturedNames;
-    if (preCapturedNames && preCapturedNames.size > 0) {
-      // Check if any parameters are captured
-      for (let i = 0, k = instance.signature.parameterTypes.length; i < k; i++) {
-        let paramName = instance.getParameterName(i);
-        if (preCapturedNames.has(paramName)) {
-          let local = flow.lookupLocal(paramName);
-          if (local && !local.isCaptured) {
-            local.isCaptured = true;
-            // Ensure environment structures are set up
-            let capturedLocals = instance.capturedLocals;
-            if (!capturedLocals) {
-              capturedLocals = new Map<Local, i32>();
-              instance.capturedLocals = capturedLocals;
-            }
-            if (!capturedLocals.has(local)) {
-              // Calculate proper byte offset with alignment
-              // Reserve slot 0 for parent environment pointer (4 or 8 bytes depending on wasm32/64)
-              let currentOffset = this.options.usizeType.byteSize; // Start after parent pointer slot
-              for (let _keys = Map_keys(capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
-                let existingLocal = _keys[j];
-                let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
-                if (endOfSlot > currentOffset) currentOffset = endOfSlot;
-              }
-              // Align to the type's natural alignment
-              let align = local.type.byteSize;
-              currentOffset = (currentOffset + align - 1) & ~(align - 1);
-              local.envSlotIndex = currentOffset;
-              local.envOwner = instance; // Track which function owns this capture
-              capturedLocals.set(local, local.envSlotIndex);
-            }
-            if (!instance.envLocal) {
-              instance.envLocal = flow.addScopedLocal("$env", this.options.usizeType);
-            }
-          }
-        }
-      }
-
-      // Also check if 'this' is captured (for methods)
-      if (preCapturedNames.has(CommonNames.this_)) {
-        let thisLocal = flow.lookupLocal(CommonNames.this_);
-        if (thisLocal && !thisLocal.isCaptured) {
-          thisLocal.isCaptured = true;
-          let capturedLocals = instance.capturedLocals;
-          if (!capturedLocals) {
-            capturedLocals = new Map<Local, i32>();
-            instance.capturedLocals = capturedLocals;
-          }
-          if (!capturedLocals.has(thisLocal)) {
-            let currentOffset = this.options.usizeType.byteSize;
-            for (let _keys = Map_keys(capturedLocals), j = 0, m = _keys.length; j < m; ++j) {
-              let existingLocal = _keys[j];
-              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
-              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
-            }
-            let align = thisLocal.type.byteSize;
-            currentOffset = (currentOffset + align - 1) & ~(align - 1);
-            thisLocal.envSlotIndex = currentOffset;
-            thisLocal.envOwner = instance;
-            capturedLocals.set(thisLocal, thisLocal.envSlotIndex);
-          }
-          if (!instance.envLocal) {
-            instance.envLocal = flow.addScopedLocal("$env", this.options.usizeType);
-          }
-        }
-      }
-    }
+    // Track anonymous function counter for potential recompilation
+    let nextAnonymousIdBeforeBody = instance.nextAnonymousId;
 
     // For closures (functions that capture from outer scope), create a local to cache
     // the environment pointer. This is needed because indirect calls to other closures
     // can overwrite the global $~lib/__closure_env.
     if (instance.outerFunction && !instance.closureEnvLocal) {
       instance.closureEnvLocal = flow.addScopedLocal("$closureEnv", this.options.usizeType);
+    }
+
+    // On recompilation, mark parameters that are known to be captured from previous pass
+    let capturedLocals = instance.capturedLocals;
+    if (capturedLocals && capturedLocals.size > 0) {
+      // Mark captured parameters and 'this' - they exist before body compilation
+      let hasOwnCapturedLocals = false;
+      for (let _keys = Map_keys(capturedLocals), i = 0, k = _keys.length; i < k; i++) {
+        let capturedLocal = _keys[i];
+        // Only handle parameters/this (they belong to this function)
+        if (capturedLocal.parent == instance) {
+          let localInFlow = flow.lookupLocal(capturedLocal.name);
+          if (localInFlow && !localInFlow.isCaptured) {
+            localInFlow.isCaptured = true;
+            localInFlow.envSlotIndex = capturedLocal.envSlotIndex;
+            localInFlow.envOwner = capturedLocal.envOwner;
+          }
+        }
+        // Check if this instance owns any captured variables (needs envLocal)
+        if (capturedLocal.envOwner == instance) {
+          hasOwnCapturedLocals = true;
+        }
+      }
+      // Only create envLocal if this function owns some captured variables
+      if (hasOwnCapturedLocals && !instance.envLocal) {
+        instance.envLocal = flow.addScopedLocal("$env", this.options.usizeType);
+      }
     }
 
     // compile statements
@@ -1881,9 +1841,97 @@ export class Compiler extends DiagnosticEmitter {
       }
     }
 
+    // Check if recompilation is needed due to late capture discovery
+    if (instance.needsCaptureRecompile) {
+      // Reset state for recompilation
+      instance.needsCaptureRecompile = false;
+
+      // Reset stmts to before body compilation
+      stmts.length = bodyStartIndex;
+
+      // Reset locals to before body compilation
+      let localsByIndex = instance.localsByIndex;
+      for (let i = numLocalsBeforeBody, k = localsByIndex.length; i < k; i++) {
+        localsByIndex[i].wasAccessedAsLocal = false;
+      }
+      localsByIndex.length = numLocalsBeforeBody;
+
+      // Reset flow flags
+      flow.localFlags.length = numLocalsBeforeBody;
+      flow.unset(
+        FlowFlags.Returns |
+        FlowFlags.ReturnsWrapped |
+        FlowFlags.ReturnsNonNull |
+        FlowFlags.Terminates |
+        FlowFlags.Breaks |
+        FlowFlags.Continues |
+        FlowFlags.AccessesThis |
+        FlowFlags.ConditionallyAccessesThis |
+        FlowFlags.CallsSuper |
+        FlowFlags.MayReturnNonThis
+      );
+
+      // Clear scoped locals added during body compilation
+      // Keep only parameters and 'this' which exist before body compilation
+      let scopedLocals = flow.scopedLocals;
+      if (scopedLocals) {
+        let signature = instance.signature;
+        let numParams = signature.parameterTypes.length;
+        let hasThis = signature.thisType != null;
+        let keysToDelete = new Array<string>();
+        for (let _keys = Map_keys(scopedLocals), i = 0, k = _keys.length; i < k; i++) {
+          let name = _keys[i];
+          let local = assert(scopedLocals.get(name));
+          // Keep parameters and 'this', but remove body-scoped locals
+          let isParam = local.index >= (hasThis ? 1 : 0) && local.index < numParams + (hasThis ? 1 : 0);
+          let isThis = hasThis && local.index == 0;
+          let isEnvLocal = local == instance.envLocal || local == instance.closureEnvLocal;
+          if (!isParam && !isThis && !isEnvLocal) {
+            keysToDelete.push(name);
+          }
+        }
+        for (let i = 0, k = keysToDelete.length; i < k; i++) {
+          scopedLocals.delete(keysToDelete[i]);
+        }
+      }
+
+      // Clear envLocal so it gets recreated with a valid index
+      // The old envLocal's index is invalid after localsByIndex truncation
+      if (instance.envLocal) {
+        let scopedLocals = flow.scopedLocals;
+        if (scopedLocals && scopedLocals.has("$env")) {
+          scopedLocals.delete("$env");
+        }
+        instance.envLocal = null;
+      }
+
+      // Also clear closureEnvLocal so it gets recreated with a valid index
+      if (instance.closureEnvLocal) {
+        let scopedLocals = flow.scopedLocals;
+        if (scopedLocals && scopedLocals.has("$closureEnv")) {
+          scopedLocals.delete("$closureEnv");
+        }
+        instance.closureEnvLocal = null;
+      }
+
+      // Clear wasAccessedAsLocal on parameters that will be marked captured
+      capturedLocals = instance.capturedLocals;
+      if (capturedLocals) {
+        for (let _keys = Map_keys(capturedLocals), i = 0, k = _keys.length; i < k; i++) {
+          _keys[i].wasAccessedAsLocal = false;
+        }
+      }
+
+      // Reset anonymous ID counter so inner functions get the same IDs
+      instance.nextAnonymousId = nextAnonymousIdBeforeBody;
+
+      // Recursively recompile - captures are now known
+      return this.compileFunctionBody(instance, stmts);
+    }
+
     // Allocate closure environment if this function has captured variables
     // This is done after compiling the body because we discover captures during body compilation
-    let capturedLocals = instance.capturedLocals;
+    capturedLocals = instance.capturedLocals;
     if (instance.envLocal && capturedLocals && capturedLocals.size > 0) {
       let envAlloc = this.compileClosureEnvironmentAllocation(instance);
       // Insert at the beginning of the body
@@ -3322,39 +3370,25 @@ export class Compiler extends DiagnosticEmitter {
           if (isConst) flow.setLocalFlag(local.index, LocalFlags.Constant);
         }
 
-        // Check if this local is pre-marked as captured by a closure
+        // On recompilation, check if this local matches a known captured variable
+        // (captures are discovered during first pass when compiling inner functions)
         let sourceFunc = flow.sourceFunction;
-        let preCapturedNames = sourceFunc.preCapturedNames;
-        if (preCapturedNames && preCapturedNames.has(name)) {
-          local.isCaptured = true;
-          // Ensure we have a closure environment for this function
-          let capturedLocals = sourceFunc.capturedLocals;
-          if (!capturedLocals) {
-            capturedLocals = new Map<Local, i32>();
-            sourceFunc.capturedLocals = capturedLocals;
-          }
-          if (!capturedLocals.has(local)) {
-            // Calculate proper byte offset based on current environment size with alignment
-            // Reserve slot 0 for parent environment pointer (4 or 8 bytes depending on wasm32/64)
-            let ptrSize = this.options.usizeType.byteSize;
-            let currentOffset = ptrSize; // Start after parent pointer slot
-            for (let _keys = Map_keys(capturedLocals), i = 0, k = _keys.length; i < k; ++i) {
-              let existingLocal = _keys[i];
-              let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
-              if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+        let capturedLocals = sourceFunc.capturedLocals;
+        if (capturedLocals) {
+          // Look for a captured local with matching name and parent
+          for (let _keys = Map_keys(capturedLocals), i = 0, k = _keys.length; i < k; ++i) {
+            let capturedLocal = _keys[i];
+            if (capturedLocal.name == name && capturedLocal.parent == sourceFunc) {
+              // Found a match - copy capture info to the new local
+              local.isCaptured = true;
+              local.envSlotIndex = capturedLocal.envSlotIndex;
+              local.envOwner = capturedLocal.envOwner;
+              // Replace the old local in capturedLocals with the new one
+              let slotIndex = capturedLocals.get(capturedLocal) as i32;
+              capturedLocals.delete(capturedLocal);
+              capturedLocals.set(local, slotIndex);
+              break;
             }
-            // Align to the type's natural alignment
-            let typeSize = local.type.byteSize;
-            let align = typeSize;
-            currentOffset = (currentOffset + align - 1) & ~(align - 1);
-            local.envSlotIndex = currentOffset;
-            local.envOwner = sourceFunc; // Track which function owns this capture
-            capturedLocals.set(local, local.envSlotIndex);
-          }
-          // Ensure we have an environment local
-          if (!sourceFunc.envLocal) {
-            let envLocal = flow.addScopedLocal("$env", this.options.usizeType);
-            sourceFunc.envLocal = envLocal;
           }
         }
 
@@ -6198,6 +6232,11 @@ export class Compiler extends DiagnosticEmitter {
       if (!flow.canOverflow(valueExpr, type)) flow.setLocalFlag(localIndex, LocalFlags.Wrapped);
       else flow.unsetLocalFlag(localIndex, LocalFlags.Wrapped);
     }
+
+    // Track that we accessed this as a regular local (for closure recompilation detection)
+    // Only set if not already captured (to avoid infinite recompilation loops)
+    if (!local.isCaptured) local.wasAccessedAsLocal = true;
+
     if (tee) { // local = value
       this.currentType = type;
       return module.local_tee(localIndex, valueExpr, type.isManaged);
@@ -7431,14 +7470,45 @@ export class Compiler extends DiagnosticEmitter {
     let sourceFunction = flow.sourceFunction;
     let isNamed = declaration.name.text.length > 0;
     let isSemanticallyAnonymous = !isNamed || contextualType != Type.void;
-    let prototype = new FunctionPrototype(
-      isSemanticallyAnonymous
-        ? `${isNamed ? declaration.name.text : "anonymous"}|${sourceFunction.nextAnonymousId++}`
-        : declaration.name.text,
-      sourceFunction,
-      declaration,
-      DecoratorFlags.None
-    );
+
+    // Generate the name for this anonymous/named function
+    let functionName = isSemanticallyAnonymous
+      ? `${isNamed ? declaration.name.text : "anonymous"}|${sourceFunction.nextAnonymousId++}`
+      : declaration.name.text;
+
+    // During recompilation, check if this function already exists
+    // Check in program.instancesByName using the internal name that would be generated
+    let expectedInternalName = mangleInternalName(functionName, sourceFunction, false);
+    let existingInstance = this.program.instancesByName.get(expectedInternalName);
+    if (existingInstance && existingInstance.kind == ElementKind.Function) {
+      let existingFunc = <Function>existingInstance;
+      if (existingFunc.is(CommonFlags.Compiled)) {
+        // Already compiled - just return a reference to it
+        let offset = this.ensureRuntimeFunction(existingFunc);
+        let capturedLocals = existingFunc.capturedLocals;
+        if (capturedLocals && capturedLocals.size > 0) {
+          return this.compileClosureFunctionCreation(existingFunc, sourceFunction);
+        }
+        this.currentType = existingFunc.signature.type;
+        let expr = this.options.isWasm64
+          ? this.module.i64(i64_low(offset), i64_high(offset))
+          : this.module.i32(i64_low(offset));
+        return expr;
+      }
+    }
+
+    // Reuse existing prototype if available (during recompilation), otherwise create new
+    let prototype: FunctionPrototype;
+    if (existingInstance && existingInstance.kind == ElementKind.Function) {
+      prototype = (<Function>existingInstance).prototype;
+    } else {
+      prototype = new FunctionPrototype(
+        functionName,
+        sourceFunction,
+        declaration,
+        DecoratorFlags.None
+      );
+    }
     let instance: Function | null;
     let contextualTypeArguments = cloneMap(flow.contextualTypeArguments);
     let module = this.module;
@@ -7554,7 +7624,7 @@ export class Compiler extends DiagnosticEmitter {
         }
         instance.capturedLocals = captures;
         instance.outerFunction = sourceFunction;
-        this.ensureClosureEnvironment(sourceFunction, captures, flow);
+        this.ensureClosureEnvironmentsForCaptures(captures, flow);
       }
 
       let worked = this.compileFunction(instance);
@@ -7580,7 +7650,7 @@ export class Compiler extends DiagnosticEmitter {
         }
         instance.capturedLocals = captures;
         instance.outerFunction = sourceFunction;
-        this.ensureClosureEnvironment(sourceFunction, captures, flow);
+        this.ensureClosureEnvironmentsForCaptures(captures, flow);
       }
 
       let worked = this.compileFunction(instance);
@@ -7633,21 +7703,12 @@ export class Compiler extends DiagnosticEmitter {
   // === Closure Support ==========================================================================
 
   /** Scans a node and its children for captured variables from outer scopes.
-   *
-   *  This function supports two modes:
-   *  1. Local mode (captures provided): Resolves names to Local objects and calculates slot indices.
-   *     Used when compiling function expressions where outer function's locals already exist.
-   *  2. Name mode (capturedNames provided): Collects just variable names for later resolution.
-   *     Used during prescan when the function body hasn't been compiled yet.
-   *     In this mode, declaredVars contains pre-scanned variable names from the outer function.
-   */
+   *  Resolves names to Local objects and calculates slot indices. */
   private scanNodeForCaptures(
     node: Node,
     outerFlow: Flow,
     innerFunctionNames: Set<string>,
-    captures: Map<Local, i32> | null,
-    capturedNames: Set<string> | null = null,
-    declaredVars: Map<string, Type | null> | null = null
+    captures: Map<Local, i32>
   ): void {
     switch (node.kind) {
       case NodeKind.Identifier: {
@@ -7656,40 +7717,55 @@ export class Compiler extends DiagnosticEmitter {
         // Skip identifiers that are parameters/locals of inner functions
         if (innerFunctionNames.has(name)) break;
 
-        if (captures) {
-          // Local mode: resolve to Local and calculate slot index
-          let local = outerFlow.lookupLocal(name);
-          if (!local) {
-            local = outerFlow.lookupLocalInOuter(name);
+        // Resolve to Local and calculate slot index
+        let local = outerFlow.lookupLocal(name);
+        if (!local) {
+          local = outerFlow.lookupLocalInOuter(name);
+        }
+        if (local && !captures.has(local)) {
+          local.isCaptured = true;
+          if (!local.envOwner) {
+            local.envOwner = <Function>local.parent;
           }
-          if (local && !captures.has(local)) {
-            local.isCaptured = true;
-            if (!local.envOwner) {
-              local.envOwner = <Function>local.parent;
-            }
-            if (local.envSlotIndex >= 0) {
-              captures.set(local, local.envSlotIndex);
-            } else {
-              // Calculate proper byte offset with alignment
-              let ptrSize = this.options.usizeType.byteSize;
-              let currentOffset = ptrSize;
-              for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
+          // Check if local was accessed before capture was discovered - need recompilation
+          if (local.wasAccessedAsLocal) {
+            let ownerFunc = <Function>local.parent;
+            ownerFunc.needsCaptureRecompile = true;
+          }
+          if (local.envSlotIndex >= 0) {
+            captures.set(local, local.envSlotIndex);
+          } else {
+            // Calculate proper byte offset with alignment
+            // Consider both current captures AND the outer function's existing captures
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize;
+            // First check existing captured locals on the outer function
+            // Only consider locals that belong to the SAME envOwner
+            let envOwner = local.envOwner;
+            if (envOwner && envOwner.capturedLocals) {
+              let existingCaptures = changetype<Map<Local, i32>>(envOwner.capturedLocals);
+              for (let _keys = Map_keys(existingCaptures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
                 let existingLocal = _keys[idx];
+                // Only consider locals owned by the same function
+                if (existingLocal.envOwner == envOwner && existingLocal.envSlotIndex >= 0) {
+                  let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+                  if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+                }
+              }
+            }
+            // Then check locals in current captures map that belong to the same envOwner
+            for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
+              let existingLocal = _keys[idx];
+              if (existingLocal.envOwner == envOwner && existingLocal.envSlotIndex >= 0) {
                 let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
                 if (endOfSlot > currentOffset) currentOffset = endOfSlot;
               }
-              let typeSize = local.type.byteSize;
-              let align = typeSize;
-              currentOffset = (currentOffset + align - 1) & ~(align - 1);
-              local.envSlotIndex = currentOffset;
-              captures.set(local, local.envSlotIndex);
             }
-          }
-        } else if (capturedNames) {
-          // Name mode: collect name if it's from outer scope
-          let isFromOuter = (declaredVars != null && declaredVars.has(name)) || outerFlow.lookupLocal(name) != null;
-          if (isFromOuter) {
-            capturedNames.add(name);
+            let typeSize = local.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
+            local.envSlotIndex = currentOffset;
+            captures.set(local, local.envSlotIndex);
           }
         }
         break;
@@ -7700,34 +7776,50 @@ export class Compiler extends DiagnosticEmitter {
         if (!local) {
           local = outerFlow.lookupLocalInOuter(CommonNames.this_);
         }
-        if (captures) {
-          // Local mode
-          if (local && !captures.has(local)) {
-            local.isCaptured = true;
-            if (!local.envOwner) {
-              local.envOwner = <Function>local.parent;
-            }
-            if (local.envSlotIndex >= 0) {
-              captures.set(local, local.envSlotIndex);
-            } else {
-              let ptrSize = this.options.usizeType.byteSize;
-              let currentOffset = ptrSize;
-              for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
+        if (local && !captures.has(local)) {
+          local.isCaptured = true;
+          if (!local.envOwner) {
+            local.envOwner = <Function>local.parent;
+          }
+          // Check if local was accessed before capture was discovered - need recompilation
+          if (local.wasAccessedAsLocal) {
+            let ownerFunc = <Function>local.parent;
+            ownerFunc.needsCaptureRecompile = true;
+          }
+          if (local.envSlotIndex >= 0) {
+            captures.set(local, local.envSlotIndex);
+          } else {
+            // Calculate proper byte offset with alignment
+            // Consider both current captures AND the outer function's existing captures
+            let ptrSize = this.options.usizeType.byteSize;
+            let currentOffset = ptrSize;
+            // First check existing captured locals on the outer function
+            // Only consider locals that belong to the SAME envOwner
+            let envOwner = local.envOwner;
+            if (envOwner && envOwner.capturedLocals) {
+              let existingCaptures = changetype<Map<Local, i32>>(envOwner.capturedLocals);
+              for (let _keys = Map_keys(existingCaptures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
                 let existingLocal = _keys[idx];
+                // Only consider locals owned by the same function
+                if (existingLocal.envOwner == envOwner && existingLocal.envSlotIndex >= 0) {
+                  let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
+                  if (endOfSlot > currentOffset) currentOffset = endOfSlot;
+                }
+              }
+            }
+            // Then check locals in current captures map that belong to the same envOwner
+            for (let _keys = Map_keys(captures), idx = 0, cnt = _keys.length; idx < cnt; ++idx) {
+              let existingLocal = _keys[idx];
+              if (existingLocal.envOwner == envOwner && existingLocal.envSlotIndex >= 0) {
                 let endOfSlot = existingLocal.envSlotIndex + existingLocal.type.byteSize;
                 if (endOfSlot > currentOffset) currentOffset = endOfSlot;
               }
-              let typeSize = local.type.byteSize;
-              let align = typeSize;
-              currentOffset = (currentOffset + align - 1) & ~(align - 1);
-              local.envSlotIndex = currentOffset;
-              captures.set(local, local.envSlotIndex);
             }
-          }
-        } else if (capturedNames) {
-          // Name mode
-          if (local) {
-            capturedNames.add(CommonNames.this_);
+            let typeSize = local.type.byteSize;
+            let align = typeSize;
+            currentOffset = (currentOffset + align - 1) & ~(align - 1);
+            local.envSlotIndex = currentOffset;
+            captures.set(local, local.envSlotIndex);
           }
         }
         break;
@@ -7741,7 +7833,7 @@ export class Compiler extends DiagnosticEmitter {
         for (let i = 0, k = params.length; i < k; i++) {
           let paramInit = params[i].initializer;
           if (paramInit) {
-            this.scanNodeForCaptures(paramInit, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+            this.scanNodeForCaptures(paramInit, outerFlow, innerFunctionNames, captures);
           }
         }
         for (let i = 0, k = params.length; i < k; i++) {
@@ -7749,7 +7841,7 @@ export class Compiler extends DiagnosticEmitter {
         }
         let declBody = decl.body;
         if (declBody) {
-          this.scanNodeForCaptures(declBody, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+          this.scanNodeForCaptures(declBody, outerFlow, innerFunctionNames, captures);
         }
         for (let i = 0, k = params.length; i < k; i++) {
           innerFunctionNames.delete(params[i].name.text);
@@ -7759,21 +7851,21 @@ export class Compiler extends DiagnosticEmitter {
       // Expression nodes
       case NodeKind.Assertion: {
         let expr = <AssertionExpression>node;
-        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.Binary: {
         let expr = <BinaryExpression>node;
-        this.scanNodeForCaptures(expr.left, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(expr.right, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.left, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(expr.right, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.Call: {
         let expr = <CallExpression>node;
-        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
         let args = expr.args;
         for (let i = 0, k = args.length; i < k; i++) {
-          this.scanNodeForCaptures(args[i], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+          this.scanNodeForCaptures(args[i], outerFlow, innerFunctionNames, captures);
         }
         break;
       }
@@ -7781,7 +7873,7 @@ export class Compiler extends DiagnosticEmitter {
         let expr = <CommaExpression>node;
         let expressions = expr.expressions;
         for (let i = 0, k = expressions.length; i < k; i++) {
-          this.scanNodeForCaptures(expressions[i], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+          this.scanNodeForCaptures(expressions[i], outerFlow, innerFunctionNames, captures);
         }
         break;
       }
@@ -7793,20 +7885,20 @@ export class Compiler extends DiagnosticEmitter {
           for (let i = 0, k = elements.length; i < k; i++) {
             let elem = elements[i];
             if (elem) {
-              this.scanNodeForCaptures(elem, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+              this.scanNodeForCaptures(elem, outerFlow, innerFunctionNames, captures);
             }
           }
         } else if (literal.literalKind == LiteralKind.Object) {
           let objLiteral = <ObjectLiteralExpression>literal;
           let values = objLiteral.values;
           for (let i = 0, k = values.length; i < k; i++) {
-            this.scanNodeForCaptures(values[i], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+            this.scanNodeForCaptures(values[i], outerFlow, innerFunctionNames, captures);
           }
         } else if (literal.literalKind == LiteralKind.Template) {
           let tmplLiteral = <TemplateLiteralExpression>literal;
           let expressions = tmplLiteral.expressions;
           for (let i = 0, k = expressions.length; i < k; i++) {
-            this.scanNodeForCaptures(expressions[i], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+            this.scanNodeForCaptures(expressions[i], outerFlow, innerFunctionNames, captures);
           }
         }
         // Other literal kinds (Integer, Float, String, RegExp) have no variable refs
@@ -7814,49 +7906,49 @@ export class Compiler extends DiagnosticEmitter {
       }
       case NodeKind.ElementAccess: {
         let expr = <ElementAccessExpression>node;
-        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(expr.elementExpression, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(expr.elementExpression, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.New: {
         let expr = <NewExpression>node;
-        this.scanNodeForCaptures(expr.typeName, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.typeName, outerFlow, innerFunctionNames, captures);
         let args = expr.args;
         for (let i = 0, k = args.length; i < k; i++) {
-          this.scanNodeForCaptures(args[i], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+          this.scanNodeForCaptures(args[i], outerFlow, innerFunctionNames, captures);
         }
         break;
       }
       case NodeKind.Parenthesized: {
         let expr = <ParenthesizedExpression>node;
-        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.PropertyAccess: {
         let expr = <PropertyAccessExpression>node;
-        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.Ternary: {
         let expr = <TernaryExpression>node;
-        this.scanNodeForCaptures(expr.condition, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(expr.ifThen, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(expr.ifElse, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.condition, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(expr.ifThen, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(expr.ifElse, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.UnaryPostfix: {
         let expr = <UnaryPostfixExpression>node;
-        this.scanNodeForCaptures(expr.operand, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.operand, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.UnaryPrefix: {
         let expr = <UnaryPrefixExpression>node;
-        this.scanNodeForCaptures(expr.operand, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.operand, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.InstanceOf: {
         let expr = <InstanceOfExpression>node;
-        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(expr.expression, outerFlow, innerFunctionNames, captures);
         break;
       }
       // Statement nodes
@@ -7864,19 +7956,19 @@ export class Compiler extends DiagnosticEmitter {
         let stmt = <BlockStatement>node;
         let statements = stmt.statements;
         for (let i = 0, k = statements.length; i < k; i++) {
-          this.scanNodeForCaptures(statements[i], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+          this.scanNodeForCaptures(statements[i], outerFlow, innerFunctionNames, captures);
         }
         break;
       }
       case NodeKind.Do: {
         let stmt = <DoStatement>node;
-        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.Expression: {
         let stmt = <ExpressionStatement>node;
-        this.scanNodeForCaptures(stmt.expression, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(stmt.expression, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.For: {
@@ -7884,69 +7976,69 @@ export class Compiler extends DiagnosticEmitter {
         let forInit = stmt.initializer;
         let forCond = stmt.condition;
         let forIncr = stmt.incrementor;
-        if (forInit) this.scanNodeForCaptures(forInit, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        if (forCond) this.scanNodeForCaptures(forCond, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        if (forIncr) this.scanNodeForCaptures(forIncr, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        if (forInit) this.scanNodeForCaptures(forInit, outerFlow, innerFunctionNames, captures);
+        if (forCond) this.scanNodeForCaptures(forCond, outerFlow, innerFunctionNames, captures);
+        if (forIncr) this.scanNodeForCaptures(forIncr, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.ForOf: {
         let stmt = <ForOfStatement>node;
-        this.scanNodeForCaptures(stmt.variable, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(stmt.iterable, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(stmt.variable, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.iterable, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.If: {
         let stmt = <IfStatement>node;
-        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(stmt.ifTrue, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.ifTrue, outerFlow, innerFunctionNames, captures);
         let ifFalse = stmt.ifFalse;
-        if (ifFalse) this.scanNodeForCaptures(ifFalse, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        if (ifFalse) this.scanNodeForCaptures(ifFalse, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.Return: {
         let stmt = <ReturnStatement>node;
         let retValue = stmt.value;
-        if (retValue) this.scanNodeForCaptures(retValue, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        if (retValue) this.scanNodeForCaptures(retValue, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.Switch: {
         let stmt = <SwitchStatement>node;
-        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures);
         let cases = stmt.cases;
         for (let i = 0, k = cases.length; i < k; i++) {
           let case_ = cases[i];
           let caseLabel = case_.label;
-          if (caseLabel) this.scanNodeForCaptures(caseLabel, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+          if (caseLabel) this.scanNodeForCaptures(caseLabel, outerFlow, innerFunctionNames, captures);
           let stmts = case_.statements;
           for (let j = 0, l = stmts.length; j < l; j++) {
-            this.scanNodeForCaptures(stmts[j], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+            this.scanNodeForCaptures(stmts[j], outerFlow, innerFunctionNames, captures);
           }
         }
         break;
       }
       case NodeKind.Throw: {
         let stmt = <ThrowStatement>node;
-        this.scanNodeForCaptures(stmt.value, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(stmt.value, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.Try: {
         let stmt = <TryStatement>node;
         let bodyStmts = stmt.bodyStatements;
         for (let i = 0, k = bodyStmts.length; i < k; i++) {
-          this.scanNodeForCaptures(bodyStmts[i], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+          this.scanNodeForCaptures(bodyStmts[i], outerFlow, innerFunctionNames, captures);
         }
         let catchStmts = stmt.catchStatements;
         if (catchStmts) {
           for (let i = 0, k = catchStmts.length; i < k; i++) {
-            this.scanNodeForCaptures(catchStmts[i], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+            this.scanNodeForCaptures(catchStmts[i], outerFlow, innerFunctionNames, captures);
           }
         }
         let finallyStmts = stmt.finallyStatements;
         if (finallyStmts) {
           for (let i = 0, k = finallyStmts.length; i < k; i++) {
-            this.scanNodeForCaptures(finallyStmts[i], outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+            this.scanNodeForCaptures(finallyStmts[i], outerFlow, innerFunctionNames, captures);
           }
         }
         break;
@@ -7960,20 +8052,20 @@ export class Compiler extends DiagnosticEmitter {
           innerFunctionNames.add(decl.name.text);
           let declInit = decl.initializer;
           if (declInit) {
-            this.scanNodeForCaptures(declInit, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+            this.scanNodeForCaptures(declInit, outerFlow, innerFunctionNames, captures);
           }
         }
         break;
       }
       case NodeKind.While: {
         let stmt = <WhileStatement>node;
-        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
-        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(stmt.condition, outerFlow, innerFunctionNames, captures);
+        this.scanNodeForCaptures(stmt.body, outerFlow, innerFunctionNames, captures);
         break;
       }
       case NodeKind.Void: {
         let stmt = <VoidStatement>node;
-        this.scanNodeForCaptures(stmt.expression, outerFlow, innerFunctionNames, captures, capturedNames, declaredVars);
+        this.scanNodeForCaptures(stmt.expression, outerFlow, innerFunctionNames, captures);
         break;
       }
 
@@ -8063,558 +8155,6 @@ export class Compiler extends DiagnosticEmitter {
     return captures;
   }
 
-  /** Pre-scans a function body to identify all closures and their captured variables.
-   *  This must be done before compiling the body so that local variables know they're captured. */
-  private prescanForClosures(
-    bodyNode: Statement,
-    instance: Function,
-    flow: Flow
-  ): void {
-    // Collect all variable names declared in this function body
-    let declaredVars = new Map<string, Type | null>();
-    this.collectDeclaredVariables(bodyNode, declaredVars);
-
-    // Scan for function expressions in the body
-    this.prescanNodeForFunctionExpressions(bodyNode, instance, flow, declaredVars);
-  }
-
-  /** Collects all variable declarations in a node (for prescan). */
-  private collectDeclaredVariables(node: Node, vars: Map<string, Type | null>): void {
-    switch (node.kind) {
-      // Statements that contain other statements
-      case NodeKind.Block: {
-        let block = <BlockStatement>node;
-        for (let i = 0, k = block.statements.length; i < k; i++) {
-          this.collectDeclaredVariables(block.statements[i], vars);
-        }
-        break;
-      }
-      case NodeKind.If: {
-        let ifStmt = <IfStatement>node;
-        this.collectDeclaredVariables(ifStmt.ifTrue, vars);
-        let ifFalse = ifStmt.ifFalse;
-        if (ifFalse) {
-          this.collectDeclaredVariables(ifFalse, vars);
-        }
-        break;
-      }
-      case NodeKind.While: {
-        let whileStmt = <WhileStatement>node;
-        this.collectDeclaredVariables(whileStmt.body, vars);
-        break;
-      }
-      case NodeKind.Do: {
-        let doStmt = <DoStatement>node;
-        this.collectDeclaredVariables(doStmt.body, vars);
-        break;
-      }
-      case NodeKind.For: {
-        let forStmt = <ForStatement>node;
-        let initializer = forStmt.initializer;
-        if (initializer) this.collectDeclaredVariables(initializer, vars);
-        this.collectDeclaredVariables(forStmt.body, vars);
-        break;
-      }
-      case NodeKind.ForOf: {
-        let forOfStmt = <ForOfStatement>node;
-        if (forOfStmt.variable.kind == NodeKind.Variable) {
-          this.collectDeclaredVariables(forOfStmt.variable, vars);
-        }
-        this.collectDeclaredVariables(forOfStmt.body, vars);
-        break;
-      }
-      case NodeKind.Switch: {
-        let switchStmt = <SwitchStatement>node;
-        let cases = switchStmt.cases;
-        for (let i = 0, k = cases.length; i < k; i++) {
-          let statements = cases[i].statements;
-          for (let j = 0, l = statements.length; j < l; j++) {
-            this.collectDeclaredVariables(statements[j], vars);
-          }
-        }
-        break;
-      }
-      case NodeKind.Try: {
-        let tryStmt = <TryStatement>node;
-        let bodyStatements = tryStmt.bodyStatements;
-        for (let i = 0, k = bodyStatements.length; i < k; i++) {
-          this.collectDeclaredVariables(bodyStatements[i], vars);
-        }
-        let catchStatements = tryStmt.catchStatements;
-        if (catchStatements) {
-          let catchVariable = tryStmt.catchVariable;
-          if (catchVariable) {
-            vars.set(catchVariable.text, null);
-          }
-          for (let i = 0, k = catchStatements.length; i < k; i++) {
-            this.collectDeclaredVariables(catchStatements[i], vars);
-          }
-        }
-        let finallyStatements = tryStmt.finallyStatements;
-        if (finallyStatements) {
-          for (let i = 0, k = finallyStatements.length; i < k; i++) {
-            this.collectDeclaredVariables(finallyStatements[i], vars);
-          }
-        }
-        break;
-      }
-
-      // Variable declarations
-      case NodeKind.Variable: {
-        let varStmt = <VariableStatement>node;
-        for (let i = 0, k = varStmt.declarations.length; i < k; i++) {
-          let decl = varStmt.declarations[i];
-          vars.set(decl.name.text, null);
-        }
-        break;
-      }
-
-      // Function scopes - don't leak variables
-      case NodeKind.FunctionDeclaration:
-      case NodeKind.Function:
-        break;
-
-      // Statements without variable declarations
-      case NodeKind.Expression:
-      case NodeKind.Return:
-      case NodeKind.Break:
-      case NodeKind.Continue:
-      case NodeKind.Throw:
-      case NodeKind.Empty:
-      case NodeKind.Void:
-        break;
-
-      // Module-level declarations (shouldn't appear in function bodies normally)
-      case NodeKind.Export:
-      case NodeKind.ExportDefault:
-      case NodeKind.ExportImport:
-      case NodeKind.Import:
-      case NodeKind.Module:
-      case NodeKind.ClassDeclaration:
-      case NodeKind.EnumDeclaration:
-      case NodeKind.InterfaceDeclaration:
-      case NodeKind.NamespaceDeclaration:
-      case NodeKind.TypeDeclaration:
-        break;
-
-      // Expression nodes (shouldn't be passed to this function normally)
-      case NodeKind.Identifier:
-      case NodeKind.Assertion:
-      case NodeKind.Binary:
-      case NodeKind.Call:
-      case NodeKind.Class:
-      case NodeKind.Comma:
-      case NodeKind.ElementAccess:
-      case NodeKind.False:
-      case NodeKind.InstanceOf:
-      case NodeKind.Literal:
-      case NodeKind.New:
-      case NodeKind.Null:
-      case NodeKind.Omitted:
-      case NodeKind.Parenthesized:
-      case NodeKind.PropertyAccess:
-      case NodeKind.Ternary:
-      case NodeKind.Super:
-      case NodeKind.This:
-      case NodeKind.True:
-      case NodeKind.Constructor:
-      case NodeKind.UnaryPostfix:
-      case NodeKind.UnaryPrefix:
-      case NodeKind.Compiled:
-        break;
-
-      // Type nodes
-      case NodeKind.NamedType:
-      case NodeKind.FunctionType:
-      case NodeKind.TypeName:
-      case NodeKind.TypeParameter:
-      case NodeKind.Parameter:
-        break;
-
-      // Special nodes
-      case NodeKind.Source:
-      case NodeKind.Decorator:
-      case NodeKind.ExportMember:
-      case NodeKind.SwitchCase:
-      case NodeKind.IndexSignature:
-      case NodeKind.Comment:
-      case NodeKind.EnumValueDeclaration:
-      case NodeKind.FieldDeclaration:
-      case NodeKind.ImportDeclaration:
-      case NodeKind.MethodDeclaration:
-      case NodeKind.VariableDeclaration:
-        break;
-
-      default:
-        assert(false, "collectDeclaredVariables: unhandled node kind: " + (node.kind as i32).toString());
-    }
-  }
-
-  /** Iteratively scans a node for function expressions and sets up their captures.
-   *  Uses an explicit stack to avoid stack overflow on deeply nested code. */
-  private prescanNodeForFunctionExpressions(
-    node: Node,
-    instance: Function,
-    flow: Flow,
-    declaredVars: Map<string, Type | null>
-  ): void {
-    // Use an explicit stack to avoid recursion stack overflow
-    let stack = new Array<Node>();
-    stack.push(node);
-
-    while (stack.length > 0) {
-      let current = assert(stack.pop());
-      switch (current.kind) {
-        case NodeKind.Block: {
-          let block = <BlockStatement>current;
-          let statements = block.statements;
-          for (let i = statements.length - 1; i >= 0; i--) {
-            stack.push(statements[i]);
-          }
-          break;
-        }
-        case NodeKind.Expression: {
-          let exprStmt = <ExpressionStatement>current;
-          stack.push(exprStmt.expression);
-          break;
-        }
-        case NodeKind.Return: {
-          let ret = <ReturnStatement>current;
-          let retValue = ret.value;
-          if (retValue) {
-            stack.push(retValue);
-          }
-          break;
-        }
-        case NodeKind.Variable: {
-          let varStmt = <VariableStatement>current;
-          let declarations = varStmt.declarations;
-          for (let i = declarations.length - 1; i >= 0; i--) {
-            let declInit = declarations[i].initializer;
-            if (declInit) {
-              stack.push(declInit);
-            }
-          }
-          break;
-        }
-        case NodeKind.If: {
-          let ifStmt = <IfStatement>current;
-          let ifFalse = ifStmt.ifFalse;
-          if (ifFalse) {
-            stack.push(ifFalse);
-          }
-          stack.push(ifStmt.ifTrue);
-          stack.push(ifStmt.condition);
-          break;
-        }
-        case NodeKind.While: {
-          let whileStmt = <WhileStatement>current;
-          stack.push(whileStmt.body);
-          stack.push(whileStmt.condition);
-          break;
-        }
-        case NodeKind.Do: {
-          let doStmt = <DoStatement>current;
-          stack.push(doStmt.body);
-          stack.push(doStmt.condition);
-          break;
-        }
-        case NodeKind.For: {
-          let forStmt = <ForStatement>current;
-          stack.push(forStmt.body);
-          let forIncr = forStmt.incrementor;
-          if (forIncr) stack.push(forIncr);
-          let forCond = forStmt.condition;
-          if (forCond) stack.push(forCond);
-          let forInit = forStmt.initializer;
-          if (forInit) stack.push(forInit);
-          break;
-        }
-        case NodeKind.Function: {
-          // Found a function expression - analyze its captures
-          let funcExpr = <FunctionExpression>current;
-          let capturedNames = this.analyzeCapturedVariablesWithDeclared(funcExpr.declaration, flow, declaredVars);
-          if (capturedNames.size > 0) {
-            // Check if closures feature is enabled
-            if (!this.options.hasFeature(Feature.Closures)) {
-              this.error(
-                DiagnosticCode.Feature_0_is_not_enabled,
-                funcExpr.range, "closures"
-              );
-              break;
-            }
-            // Store captured names for later use when compiling variable declarations
-            let existingNames = instance.preCapturedNames;
-            if (!existingNames) {
-              existingNames = new Set<string>();
-              instance.preCapturedNames = existingNames;
-            }
-            for (let _values = Set_values(capturedNames), i = 0, k = _values.length; i < k; i++) {
-              existingNames.add(_values[i]);
-            }
-          }
-          // We don't recurse into nested function bodies here - that happens when the inner function is compiled
-          break;
-        }
-        case NodeKind.Binary: {
-          let binary = <BinaryExpression>current;
-          stack.push(binary.right);
-          stack.push(binary.left);
-          break;
-        }
-        case NodeKind.UnaryPrefix: {
-          let unary = <UnaryPrefixExpression>current;
-          stack.push(unary.operand);
-          break;
-        }
-        case NodeKind.UnaryPostfix: {
-          let unary = <UnaryPostfixExpression>current;
-          stack.push(unary.operand);
-          break;
-        }
-        case NodeKind.Call: {
-          let call = <CallExpression>current;
-          let args = call.args;
-          for (let i = args.length - 1; i >= 0; i--) {
-            stack.push(args[i]);
-          }
-          stack.push(call.expression);
-          break;
-        }
-        case NodeKind.New: {
-          let newExpr = <NewExpression>current;
-          let args = newExpr.args;
-          for (let i = args.length - 1; i >= 0; i--) {
-            stack.push(args[i]);
-          }
-          break;
-        }
-        case NodeKind.Parenthesized: {
-          let paren = <ParenthesizedExpression>current;
-          stack.push(paren.expression);
-          break;
-        }
-        case NodeKind.Ternary: {
-          let ternary = <TernaryExpression>current;
-          stack.push(ternary.ifElse);
-          stack.push(ternary.ifThen);
-          stack.push(ternary.condition);
-          break;
-        }
-        case NodeKind.Comma: {
-          let comma = <CommaExpression>current;
-          let expressions = comma.expressions;
-          for (let i = expressions.length - 1; i >= 0; i--) {
-            stack.push(expressions[i]);
-          }
-          break;
-        }
-        case NodeKind.Literal: {
-          let literal = <LiteralExpression>current;
-          if (literal.literalKind == LiteralKind.Array) {
-            let arrLiteral = <ArrayLiteralExpression>literal;
-            let elements = arrLiteral.elementExpressions;
-            for (let i = elements.length - 1; i >= 0; i--) {
-              let elem = elements[i];
-              if (elem) {
-                stack.push(elem);
-              }
-            }
-          } else if (literal.literalKind == LiteralKind.Object) {
-            let objLiteral = <ObjectLiteralExpression>literal;
-            let values = objLiteral.values;
-            for (let i = values.length - 1; i >= 0; i--) {
-              stack.push(values[i]);
-            }
-          } else if (literal.literalKind == LiteralKind.Template) {
-            let tmplLiteral = <TemplateLiteralExpression>literal;
-            let expressions = tmplLiteral.expressions;
-            for (let i = expressions.length - 1; i >= 0; i--) {
-              stack.push(expressions[i]);
-            }
-          }
-          break;
-        }
-        case NodeKind.ElementAccess: {
-          let elemAccess = <ElementAccessExpression>current;
-          stack.push(elemAccess.elementExpression);
-          stack.push(elemAccess.expression);
-          break;
-        }
-        case NodeKind.PropertyAccess: {
-          let propAccess = <PropertyAccessExpression>current;
-          stack.push(propAccess.expression);
-          break;
-        }
-        case NodeKind.Assertion: {
-          let assertion = <AssertionExpression>current;
-          stack.push(assertion.expression);
-          break;
-        }
-        case NodeKind.InstanceOf: {
-          let instanceOfExpr = <InstanceOfExpression>current;
-          stack.push(instanceOfExpr.expression);
-          break;
-        }
-        case NodeKind.Switch: {
-          let switchStmt = <SwitchStatement>current;
-          let cases = switchStmt.cases;
-          for (let i = cases.length - 1; i >= 0; i--) {
-            let switchCase = cases[i];
-            let statements = switchCase.statements;
-            for (let j = statements.length - 1; j >= 0; j--) {
-              stack.push(statements[j]);
-            }
-            let caseLabel = switchCase.label;
-            if (caseLabel) {
-              stack.push(caseLabel);
-            }
-          }
-          stack.push(switchStmt.condition);
-          break;
-        }
-        case NodeKind.ForOf: {
-          let forOfStmt = <ForOfStatement>current;
-          stack.push(forOfStmt.body);
-          if (forOfStmt.variable.kind == NodeKind.Variable) {
-            stack.push(forOfStmt.variable);
-          }
-          stack.push(forOfStmt.iterable);
-          break;
-        }
-        case NodeKind.Try: {
-          let tryStmt = <TryStatement>current;
-          let finallyStatements = tryStmt.finallyStatements;
-          if (finallyStatements) {
-            for (let i = finallyStatements.length - 1; i >= 0; i--) {
-              stack.push(finallyStatements[i]);
-            }
-          }
-          let catchStatements = tryStmt.catchStatements;
-          if (catchStatements) {
-            for (let i = catchStatements.length - 1; i >= 0; i--) {
-              stack.push(catchStatements[i]);
-            }
-          }
-          let bodyStatements = tryStmt.bodyStatements;
-          for (let i = bodyStatements.length - 1; i >= 0; i--) {
-            stack.push(bodyStatements[i]);
-          }
-          break;
-        }
-        case NodeKind.Throw: {
-          let throwStmt = <ThrowStatement>current;
-          stack.push(throwStmt.value);
-          break;
-        }
-        case NodeKind.Void: {
-          let voidStmt = <VoidStatement>current;
-          stack.push(voidStmt.expression);
-          break;
-        }
-
-        // Leaf expressions - no children to scan
-        case NodeKind.Identifier:
-        case NodeKind.True:
-        case NodeKind.False:
-        case NodeKind.Null:
-        case NodeKind.Super:
-        case NodeKind.This:
-        case NodeKind.Omitted:
-        case NodeKind.Compiled:
-          break;
-
-        // Statements without expressions
-        case NodeKind.Break:
-        case NodeKind.Continue:
-        case NodeKind.Empty:
-          break;
-
-        // Class expressions are not supported (will error during compilation)
-        case NodeKind.Class:
-        // Constructor keyword - not a capturable expression
-        case NodeKind.Constructor:
-          break;
-
-        // Module-level declarations (shouldn't appear in function bodies normally)
-        case NodeKind.Export:
-        case NodeKind.ExportDefault:
-        case NodeKind.ExportImport:
-        case NodeKind.Import:
-        case NodeKind.Module:
-        case NodeKind.ClassDeclaration:
-        case NodeKind.EnumDeclaration:
-        case NodeKind.InterfaceDeclaration:
-        case NodeKind.NamespaceDeclaration:
-        case NodeKind.TypeDeclaration:
-        case NodeKind.FunctionDeclaration:
-          break;
-
-        // Type nodes - no runtime expressions
-        case NodeKind.NamedType:
-        case NodeKind.FunctionType:
-        case NodeKind.TypeName:
-        case NodeKind.TypeParameter:
-        case NodeKind.Parameter:
-          break;
-
-        // Special nodes
-        case NodeKind.Source:
-        case NodeKind.Decorator:
-        case NodeKind.ExportMember:
-        case NodeKind.SwitchCase:
-        case NodeKind.IndexSignature:
-        case NodeKind.Comment:
-        case NodeKind.EnumValueDeclaration:
-        case NodeKind.FieldDeclaration:
-        case NodeKind.ImportDeclaration:
-        case NodeKind.MethodDeclaration:
-        case NodeKind.VariableDeclaration:
-          break;
-
-        default:
-          assert(false, "prescanNodeForFunctionExpressions: unhandled node kind: " + (current.kind as i32).toString());
-      }
-    }
-  }
-
-  /** Analyzes captured variables using both flow and pre-collected variable names.
-   *  Uses name mode since Locals may not exist yet during prescan. */
-  private analyzeCapturedVariablesWithDeclared(
-    declaration: FunctionDeclaration,
-    outerFlow: Flow,
-    declaredVars: Map<string, Type | null>
-  ): Set<string> {
-    // For prescan, we just collect variable NAMES that are captured
-    // We'll create the actual captures with proper Local references later
-    let capturedNames = new Set<string>();
-    let innerFunctionNames = new Set<string>();
-
-    // Scan parameter default values for captures (before adding params to inner names)
-    let params = declaration.signature.parameters;
-    for (let i = 0, k = params.length; i < k; i++) {
-      let paramInit = params[i].initializer;
-      if (paramInit) {
-        // Use name mode (null captures, with capturedNames and declaredVars)
-        this.scanNodeForCaptures(paramInit, outerFlow, innerFunctionNames, null, capturedNames, declaredVars);
-      }
-    }
-
-    // Add the function's own parameters to the inner names set
-    for (let i = 0, k = params.length; i < k; i++) {
-      innerFunctionNames.add(params[i].name.text);
-    }
-
-    // Scan the function body for identifier usages
-    let body = declaration.body;
-    if (body) {
-      // Use name mode (null captures, with capturedNames and declaredVars)
-      this.scanNodeForCaptures(body, outerFlow, innerFunctionNames, null, capturedNames, declaredVars);
-    }
-
-    return capturedNames;
-  }
-
   /** Computes the total size needed for a closure environment. */
   private computeEnvironmentSize(captures: Map<Local, i32>): i32 {
     // Calculate the total size based on already-assigned slot indices
@@ -8629,6 +8169,30 @@ export class Compiler extends DiagnosticEmitter {
     }
     // Ensure total size is aligned to pointer size
     return (maxEnd + usizeSize - 1) & ~(usizeSize - 1);
+  }
+
+  /** Ensures closure environments are set up for all functions that own captured variables. */
+  private ensureClosureEnvironmentsForCaptures(
+    captures: Map<Local, i32>,
+    flow: Flow
+  ): void {
+    // Group captures by owner since variables may come from different nesting levels
+    let envOwners = new Map<Function, Map<Local, i32>>();
+    for (let _keys = Map_keys(captures), i = 0, k = _keys.length; i < k; i++) {
+      let local = _keys[i];
+      let owner = assert(local.envOwner);
+      let ownerCaptures = envOwners.get(owner);
+      if (!ownerCaptures) {
+        ownerCaptures = new Map<Local, i32>();
+        envOwners.set(owner, ownerCaptures);
+      }
+      ownerCaptures.set(local, captures.get(local) as i32);
+    }
+    for (let _keys = Map_keys(envOwners), i = 0, k = _keys.length; i < k; i++) {
+      let owner = _keys[i];
+      let ownerCaptures = assert(envOwners.get(owner));
+      this.ensureClosureEnvironment(owner, ownerCaptures, flow);
+    }
   }
 
   /** Ensures a closure environment is set up for the outer function. */
@@ -8654,7 +8218,7 @@ export class Compiler extends DiagnosticEmitter {
 
     // Create a new environment local for the outer function
     let usizeType = this.options.usizeType;
-    outerFunc.envLocal = flow.addScopedLocal("$env", usizeType);;
+    outerFunc.envLocal = flow.addScopedLocal("$env", usizeType);
     outerFunc.capturedLocals = captures;
 
     // Compute the environment size
@@ -8700,10 +8264,17 @@ export class Compiler extends DiagnosticEmitter {
     flow.setLocalFlag(funcPtrLocal.index, LocalFlags.Wrapped);
 
     // Get the environment pointer from the outer function
+    // For nested closures, the outer function might not own the environment
+    // - it might be using closureEnvLocal (a cached copy from an even outer function)
     let envPtrExpr: ExpressionRef;
     let outerEnvLocal = outerFunc.envLocal;
+    let outerClosureEnvLocal = outerFunc.closureEnvLocal;
     if (outerEnvLocal) {
+      // Outer function owns an environment - use it
       envPtrExpr = module.local_get(outerEnvLocal.index, sizeTypeRef);
+    } else if (outerClosureEnvLocal) {
+      // Outer function is a closure - use its cached environment from the outer scope
+      envPtrExpr = module.local_get(outerClosureEnvLocal.index, sizeTypeRef);
     } else {
       envPtrExpr = options.isWasm64 ? module.i64(0) : module.i32(0);
     }
@@ -8776,10 +8347,15 @@ export class Compiler extends DiagnosticEmitter {
 
     // Count how many levels up we need to go
     // Start from current function's outer function and walk up to find envOwner
+    // Only count functions that have their own environment (envLocal set)
     let func: Function | null = currentFunc.outerFunction;
     let depth = 0;
     while (func && func != envOwner) {
-      depth++;
+      // Only increment depth if this function has its own environment
+      // Functions without envLocal just pass through their parent's environment
+      if (func.envLocal) {
+        depth++;
+      }
       func = func.outerFunction;
     }
 
@@ -9150,6 +8726,10 @@ export class Compiler extends DiagnosticEmitter {
         } else {
           this.currentType = localType;
         }
+
+        // Track that we accessed this as a regular local (for closure recompilation detection)
+        // Only set if not already captured (to avoid infinite recompilation loops)
+        if (!local.isCaptured) local.wasAccessedAsLocal = true;
 
         let expr = module.local_get(localIndex, localType.toRef());
         if (isNonNull && localType.isNullableExternalReference && this.options.hasFeature(Feature.GC)) {
