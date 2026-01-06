@@ -499,3 +499,80 @@ function testReturnInFinallySuppressesException(): i32 {
 }
 assert(testReturnInFinallySuppressesException() == 42);
 assert(finallyReturnSuppressedExceptionRan);
+
+// ============================================================
+// Tests for catching abort() and runtime errors
+// ============================================================
+
+// Test catching abort()
+function testCatchAbort(): bool {
+  let caught = false;
+  try {
+    abort("this should be catchable");
+  } catch (e) {
+    caught = true;
+    // Verify we got an Error with the abort message
+    assert(e.message.includes("this should be catchable"));
+  }
+  return caught;
+}
+assert(testCatchAbort());
+
+// Test catching runtime errors from __new (allocation too large)
+function testCatchRuntimeError(): bool {
+  let caught = false;
+  try {
+    // Try to allocate an impossibly large object
+    // This should trigger an allocation error in the runtime
+    __new(usize.MAX_VALUE, idof<ArrayBuffer>());
+  } catch (e) {
+    caught = true;
+    // Should have caught an allocation error
+    assert(e.message.length > 0);
+  }
+  return caught;
+}
+assert(testCatchRuntimeError());
+
+// Test that abort in a function can be caught by the caller
+function functionThatAborts(): void {
+  abort("abort from function");
+}
+
+function testCatchAbortFromFunction(): bool {
+  let caught = false;
+  try {
+    functionThatAborts();
+  } catch (e) {
+    caught = true;
+    assert(e.message.includes("abort from function"));
+  }
+  return caught;
+}
+assert(testCatchAbortFromFunction());
+
+// Test catch variable is properly typed as Error
+function testCatchVariableType(): bool {
+  try {
+    throw new Error("type test");
+  } catch (e) {
+    // e should be typed as Error, so we can access message directly
+    let msg: string = e.message;
+    return msg == "type test";
+  }
+  return false;
+}
+assert(testCatchVariableType());
+
+// Test catching custom Error subclass (use existing CustomError class)
+function testCatchCustomError2(): bool {
+  try {
+    throw new CustomError("custom error 2", 99);
+  } catch (e) {
+    // e is typed as Error, need to cast to access code
+    let custom = e as CustomError;
+    return custom.message == "custom error 2" && custom.code == 99;
+  }
+  return false;
+}
+assert(testCatchCustomError2());

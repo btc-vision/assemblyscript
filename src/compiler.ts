@@ -3024,6 +3024,19 @@ export class Compiler extends DiagnosticEmitter {
     if (this.options.hasFeature(Feature.ExceptionHandling)) {
       // Compile the thrown value - should be Error or subclass
       let valueExpr = this.compileExpression(statement.value, Type.auto);
+      let valueType = this.currentType;
+
+      // Verify that the thrown type is Error or a subclass
+      let errorInstance = this.program.errorInstance;
+      let classReference = valueType.getClass();
+      if (!classReference || !classReference.isAssignableTo(errorInstance)) {
+        this.error(
+          DiagnosticCode.Only_Error_or_its_subclasses_can_be_thrown_but_found_type_0,
+          statement.value.range,
+          valueType.toString()
+        );
+        return module.unreachable();
+      }
 
       // Ensure exception tag exists
       let tagName = this.ensureExceptionTag();
