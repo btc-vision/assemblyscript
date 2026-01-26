@@ -651,11 +651,11 @@ export class Compiler extends DiagnosticEmitter {
       }
     }
 
-    // finalize runtime features
+    // finalize runtime features (RTTI must be compiled here as it affects memory layout)
     module.removeGlobal(BuiltinNames.rtti_base);
     if (this.runtimeFeatures & RuntimeFeatures.Rtti) compileRTTI(this);
-    if (this.runtimeFeatures & RuntimeFeatures.visitGlobals) compileVisitGlobals(this);
-    if (this.runtimeFeatures & RuntimeFeatures.visitMembers) compileVisitMembers(this);
+    // NOTE: compileVisitGlobals and compileVisitMembers are deferred until after
+    // custom passes (like shadow stack) that may trigger additional compilations
 
     let memoryOffset = i64_align(this.memoryOffset, options.usizeType.byteSize);
 
@@ -764,6 +764,10 @@ export class Compiler extends DiagnosticEmitter {
     if (program.lookup("ASC_RTRACE") != null) {
       new RtraceMemory(this).walkModule();
     }
+
+    // Finalize visit functions after custom passes that may trigger additional compilations
+    if (this.runtimeFeatures & RuntimeFeatures.visitGlobals) compileVisitGlobals(this);
+    if (this.runtimeFeatures & RuntimeFeatures.visitMembers) compileVisitMembers(this);
 
     return module;
   }
