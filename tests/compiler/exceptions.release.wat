@@ -2054,94 +2054,6 @@
   global.set $exceptions/multiReturnFinallyCount
   local.get $1
  )
- (func $~lib/rt/__visit_members (param $0 i32)
-  block $folding-inner0
-   block $invalid
-    block $exceptions/Counter
-     block $exceptions/StateMachine
-      block $~lib/array/Array<i32>
-       block $exceptions/Inner
-        block $exceptions/Outer
-         block $exceptions/Calculator
-          block $exceptions/Resource
-           block $~lib/arraybuffer/ArrayBufferView
-            block $~lib/string/String
-             block $~lib/arraybuffer/ArrayBuffer
-              block $~lib/object/Object
-               local.get $0
-               i32.const 8
-               i32.sub
-               i32.load
-               br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $folding-inner0 $folding-inner0 $folding-inner0 $exceptions/Resource $exceptions/Calculator $exceptions/Outer $exceptions/Inner $~lib/array/Array<i32> $exceptions/StateMachine $exceptions/Counter $invalid
-              end
-              return
-             end
-             return
-            end
-            return
-           end
-           local.get $0
-           i32.load
-           call $~lib/rt/itcms/__visit
-           return
-          end
-          return
-         end
-         return
-        end
-        local.get $0
-        i32.load
-        call $~lib/rt/itcms/__visit
-        return
-       end
-       return
-      end
-      global.get $~lib/memory/__stack_pointer
-      i32.const 4
-      i32.sub
-      global.set $~lib/memory/__stack_pointer
-      global.get $~lib/memory/__stack_pointer
-      i32.const 5036
-      i32.lt_s
-      if
-       i32.const 37824
-       i32.const 37872
-       i32.const 1
-       i32.const 1
-       call $~lib/builtins/abort
-       unreachable
-      end
-      global.get $~lib/memory/__stack_pointer
-      i32.const 0
-      i32.store
-      global.get $~lib/memory/__stack_pointer
-      local.get $0
-      i32.store
-      local.get $0
-      i32.load
-      call $~lib/rt/itcms/__visit
-      global.get $~lib/memory/__stack_pointer
-      i32.const 4
-      i32.add
-      global.set $~lib/memory/__stack_pointer
-      return
-     end
-     return
-    end
-    return
-   end
-   unreachable
-  end
-  local.get $0
-  i32.load
-  call $~lib/rt/itcms/__visit
-  local.get $0
-  i32.load offset=4
-  call $~lib/rt/itcms/__visit
-  local.get $0
-  i32.load offset=8
-  call $~lib/rt/itcms/__visit
- )
  (func $~start
   call $start:exceptions
  )
@@ -2192,7 +2104,7 @@
    global.get $~lib/memory/__stack_pointer
    local.get $1
    i32.store
-   block $__inlined_func$~lib/string/String#concat$277
+   block $__inlined_func$~lib/string/String#concat$276
     local.get $1
     i32.const 20
     i32.sub
@@ -2211,7 +2123,7 @@
      global.set $~lib/memory/__stack_pointer
      i32.const 1216
      local.set $0
-     br $__inlined_func$~lib/string/String#concat$277
+     br $__inlined_func$~lib/string/String#concat$276
     end
     global.get $~lib/memory/__stack_pointer
     local.get $0
@@ -2842,7 +2754,7 @@
      global.get $~lib/memory/__stack_pointer
      local.get $0
      i32.store
-     block $__inlined_func$~lib/rt/itcms/__renew$249
+     block $__inlined_func$~lib/rt/itcms/__renew$245
       i32.const 1073741820
       local.get $3
       i32.const 1
@@ -2885,7 +2797,7 @@
        i32.store offset=16
        local.get $3
        local.set $4
-       br $__inlined_func$~lib/rt/itcms/__renew$249
+       br $__inlined_func$~lib/rt/itcms/__renew$245
       end
       local.get $6
       local.get $5
@@ -3380,7 +3292,7 @@
    global.get $~lib/memory/__stack_pointer
    local.get $1
    i32.store
-   block $__inlined_func$~lib/string/String#indexOf$279
+   block $__inlined_func$~lib/string/String#indexOf$278
     local.get $1
     i32.const 20
     i32.sub
@@ -3396,7 +3308,7 @@
      global.set $~lib/memory/__stack_pointer
      i32.const 0
      local.set $0
-     br $__inlined_func$~lib/string/String#indexOf$279
+     br $__inlined_func$~lib/string/String#indexOf$278
     end
     global.get $~lib/memory/__stack_pointer
     local.get $2
@@ -3416,7 +3328,7 @@
      global.set $~lib/memory/__stack_pointer
      i32.const -1
      local.set $0
-     br $__inlined_func$~lib/string/String#indexOf$279
+     br $__inlined_func$~lib/string/String#indexOf$278
     end
     i32.const 0
     local.set $0
@@ -3446,7 +3358,7 @@
        i32.const 8
        i32.add
        global.set $~lib/memory/__stack_pointer
-       br $__inlined_func$~lib/string/String#indexOf$279
+       br $__inlined_func$~lib/string/String#indexOf$278
       end
       local.get $0
       i32.const 1
@@ -3532,7 +3444,7 @@
   i32.store
   i32.const 3184
   global.set $~lib/rt/itcms/fromSpace
-  block $__inlined_func$exceptions/testTryCatch$182
+  block $__inlined_func$exceptions/testTryCatch$176
    try
     i32.const 0
     i32.const 3328
@@ -3541,7 +3453,7 @@
    catch $error
     
     drop
-    br $__inlined_func$exceptions/testTryCatch$182
+    br $__inlined_func$exceptions/testTryCatch$176
    end
    unreachable
   end
@@ -3563,7 +3475,7 @@
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   i32.store
-  block $__inlined_func$exceptions/testCatchVar$258
+  block $__inlined_func$exceptions/testCatchVar$254
    try
     i32.const 0
     i32.const 3408
@@ -3582,7 +3494,7 @@
     i32.const 4
     i32.add
     global.set $~lib/memory/__stack_pointer
-    br $__inlined_func$exceptions/testCatchVar$258
+    br $__inlined_func$exceptions/testCatchVar$254
    end
    unreachable
   end
@@ -3601,7 +3513,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  block $__inlined_func$exceptions/testNested$185
+  block $__inlined_func$exceptions/testNested$179
    try
     try
      i32.const 0
@@ -3620,7 +3532,7 @@
    catch $error
     
     drop
-    br $__inlined_func$exceptions/testNested$185
+    br $__inlined_func$exceptions/testNested$179
    end
    unreachable
   end
@@ -3682,7 +3594,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  block $__inlined_func$exceptions/testFinallyWithException$259
+  block $__inlined_func$exceptions/testFinallyWithException$255
    try
     try $try_finally|07
      i32.const 0
@@ -3702,7 +3614,7 @@
     i32.const 0
     i32.ne
     local.set $1
-    br $__inlined_func$exceptions/testFinallyWithException$259
+    br $__inlined_func$exceptions/testFinallyWithException$255
    end
    unreachable
   end
@@ -3716,7 +3628,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  block $__inlined_func$exceptions/testCustomError$189
+  block $__inlined_func$exceptions/testCustomError$183
    try
     i32.const 3584
     i32.const 42
@@ -3725,7 +3637,7 @@
    catch $error
     
     drop
-    br $__inlined_func$exceptions/testCustomError$189
+    br $__inlined_func$exceptions/testCustomError$183
    end
    unreachable
   end
@@ -3800,7 +3712,7 @@
   call $exceptions/Resource#constructor
   local.tee $1
   i32.store
-  block $__inlined_func$exceptions/testResourceCleanupWithException$261
+  block $__inlined_func$exceptions/testResourceCleanupWithException$257
    try
     try $try_finally|1
      global.get $~lib/memory/__stack_pointer
@@ -3830,7 +3742,7 @@
     global.set $~lib/memory/__stack_pointer
     global.get $exceptions/Resource.disposed
     local.set $1
-    br $__inlined_func$exceptions/testResourceCleanupWithException$261
+    br $__inlined_func$exceptions/testResourceCleanupWithException$257
    end
    unreachable
   end
@@ -4090,7 +4002,7 @@
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store
-  block $__inlined_func$exceptions/Outer#process$263
+  block $__inlined_func$exceptions/Outer#process$259
    try
     global.get $~lib/memory/__stack_pointer
     local.get $1
@@ -4120,7 +4032,7 @@
     i32.const 8
     i32.add
     global.set $~lib/memory/__stack_pointer
-    br $__inlined_func$exceptions/Outer#process$263
+    br $__inlined_func$exceptions/Outer#process$259
    end
    unreachable
   end
@@ -4137,7 +4049,7 @@
   end
   i32.const 0
   global.set $exceptions/rethrowFinallyRan
-  block $__inlined_func$exceptions/testRethrowWithFinally$281
+  block $__inlined_func$exceptions/testRethrowWithFinally$280
    try
     global.get $~lib/memory/__stack_pointer
     i32.const 12
@@ -4205,7 +4117,7 @@
     i32.const 0
     i32.ne
     local.set $1
-    br $__inlined_func$exceptions/testRethrowWithFinally$281
+    br $__inlined_func$exceptions/testRethrowWithFinally$280
    end
    unreachable
   end
@@ -4774,7 +4686,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  block $__inlined_func$exceptions/testReturnInFinallyOverridesCatch$200
+  block $__inlined_func$exceptions/testReturnInFinallyOverridesCatch$194
    try
     try
      i32.const 0
@@ -4784,15 +4696,15 @@
     catch $error
      
      drop
-     br $__inlined_func$exceptions/testReturnInFinallyOverridesCatch$200
+     br $__inlined_func$exceptions/testReturnInFinallyOverridesCatch$194
     end
     unreachable
    catch_all
-    br $__inlined_func$exceptions/testReturnInFinallyOverridesCatch$200
+    br $__inlined_func$exceptions/testReturnInFinallyOverridesCatch$194
    end
    unreachable
   end
-  block $__inlined_func$exceptions/testReturnInFinallySuppressesException$201
+  block $__inlined_func$exceptions/testReturnInFinallySuppressesException$195
    try
     i32.const 0
     i32.const 4624
@@ -4801,7 +4713,7 @@
    catch_all
     i32.const 1
     global.set $exceptions/finallyReturnSuppressedExceptionRan
-    br $__inlined_func$exceptions/testReturnInFinallySuppressesException$201
+    br $__inlined_func$exceptions/testReturnInFinallySuppressesException$195
    end
    unreachable
   end
@@ -5031,7 +4943,7 @@
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store
-  block $__inlined_func$exceptions/testCatchVariableType$269
+  block $__inlined_func$exceptions/testCatchVariableType$265
    try
     i32.const 0
     i32.const 4832
@@ -5059,7 +4971,7 @@
     i32.const 8
     i32.add
     global.set $~lib/memory/__stack_pointer
-    br $__inlined_func$exceptions/testCatchVariableType$269
+    br $__inlined_func$exceptions/testCatchVariableType$265
    end
    unreachable
   end
@@ -5094,7 +5006,7 @@
   global.get $~lib/memory/__stack_pointer
   i64.const 0
   i64.store offset=8
-  block $__inlined_func$exceptions/testCatchCustomError2$270
+  block $__inlined_func$exceptions/testCatchCustomError2$266
    try
     i32.const 4880
     i32.const 99
@@ -5104,7 +5016,7 @@
     
     local.set $0
     global.get $~lib/memory/__stack_pointer
-    block $__inlined_func$~instanceof|exceptions/CustomError$178 (result i32)
+    block $__inlined_func$~instanceof|exceptions/CustomError$172 (result i32)
      global.get $~lib/memory/__stack_pointer
      local.get $0
      i32.store
@@ -5115,7 +5027,7 @@
      i32.load
      i32.const 6
      i32.ne
-     br_if $__inlined_func$~instanceof|exceptions/CustomError$178
+     br_if $__inlined_func$~instanceof|exceptions/CustomError$172
      drop
      i32.const 1
     end
@@ -5157,7 +5069,7 @@
     i32.const 16
     i32.add
     global.set $~lib/memory/__stack_pointer
-    br $__inlined_func$exceptions/testCatchCustomError2$270
+    br $__inlined_func$exceptions/testCatchCustomError2$266
    end
    unreachable
   end
@@ -5210,5 +5122,93 @@
   i32.add
   global.set $~lib/memory/__stack_pointer
   local.get $0
+ )
+ (func $~lib/rt/__visit_members (param $0 i32)
+  block $folding-inner0
+   block $invalid
+    block $exceptions/Counter
+     block $exceptions/StateMachine
+      block $~lib/array/Array<i32>
+       block $exceptions/Inner
+        block $exceptions/Outer
+         block $exceptions/Calculator
+          block $exceptions/Resource
+           block $~lib/arraybuffer/ArrayBufferView
+            block $~lib/string/String
+             block $~lib/arraybuffer/ArrayBuffer
+              block $~lib/object/Object
+               local.get $0
+               i32.const 8
+               i32.sub
+               i32.load
+               br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $folding-inner0 $folding-inner0 $folding-inner0 $exceptions/Resource $exceptions/Calculator $exceptions/Outer $exceptions/Inner $~lib/array/Array<i32> $exceptions/StateMachine $exceptions/Counter $invalid
+              end
+              return
+             end
+             return
+            end
+            return
+           end
+           local.get $0
+           i32.load
+           call $~lib/rt/itcms/__visit
+           return
+          end
+          return
+         end
+         return
+        end
+        local.get $0
+        i32.load
+        call $~lib/rt/itcms/__visit
+        return
+       end
+       return
+      end
+      global.get $~lib/memory/__stack_pointer
+      i32.const 4
+      i32.sub
+      global.set $~lib/memory/__stack_pointer
+      global.get $~lib/memory/__stack_pointer
+      i32.const 5036
+      i32.lt_s
+      if
+       i32.const 37824
+       i32.const 37872
+       i32.const 1
+       i32.const 1
+       call $~lib/builtins/abort
+       unreachable
+      end
+      global.get $~lib/memory/__stack_pointer
+      i32.const 0
+      i32.store
+      global.get $~lib/memory/__stack_pointer
+      local.get $0
+      i32.store
+      local.get $0
+      i32.load
+      call $~lib/rt/itcms/__visit
+      global.get $~lib/memory/__stack_pointer
+      i32.const 4
+      i32.add
+      global.set $~lib/memory/__stack_pointer
+      return
+     end
+     return
+    end
+    return
+   end
+   unreachable
+  end
+  local.get $0
+  i32.load
+  call $~lib/rt/itcms/__visit
+  local.get $0
+  i32.load offset=4
+  call $~lib/rt/itcms/__visit
+  local.get $0
+  i32.load offset=8
+  call $~lib/rt/itcms/__visit
  )
 )

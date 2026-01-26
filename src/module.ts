@@ -271,9 +271,14 @@ export const enum ExpressionId {
   TableSet = 47 /* _BinaryenTableSetId */,
   TableSize = 48 /* _BinaryenTableSizeId */,
   TableGrow = 49 /* _BinaryenTableGrowId */,
+  TableFill = 50 /* _BinaryenTableFillId */,
+  TableCopy = 51 /* _BinaryenTableCopyId */,
+  TableInit = 52 /* _BinaryenTableInitId */,
   Try = 54 /* _BinaryenTryId */,
+  TryTable = 55 /* _BinaryenTryTableId */,
   Throw = 56 /* _BinaryenThrowId */,
   Rethrow = 57 /* _BinaryenRethrowId */,
+  ThrowRef = 58 /* _BinaryenThrowRefId */,
   TupleMake = 59 /* _BinaryenTupleMakeId */,
   TupleExtract = 60 /* _BinaryenTupleExtractId */,
   RefI31 = 61 /* _BinaryenRefI31Id */,
@@ -281,10 +286,13 @@ export const enum ExpressionId {
   CallRef = 63 /* _BinaryenCallRefId */,
   RefTest = 64 /* _BinaryenRefTestId */,
   RefCast = 65 /* _BinaryenRefCastId */,
+  RefGetDesc = 66 /* _BinaryenRefGetDescId */,
   BrOn = 67 /* _BinaryenBrOnId */,
   StructNew = 68 /* _BinaryenStructNewId */,
   StructGet = 69 /* _BinaryenStructGetId */,
   StructSet = 70 /* _BinaryenStructSetId */,
+  StructRMW = 71 /* _BinaryenStructRMWId */,
+  StructCmpxchg = 72 /* _BinaryenStructCmpxchgId */,
   ArrayNew = 73 /* _BinaryenArrayNewId */,
   ArrayNewData = 74 /* _BinaryenArrayNewDataId */,
   ArrayNewElem = 75 /* _BinaryenArrayNewElemId */,
@@ -304,7 +312,13 @@ export const enum ExpressionId {
   StringConcat = 91 /* _BinaryenStringConcatId */,
   StringEq = 92 /* _BinaryenStringEqId */,
   StringWTF16Get = 94 /* _BinaryenStringWTF16GetId */,
-  StringSliceWTF = 95 /* _BinaryenStringSliceWTFId */
+  StringSliceWTF = 95 /* _BinaryenStringSliceWTFId */,
+  ContNew = 96 /* _BinaryenContNewId */,
+  ContBind = 97 /* _BinaryenContBindId */,
+  Suspend = 98 /* _BinaryenSuspendId */,
+  Resume = 99 /* _BinaryenResumeId */,
+  ResumeThrow = 100 /* _BinaryenResumeThrowId */,
+  StackSwitch = 101 /* _BinaryenStackSwitchId */
 }
 
 /** Binaryen external kind constants. */

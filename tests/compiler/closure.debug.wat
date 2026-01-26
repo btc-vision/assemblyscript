@@ -7,11 +7,17 @@
  (type $5 (func (param i32)))
  (type $6 (func (param i32 i32 i32)))
  (type $7 (func (param i32 i32 i32 i32)))
- (type $8 (func (param i32 i32 i64) (result i32)))
- (type $9 (func (param i32 i32 i32) (result i32)))
- (type $10 (func (param i32 i32 i32 i32) (result i32)))
- (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
+ (type $8 (func (param i32 i64 i32)))
+ (type $9 (func (param i64 i32) (result i32)))
+ (type $10 (func (param i32 i64 i32 i32)))
+ (type $11 (func (param i32 i32 i64) (result i32)))
+ (type $12 (func (param i32 i32 i32) (result i32)))
+ (type $13 (func (param i32 i32 i32 i32) (result i32)))
  (global $~lib/__closure_env (mut i32) (i32.const 0))
+ (global $~lib/shared/runtime/Runtime.Stub i32 (i32.const 0))
+ (global $~lib/shared/runtime/Runtime.Minimal i32 (i32.const 1))
+ (global $~lib/shared/runtime/Runtime.Incremental i32 (i32.const 2))
+ (global $~lib/native/ASC_SHRINK_LEVEL i32 (i32.const 0))
  (global $~lib/rt/itcms/total (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/threshold (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/state (mut i32) (i32.const 0))
@@ -20,9 +26,6 @@
  (global $~lib/rt/itcms/iter (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/toSpace (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/white (mut i32) (i32.const 0))
- (global $~lib/shared/runtime/Runtime.Stub i32 (i32.const 0))
- (global $~lib/shared/runtime/Runtime.Minimal i32 (i32.const 1))
- (global $~lib/shared/runtime/Runtime.Incremental i32 (i32.const 2))
  (global $~lib/rt/itcms/fromSpace (mut i32) (i32.const 0))
  (global $~lib/rt/tlsf/ROOT (mut i32) (i32.const 0))
  (global $~lib/native/ASC_LOW_MEMORY_LIMIT i32 (i32.const 0))
@@ -34,52 +37,63 @@
  (global $~lib/native/ASC_RUNTIME i32 (i32.const 2))
  (global $closure/counter1 (mut i32) (i32.const 0))
  (global $closure/counter2 (mut i32) (i32.const 0))
- (global $~lib/rt/__rtti_base i32 (i32.const 1584))
- (global $~lib/memory/__data_end i32 (i32.const 1648))
- (global $~lib/memory/__stack_pointer (mut i32) (i32.const 34416))
- (global $~lib/memory/__heap_base i32 (i32.const 34416))
+ (global $~lib/rt/__rtti_base i32 (i32.const 3552))
+ (global $~lib/memory/__data_end i32 (i32.const 3616))
+ (global $~lib/memory/__stack_pointer (mut i32) (i32.const 36384))
+ (global $~lib/memory/__heap_base i32 (i32.const 36384))
  (memory $0 1)
  (data $0 (i32.const 12) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00")
- (data $1 (i32.const 44) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e\00\00\00\00\00")
- (data $2 (i32.const 108) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00 \00\00\00~\00l\00i\00b\00/\00r\00t\00/\00i\00t\00c\00m\00s\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $3 (i32.const 176) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $4 (i32.const 208) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $5 (i32.const 236) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00$\00\00\00I\00n\00d\00e\00x\00 \00o\00u\00t\00 \00o\00f\00 \00r\00a\00n\00g\00e\00\00\00\00\00\00\00\00\00")
- (data $6 (i32.const 300) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\14\00\00\00~\00l\00i\00b\00/\00r\00t\00.\00t\00s\00\00\00\00\00\00\00\00\00")
- (data $7 (i32.const 352) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $8 (i32.const 380) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1e\00\00\00~\00l\00i\00b\00/\00r\00t\00/\00t\00l\00s\00f\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $9 (i32.const 444) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\14\00\00\00c\00l\00o\00s\00u\00r\00e\00.\00t\00s\00\00\00\00\00\00\00\00\00")
- (data $10 (i32.const 492) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\02\00\00\00\00\00\00\00\00\00\00\00")
- (data $11 (i32.const 524) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\03\00\00\00\00\00\00\00\00\00\00\00")
- (data $12 (i32.const 556) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\04\00\00\00\00\00\00\00\00\00\00\00")
- (data $13 (i32.const 588) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\05\00\00\00\00\00\00\00\00\00\00\00")
- (data $14 (i32.const 620) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\06\00\00\00\00\00\00\00\00\00\00\00")
- (data $15 (i32.const 652) "\1c\00\00\00\00\00\00\00\00\00\00\00\06\00\00\00\08\00\00\00\07\00\00\00\00\00\00\00\00\00\00\00")
- (data $16 (i32.const 684) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\08\00\00\00\00\00\00\00\00\00\00\00")
- (data $17 (i32.const 716) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\t\00\00\00\00\00\00\00\00\00\00\00")
- (data $18 (i32.const 748) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\n\00\00\00\00\00\00\00\00\00\00\00")
- (data $19 (i32.const 780) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0b\00\00\00\00\00\00\00\00\00\00\00")
- (data $20 (i32.const 812) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0c\00\00\00\00\00\00\00\00\00\00\00")
- (data $21 (i32.const 844) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\r\00\00\00\00\00\00\00\00\00\00\00")
- (data $22 (i32.const 876) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0e\00\00\00\00\00\00\00\00\00\00\00")
- (data $23 (i32.const 908) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\0f\00\00\00\00\00\00\00\00\00\00\00")
- (data $24 (i32.const 940) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\10\00\00\00\00\00\00\00\00\00\00\00")
- (data $25 (i32.const 972) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\11\00\00\00\00\00\00\00\00\00\00\00")
- (data $26 (i32.const 1004) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1a\00\00\00~\00l\00i\00b\00/\00a\00r\00r\00a\00y\00.\00t\00s\00\00\00")
- (data $27 (i32.const 1052) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1c\00\00\00I\00n\00v\00a\00l\00i\00d\00 \00l\00e\00n\00g\00t\00h\00")
- (data $28 (i32.const 1100) "|\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00^\00\00\00E\00l\00e\00m\00e\00n\00t\00 \00t\00y\00p\00e\00 \00m\00u\00s\00t\00 \00b\00e\00 \00n\00u\00l\00l\00a\00b\00l\00e\00 \00i\00f\00 \00a\00r\00r\00a\00y\00 \00i\00s\00 \00h\00o\00l\00e\00y\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $29 (i32.const 1228) "\1c\00\00\00\00\00\00\00\00\00\00\00\t\00\00\00\08\00\00\00\12\00\00\00\00\00\00\00\00\00\00\00")
- (data $30 (i32.const 1260) "\1c\00\00\00\00\00\00\00\00\00\00\00\n\00\00\00\08\00\00\00\13\00\00\00\00\00\00\00\00\00\00\00")
- (data $31 (i32.const 1292) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $32 (i32.const 1324) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\14\00\00\00\00\00\00\00\00\00\00\00")
- (data $33 (i32.const 1356) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data $34 (i32.const 1388) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\15\00\00\00\00\00\00\00\00\00\00\00")
- (data $35 (i32.const 1420) "\1c\00\00\00\00\00\00\00\00\00\00\00\0c\00\00\00\08\00\00\00\16\00\00\00\00\00\00\00\00\00\00\00")
- (data $36 (i32.const 1452) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\17\00\00\00\00\00\00\00\00\00\00\00")
- (data $37 (i32.const 1484) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\18\00\00\00\00\00\00\00\00\00\00\00")
- (data $38 (i32.const 1516) "\1c\00\00\00\00\00\00\00\00\00\00\00\r\00\00\00\08\00\00\00\19\00\00\00\00\00\00\00\00\00\00\00")
- (data $39 (i32.const 1548) "\1c\00\00\00\00\00\00\00\00\00\00\00\0e\00\00\00\08\00\00\00\1a\00\00\00\00\00\00\00\00\00\00\00")
- (data $40 (i32.const 1584) "\0f\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\02A\00\00\02\t\00\00\00\00\00\00\00\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $1 (i32.const 44) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\n\00\00\00a\00b\00o\00r\00t\00\00\00")
+ (data $2 (i32.const 76) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\08\00\00\00 \00i\00n\00 \00\00\00\00\00")
+ (data $3 (i32.const 108) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $4 (i32.const 140) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\02\00\00\00:\00\00\00\00\00\00\00\00\00\00\00")
+ (data $5 (i32.const 172) "|\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00d\00\00\00t\00o\00S\00t\00r\00i\00n\00g\00(\00)\00 \00r\00a\00d\00i\00x\00 \00a\00r\00g\00u\00m\00e\00n\00t\00 \00m\00u\00s\00t\00 \00b\00e\00 \00b\00e\00t\00w\00e\00e\00n\00 \002\00 \00a\00n\00d\00 \003\006\00\00\00\00\00\00\00\00\00")
+ (data $6 (i32.const 300) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00&\00\00\00~\00l\00i\00b\00/\00u\00t\00i\00l\00/\00n\00u\00m\00b\00e\00r\00.\00t\00s\00\00\00\00\00\00\00")
+ (data $7 (i32.const 364) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\02\00\00\000\00\00\00\00\00\00\00\00\00\00\00")
+ (data $8 (i32.const 396) "0\000\000\001\000\002\000\003\000\004\000\005\000\006\000\007\000\008\000\009\001\000\001\001\001\002\001\003\001\004\001\005\001\006\001\007\001\008\001\009\002\000\002\001\002\002\002\003\002\004\002\005\002\006\002\007\002\008\002\009\003\000\003\001\003\002\003\003\003\004\003\005\003\006\003\007\003\008\003\009\004\000\004\001\004\002\004\003\004\004\004\005\004\006\004\007\004\008\004\009\005\000\005\001\005\002\005\003\005\004\005\005\005\006\005\007\005\008\005\009\006\000\006\001\006\002\006\003\006\004\006\005\006\006\006\007\006\008\006\009\007\000\007\001\007\002\007\003\007\004\007\005\007\006\007\007\007\008\007\009\008\000\008\001\008\002\008\003\008\004\008\005\008\006\008\007\008\008\008\009\009\000\009\001\009\002\009\003\009\004\009\005\009\006\009\007\009\008\009\009\00")
+ (data $9 (i32.const 796) "\1c\04\00\00\00\00\00\00\00\00\00\00\02\00\00\00\00\04\00\000\000\000\001\000\002\000\003\000\004\000\005\000\006\000\007\000\008\000\009\000\00a\000\00b\000\00c\000\00d\000\00e\000\00f\001\000\001\001\001\002\001\003\001\004\001\005\001\006\001\007\001\008\001\009\001\00a\001\00b\001\00c\001\00d\001\00e\001\00f\002\000\002\001\002\002\002\003\002\004\002\005\002\006\002\007\002\008\002\009\002\00a\002\00b\002\00c\002\00d\002\00e\002\00f\003\000\003\001\003\002\003\003\003\004\003\005\003\006\003\007\003\008\003\009\003\00a\003\00b\003\00c\003\00d\003\00e\003\00f\004\000\004\001\004\002\004\003\004\004\004\005\004\006\004\007\004\008\004\009\004\00a\004\00b\004\00c\004\00d\004\00e\004\00f\005\000\005\001\005\002\005\003\005\004\005\005\005\006\005\007\005\008\005\009\005\00a\005\00b\005\00c\005\00d\005\00e\005\00f\006\000\006\001\006\002\006\003\006\004\006\005\006\006\006\007\006\008\006\009\006\00a\006\00b\006\00c\006\00d\006\00e\006\00f\007\000\007\001\007\002\007\003\007\004\007\005\007\006\007\007\007\008\007\009\007\00a\007\00b\007\00c\007\00d\007\00e\007\00f\008\000\008\001\008\002\008\003\008\004\008\005\008\006\008\007\008\008\008\009\008\00a\008\00b\008\00c\008\00d\008\00e\008\00f\009\000\009\001\009\002\009\003\009\004\009\005\009\006\009\007\009\008\009\009\009\00a\009\00b\009\00c\009\00d\009\00e\009\00f\00a\000\00a\001\00a\002\00a\003\00a\004\00a\005\00a\006\00a\007\00a\008\00a\009\00a\00a\00a\00b\00a\00c\00a\00d\00a\00e\00a\00f\00b\000\00b\001\00b\002\00b\003\00b\004\00b\005\00b\006\00b\007\00b\008\00b\009\00b\00a\00b\00b\00b\00c\00b\00d\00b\00e\00b\00f\00c\000\00c\001\00c\002\00c\003\00c\004\00c\005\00c\006\00c\007\00c\008\00c\009\00c\00a\00c\00b\00c\00c\00c\00d\00c\00e\00c\00f\00d\000\00d\001\00d\002\00d\003\00d\004\00d\005\00d\006\00d\007\00d\008\00d\009\00d\00a\00d\00b\00d\00c\00d\00d\00d\00e\00d\00f\00e\000\00e\001\00e\002\00e\003\00e\004\00e\005\00e\006\00e\007\00e\008\00e\009\00e\00a\00e\00b\00e\00c\00e\00d\00e\00e\00e\00f\00f\000\00f\001\00f\002\00f\003\00f\004\00f\005\00f\006\00f\007\00f\008\00f\009\00f\00a\00f\00b\00f\00c\00f\00d\00f\00e\00f\00f\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $10 (i32.const 1852) "\\\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00H\00\00\000\001\002\003\004\005\006\007\008\009\00a\00b\00c\00d\00e\00f\00g\00h\00i\00j\00k\00l\00m\00n\00o\00p\00q\00r\00s\00t\00u\00v\00w\00x\00y\00z\00\00\00\00\00")
+ (data $11 (i32.const 1948) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00 \00\00\00~\00l\00i\00b\00/\00b\00u\00i\00l\00t\00i\00n\00s\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $12 (i32.const 2012) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e\00\00\00\00\00")
+ (data $13 (i32.const 2076) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00 \00\00\00~\00l\00i\00b\00/\00r\00t\00/\00i\00t\00c\00m\00s\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $14 (i32.const 2144) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $15 (i32.const 2176) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $16 (i32.const 2204) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00$\00\00\00I\00n\00d\00e\00x\00 \00o\00u\00t\00 \00o\00f\00 \00r\00a\00n\00g\00e\00\00\00\00\00\00\00\00\00")
+ (data $17 (i32.const 2268) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\14\00\00\00~\00l\00i\00b\00/\00r\00t\00.\00t\00s\00\00\00\00\00\00\00\00\00")
+ (data $18 (i32.const 2320) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $19 (i32.const 2348) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1e\00\00\00~\00l\00i\00b\00/\00r\00t\00/\00t\00l\00s\00f\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $20 (i32.const 2412) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\14\00\00\00c\00l\00o\00s\00u\00r\00e\00.\00t\00s\00\00\00\00\00\00\00\00\00")
+ (data $21 (i32.const 2460) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\02\00\00\00\00\00\00\00\00\00\00\00")
+ (data $22 (i32.const 2492) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\03\00\00\00\00\00\00\00\00\00\00\00")
+ (data $23 (i32.const 2524) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\04\00\00\00\00\00\00\00\00\00\00\00")
+ (data $24 (i32.const 2556) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\05\00\00\00\00\00\00\00\00\00\00\00")
+ (data $25 (i32.const 2588) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\06\00\00\00\00\00\00\00\00\00\00\00")
+ (data $26 (i32.const 2620) "\1c\00\00\00\00\00\00\00\00\00\00\00\06\00\00\00\08\00\00\00\07\00\00\00\00\00\00\00\00\00\00\00")
+ (data $27 (i32.const 2652) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\08\00\00\00\00\00\00\00\00\00\00\00")
+ (data $28 (i32.const 2684) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\t\00\00\00\00\00\00\00\00\00\00\00")
+ (data $29 (i32.const 2716) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\n\00\00\00\00\00\00\00\00\00\00\00")
+ (data $30 (i32.const 2748) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0b\00\00\00\00\00\00\00\00\00\00\00")
+ (data $31 (i32.const 2780) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0c\00\00\00\00\00\00\00\00\00\00\00")
+ (data $32 (i32.const 2812) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\r\00\00\00\00\00\00\00\00\00\00\00")
+ (data $33 (i32.const 2844) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\0e\00\00\00\00\00\00\00\00\00\00\00")
+ (data $34 (i32.const 2876) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\0f\00\00\00\00\00\00\00\00\00\00\00")
+ (data $35 (i32.const 2908) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\10\00\00\00\00\00\00\00\00\00\00\00")
+ (data $36 (i32.const 2940) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\11\00\00\00\00\00\00\00\00\00\00\00")
+ (data $37 (i32.const 2972) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1a\00\00\00~\00l\00i\00b\00/\00a\00r\00r\00a\00y\00.\00t\00s\00\00\00")
+ (data $38 (i32.const 3020) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1c\00\00\00I\00n\00v\00a\00l\00i\00d\00 \00l\00e\00n\00g\00t\00h\00")
+ (data $39 (i32.const 3068) "|\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00^\00\00\00E\00l\00e\00m\00e\00n\00t\00 \00t\00y\00p\00e\00 \00m\00u\00s\00t\00 \00b\00e\00 \00n\00u\00l\00l\00a\00b\00l\00e\00 \00i\00f\00 \00a\00r\00r\00a\00y\00 \00i\00s\00 \00h\00o\00l\00e\00y\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $40 (i32.const 3196) "\1c\00\00\00\00\00\00\00\00\00\00\00\t\00\00\00\08\00\00\00\12\00\00\00\00\00\00\00\00\00\00\00")
+ (data $41 (i32.const 3228) "\1c\00\00\00\00\00\00\00\00\00\00\00\n\00\00\00\08\00\00\00\13\00\00\00\00\00\00\00\00\00\00\00")
+ (data $42 (i32.const 3260) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $43 (i32.const 3292) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\14\00\00\00\00\00\00\00\00\00\00\00")
+ (data $44 (i32.const 3324) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data $45 (i32.const 3356) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\15\00\00\00\00\00\00\00\00\00\00\00")
+ (data $46 (i32.const 3388) "\1c\00\00\00\00\00\00\00\00\00\00\00\0c\00\00\00\08\00\00\00\16\00\00\00\00\00\00\00\00\00\00\00")
+ (data $47 (i32.const 3420) "\1c\00\00\00\00\00\00\00\00\00\00\00\05\00\00\00\08\00\00\00\17\00\00\00\00\00\00\00\00\00\00\00")
+ (data $48 (i32.const 3452) "\1c\00\00\00\00\00\00\00\00\00\00\00\04\00\00\00\08\00\00\00\18\00\00\00\00\00\00\00\00\00\00\00")
+ (data $49 (i32.const 3484) "\1c\00\00\00\00\00\00\00\00\00\00\00\r\00\00\00\08\00\00\00\19\00\00\00\00\00\00\00\00\00\00\00")
+ (data $50 (i32.const 3516) "\1c\00\00\00\00\00\00\00\00\00\00\00\0e\00\00\00\08\00\00\00\1a\00\00\00\00\00\00\00\00\00\00\00")
+ (data $51 (i32.const 3552) "\0f\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\02A\00\00\02\t\00\00\00\00\00\00\00\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
  (table $0 27 27 funcref)
  (elem $0 (i32.const 1) $closure/testCaptureParam~anonymous|0 $closure/testCaptureVar~anonymous|0 $closure/testCaptureLet~anonymous|0 $closure/testClosureWrite~anonymous|0 $closure/testClosureWrite~anonymous|1 $closure/testMultipleCaptures~anonymous|0 $closure/testSharedEnvironment~anonymous|0 $closure/testSharedEnvironment~anonymous|1 $closure/testCaptureInWhile~anonymous|0 $closure/testCaptureInDoWhile~anonymous|0 $closure/testCaptureInFor~anonymous|0 $closure/testCaptureInSwitch~anonymous|0 $closure/testCaptureInSwitch~anonymous|1 $closure/testCaptureInSwitch~anonymous|2 $closure/testCaptureInArrayLiteral~anonymous|0 $closure/testCaptureInArrayLiteral~anonymous|1 $closure/testCaptureInArrayLiteral~anonymous|2 $closure/testNestedClosureCapture~anonymous|0~anonymous|0 $closure/testNestedClosureCapture~anonymous|0 $closure/testMultipleClosuresInArray~anonymous|0 $closure/testCaptureInTernary~anonymous|0 $closure/testCaptureFromCondition~anonymous|0 $closure/testDeepLoopCapture~anonymous|0 $closure/makeCounter~anonymous|0 $closure/testDefaultParamCapture~anonymous|0@varargs $closure/testDefaultParamWithOtherParam~anonymous|0@varargs)
  (export "memory" (memory $0))
@@ -90,6 +104,435 @@
   local.set $$closureEnv
   local.get $$closureEnv
   i32.load offset=4
+ )
+ (func $~lib/rt/common/OBJECT#get:rtSize (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=16
+ )
+ (func $~lib/string/String#get:length (param $this i32) (result i32)
+  local.get $this
+  i32.const 20
+  i32.sub
+  call $~lib/rt/common/OBJECT#get:rtSize
+  i32.const 1
+  i32.shr_u
+  return
+ )
+ (func $~lib/util/number/decimalCount32 (param $value i32) (result i32)
+  local.get $value
+  i32.const 100000
+  i32.lt_u
+  if
+   local.get $value
+   i32.const 100
+   i32.lt_u
+   if
+    i32.const 1
+    local.get $value
+    i32.const 10
+    i32.ge_u
+    i32.add
+    return
+   else
+    i32.const 3
+    local.get $value
+    i32.const 10000
+    i32.ge_u
+    i32.add
+    local.get $value
+    i32.const 1000
+    i32.ge_u
+    i32.add
+    return
+   end
+   unreachable
+  else
+   local.get $value
+   i32.const 10000000
+   i32.lt_u
+   if
+    i32.const 6
+    local.get $value
+    i32.const 1000000
+    i32.ge_u
+    i32.add
+    return
+   else
+    i32.const 8
+    local.get $value
+    i32.const 1000000000
+    i32.ge_u
+    i32.add
+    local.get $value
+    i32.const 100000000
+    i32.ge_u
+    i32.add
+    return
+   end
+   unreachable
+  end
+  unreachable
+ )
+ (func $~lib/util/number/utoa32_dec_lut (param $buffer i32) (param $num i32) (param $offset i32)
+  (local $t i32)
+  (local $r i32)
+  (local $d1 i32)
+  (local $d2 i32)
+  (local $digits1 i64)
+  (local $digits2 i64)
+  (local $t|9 i32)
+  (local $d1|10 i32)
+  (local $digits i32)
+  (local $digits|12 i32)
+  (local $digit i32)
+  loop $while-continue|0
+   local.get $num
+   i32.const 10000
+   i32.ge_u
+   if
+    local.get $num
+    i32.const 10000
+    i32.div_u
+    local.set $t
+    local.get $num
+    i32.const 10000
+    i32.rem_u
+    local.set $r
+    local.get $t
+    local.set $num
+    local.get $r
+    i32.const 100
+    i32.div_u
+    local.set $d1
+    local.get $r
+    i32.const 100
+    i32.rem_u
+    local.set $d2
+    i32.const 396
+    local.get $d1
+    i32.const 2
+    i32.shl
+    i32.add
+    i64.load32_u
+    local.set $digits1
+    i32.const 396
+    local.get $d2
+    i32.const 2
+    i32.shl
+    i32.add
+    i64.load32_u
+    local.set $digits2
+    local.get $offset
+    i32.const 4
+    i32.sub
+    local.set $offset
+    local.get $buffer
+    local.get $offset
+    i32.const 1
+    i32.shl
+    i32.add
+    local.get $digits1
+    local.get $digits2
+    i64.const 32
+    i64.shl
+    i64.or
+    i64.store
+    br $while-continue|0
+   end
+  end
+  local.get $num
+  i32.const 100
+  i32.ge_u
+  if
+   local.get $num
+   i32.const 100
+   i32.div_u
+   local.set $t|9
+   local.get $num
+   i32.const 100
+   i32.rem_u
+   local.set $d1|10
+   local.get $t|9
+   local.set $num
+   local.get $offset
+   i32.const 2
+   i32.sub
+   local.set $offset
+   i32.const 396
+   local.get $d1|10
+   i32.const 2
+   i32.shl
+   i32.add
+   i32.load
+   local.set $digits
+   local.get $buffer
+   local.get $offset
+   i32.const 1
+   i32.shl
+   i32.add
+   local.get $digits
+   i32.store
+  end
+  local.get $num
+  i32.const 10
+  i32.ge_u
+  if
+   local.get $offset
+   i32.const 2
+   i32.sub
+   local.set $offset
+   i32.const 396
+   local.get $num
+   i32.const 2
+   i32.shl
+   i32.add
+   i32.load
+   local.set $digits|12
+   local.get $buffer
+   local.get $offset
+   i32.const 1
+   i32.shl
+   i32.add
+   local.get $digits|12
+   i32.store
+  else
+   local.get $offset
+   i32.const 1
+   i32.sub
+   local.set $offset
+   i32.const 48
+   local.get $num
+   i32.add
+   local.set $digit
+   local.get $buffer
+   local.get $offset
+   i32.const 1
+   i32.shl
+   i32.add
+   local.get $digit
+   i32.store16
+  end
+ )
+ (func $~lib/util/number/utoa_hex_lut (param $buffer i32) (param $num i64) (param $offset i32)
+  loop $while-continue|0
+   local.get $offset
+   i32.const 2
+   i32.ge_u
+   if
+    local.get $offset
+    i32.const 2
+    i32.sub
+    local.set $offset
+    local.get $buffer
+    local.get $offset
+    i32.const 1
+    i32.shl
+    i32.add
+    i32.const 816
+    local.get $num
+    i32.wrap_i64
+    i32.const 255
+    i32.and
+    i32.const 2
+    i32.shl
+    i32.add
+    i32.load
+    i32.store
+    local.get $num
+    i64.const 8
+    i64.shr_u
+    local.set $num
+    br $while-continue|0
+   end
+  end
+  local.get $offset
+  i32.const 1
+  i32.and
+  if
+   local.get $buffer
+   i32.const 816
+   local.get $num
+   i32.wrap_i64
+   i32.const 6
+   i32.shl
+   i32.add
+   i32.load16_u
+   i32.store16
+  end
+ )
+ (func $~lib/util/number/ulog_base (param $num i64) (param $base i32) (result i32)
+  (local $value i32)
+  (local $b64 i64)
+  (local $b i64)
+  (local $e i32)
+  block $~lib/util/number/isPowerOf2<i32>|inlined.0 (result i32)
+   local.get $base
+   local.set $value
+   local.get $value
+   i32.popcnt
+   i32.const 1
+   i32.eq
+   br $~lib/util/number/isPowerOf2<i32>|inlined.0
+  end
+  if
+   i32.const 63
+   local.get $num
+   i64.clz
+   i32.wrap_i64
+   i32.sub
+   i32.const 31
+   local.get $base
+   i32.clz
+   i32.sub
+   i32.div_u
+   i32.const 1
+   i32.add
+   return
+  end
+  local.get $base
+  i64.extend_i32_s
+  local.set $b64
+  local.get $b64
+  local.set $b
+  i32.const 1
+  local.set $e
+  loop $while-continue|0
+   local.get $num
+   local.get $b
+   i64.ge_u
+   if
+    local.get $num
+    local.get $b
+    i64.div_u
+    local.set $num
+    local.get $b
+    local.get $b
+    i64.mul
+    local.set $b
+    local.get $e
+    i32.const 1
+    i32.shl
+    local.set $e
+    br $while-continue|0
+   end
+  end
+  loop $while-continue|1
+   local.get $num
+   i64.const 1
+   i64.ge_u
+   if
+    local.get $num
+    local.get $b64
+    i64.div_u
+    local.set $num
+    local.get $e
+    i32.const 1
+    i32.add
+    local.set $e
+    br $while-continue|1
+   end
+  end
+  local.get $e
+  i32.const 1
+  i32.sub
+  return
+ )
+ (func $~lib/util/number/utoa64_any_core (param $buffer i32) (param $num i64) (param $offset i32) (param $radix i32)
+  (local $base i64)
+  (local $shift i64)
+  (local $mask i64)
+  (local $q i64)
+  local.get $radix
+  i64.extend_i32_s
+  local.set $base
+  local.get $radix
+  local.get $radix
+  i32.const 1
+  i32.sub
+  i32.and
+  i32.const 0
+  i32.eq
+  if
+   local.get $radix
+   i32.ctz
+   i32.const 7
+   i32.and
+   i64.extend_i32_s
+   local.set $shift
+   local.get $base
+   i64.const 1
+   i64.sub
+   local.set $mask
+   loop $do-loop|0
+    local.get $offset
+    i32.const 1
+    i32.sub
+    local.set $offset
+    local.get $buffer
+    local.get $offset
+    i32.const 1
+    i32.shl
+    i32.add
+    i32.const 1872
+    local.get $num
+    local.get $mask
+    i64.and
+    i32.wrap_i64
+    i32.const 1
+    i32.shl
+    i32.add
+    i32.load16_u
+    i32.store16
+    local.get $num
+    local.get $shift
+    i64.shr_u
+    local.set $num
+    local.get $num
+    i64.const 0
+    i64.ne
+    br_if $do-loop|0
+   end
+  else
+   loop $do-loop|1
+    local.get $offset
+    i32.const 1
+    i32.sub
+    local.set $offset
+    local.get $num
+    local.get $base
+    i64.div_u
+    local.set $q
+    local.get $buffer
+    local.get $offset
+    i32.const 1
+    i32.shl
+    i32.add
+    i32.const 1872
+    local.get $num
+    local.get $q
+    local.get $base
+    i64.mul
+    i64.sub
+    i32.wrap_i64
+    i32.const 1
+    i32.shl
+    i32.add
+    i32.load16_u
+    i32.store16
+    local.get $q
+    local.set $num
+    local.get $num
+    i64.const 0
+    i64.ne
+    br_if $do-loop|1
+   end
+  end
+ )
+ (func $~lib/number/U32#toString (param $this i32) (param $radix i32) (result i32)
+  local.get $this
+  local.get $radix
+  call $~lib/util/number/utoa32
+  return
  )
  (func $~lib/rt/itcms/Object#set:nextWithColor (param $this i32) (param $nextWithColor i32)
   local.get $this
@@ -155,7 +598,7 @@
     i32.eqz
     if
      i32.const 0
-     i32.const 128
+     i32.const 2096
      i32.const 160
      i32.const 16
      call $~lib/builtins/abort
@@ -225,7 +668,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 128
+    i32.const 2096
     i32.const 128
     i32.const 18
     call $~lib/builtins/abort
@@ -242,7 +685,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 128
+   i32.const 2096
    i32.const 132
    i32.const 16
    call $~lib/builtins/abort
@@ -272,8 +715,8 @@
   i32.load
   i32.gt_u
   if
-   i32.const 256
-   i32.const 320
+   i32.const 2224
+   i32.const 2288
    i32.const 21
    i32.const 28
    call $~lib/builtins/abort
@@ -341,7 +784,7 @@
    i32.eqz
    if (result i32)
     i32.const 0
-    i32.const 128
+    i32.const 2096
     i32.const 148
     i32.const 30
     call $~lib/builtins/abort
@@ -493,7 +936,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 268
    i32.const 14
    call $~lib/builtins/abort
@@ -513,7 +956,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 270
    i32.const 14
    call $~lib/builtins/abort
@@ -576,7 +1019,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 284
    i32.const 14
    call $~lib/builtins/abort
@@ -729,7 +1172,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 201
    i32.const 14
    call $~lib/builtins/abort
@@ -746,7 +1189,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 203
    i32.const 14
    call $~lib/builtins/abort
@@ -835,7 +1278,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 400
+    i32.const 2368
     i32.const 221
     i32.const 16
     call $~lib/builtins/abort
@@ -878,7 +1321,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 233
    i32.const 14
    call $~lib/builtins/abort
@@ -896,7 +1339,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 234
    i32.const 14
    call $~lib/builtins/abort
@@ -964,7 +1407,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 251
    i32.const 14
    call $~lib/builtins/abort
@@ -1081,7 +1524,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 382
    i32.const 14
    call $~lib/builtins/abort
@@ -1127,7 +1570,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 400
+    i32.const 2368
     i32.const 389
     i32.const 16
     call $~lib/builtins/abort
@@ -1159,7 +1602,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 400
+    i32.const 2368
     i32.const 402
     i32.const 5
     call $~lib/builtins/abort
@@ -1403,7 +1846,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 562
    i32.const 3
    call $~lib/builtins/abort
@@ -1623,7 +2066,7 @@
     i32.eqz
     if
      i32.const 0
-     i32.const 128
+     i32.const 2096
      i32.const 229
      i32.const 20
      call $~lib/builtins/abort
@@ -1731,8 +2174,8 @@
   i32.const 1073741820
   i32.gt_u
   if
-   i32.const 64
-   i32.const 400
+   i32.const 2032
+   i32.const 2368
    i32.const 461
    i32.const 29
    call $~lib/builtins/abort
@@ -1834,7 +2277,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 334
    i32.const 14
    call $~lib/builtins/abort
@@ -1905,7 +2348,7 @@
     i32.eqz
     if
      i32.const 0
-     i32.const 400
+     i32.const 2368
      i32.const 347
      i32.const 18
      call $~lib/builtins/abort
@@ -2062,7 +2505,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 361
    i32.const 14
    call $~lib/builtins/abort
@@ -2177,7 +2620,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 400
+    i32.const 2368
     i32.const 499
     i32.const 16
     call $~lib/builtins/abort
@@ -2197,7 +2640,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 400
+   i32.const 2368
    i32.const 501
    i32.const 14
    call $~lib/builtins/abort
@@ -2245,8 +2688,8 @@
   i32.const 1073741804
   i32.ge_u
   if
-   i32.const 64
-   i32.const 128
+   i32.const 2032
+   i32.const 2096
    i32.const 261
    i32.const 31
    call $~lib/builtins/abort
@@ -2575,7 +3018,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 128
+   i32.const 2096
    i32.const 295
    i32.const 14
    call $~lib/builtins/abort
@@ -2868,13 +3311,13 @@
   i32.const 1
   i32.shr_u
   global.set $~lib/rt/itcms/threshold
-  i32.const 176
+  i32.const 2144
   call $~lib/rt/itcms/initLazy
   global.set $~lib/rt/itcms/pinSpace
-  i32.const 208
+  i32.const 2176
   call $~lib/rt/itcms/initLazy
   global.set $~lib/rt/itcms/toSpace
-  i32.const 352
+  i32.const 2320
   call $~lib/rt/itcms/initLazy
   global.set $~lib/rt/itcms/fromSpace
   i32.const 42
@@ -2897,7 +3340,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 6
    i32.const 1
    call $~lib/builtins/abort
@@ -2922,7 +3365,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 14
    i32.const 1
    call $~lib/builtins/abort
@@ -2947,7 +3390,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 22
    i32.const 1
    call $~lib/builtins/abort
@@ -2959,7 +3402,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 34
    i32.const 1
    call $~lib/builtins/abort
@@ -2986,7 +3429,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 42
    i32.const 1
    call $~lib/builtins/abort
@@ -2998,7 +3441,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 53
    i32.const 1
    call $~lib/builtins/abort
@@ -3010,7 +3453,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 70
    i32.const 1
    call $~lib/builtins/abort
@@ -3022,7 +3465,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 83
    i32.const 1
    call $~lib/builtins/abort
@@ -3034,7 +3477,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 94
    i32.const 1
    call $~lib/builtins/abort
@@ -3047,7 +3490,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 118
    i32.const 1
    call $~lib/builtins/abort
@@ -3060,7 +3503,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 119
    i32.const 1
    call $~lib/builtins/abort
@@ -3073,7 +3516,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 120
    i32.const 1
    call $~lib/builtins/abort
@@ -3085,7 +3528,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 133
    i32.const 1
    call $~lib/builtins/abort
@@ -3097,7 +3540,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 144
    i32.const 1
    call $~lib/builtins/abort
@@ -3109,7 +3552,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 161
    i32.const 1
    call $~lib/builtins/abort
@@ -3121,7 +3564,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 174
    i32.const 1
    call $~lib/builtins/abort
@@ -3133,7 +3576,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 186
    i32.const 1
    call $~lib/builtins/abort
@@ -3145,7 +3588,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 200
    i32.const 1
    call $~lib/builtins/abort
@@ -3172,7 +3615,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 212
    i32.const 1
    call $~lib/builtins/abort
@@ -3195,7 +3638,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 213
    i32.const 1
    call $~lib/builtins/abort
@@ -3218,7 +3661,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 214
    i32.const 1
    call $~lib/builtins/abort
@@ -3241,7 +3684,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 215
    i32.const 1
    call $~lib/builtins/abort
@@ -3264,7 +3707,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 216
    i32.const 1
    call $~lib/builtins/abort
@@ -3276,7 +3719,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 224
    i32.const 1
    call $~lib/builtins/abort
@@ -3288,7 +3731,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 232
    i32.const 1
    call $~lib/builtins/abort
@@ -3336,256 +3779,6 @@
   local.get $b
   call $closure/testDefaultParamWithOtherParam~anonymous|0
  )
- (func $~lib/rt/__visit_globals (param $0 i32)
-  (local $1 i32)
-  i32.const 256
-  local.get $0
-  call $~lib/rt/itcms/__visit
-  i32.const 1072
-  local.get $0
-  call $~lib/rt/itcms/__visit
-  i32.const 1120
-  local.get $0
-  call $~lib/rt/itcms/__visit
-  i32.const 64
-  local.get $0
-  call $~lib/rt/itcms/__visit
- )
- (func $~lib/arraybuffer/ArrayBufferView~visit (param $0 i32) (param $1 i32)
-  (local $2 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  i32.load
-  local.get $1
-  call $~lib/rt/itcms/__visit
- )
- (func $~lib/object/Object~visit (param $0 i32) (param $1 i32)
- )
- (func $~lib/function/Function<%28%29=>i32>#get:_env (param $this i32) (result i32)
-  local.get $this
-  i32.load offset=4
- )
- (func $~lib/function/Function<%28%29=>i32>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/function/Function<%28%29=>i32>#__visit
- )
- (func $~lib/function/Function<%28%29=>void>#get:_env (param $this i32) (result i32)
-  local.get $this
-  i32.load offset=4
- )
- (func $~lib/function/Function<%28%29=>void>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/function/Function<%28%29=>void>#__visit
- )
- (func $~lib/function/Function<%28i32%29=>void>#get:_env (param $this i32) (result i32)
-  local.get $this
-  i32.load offset=4
- )
- (func $~lib/function/Function<%28i32%29=>void>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/function/Function<%28i32%29=>void>#__visit
- )
- (func $~lib/array/Array<%28%29=>i32>#get:buffer (param $this i32) (result i32)
-  local.get $this
-  i32.load
- )
- (func $~lib/array/Array<%28%29=>i32>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/array/Array<%28%29=>i32>#__visit
- )
- (func $~lib/array/Array<i32>#get:buffer (param $this i32) (result i32)
-  local.get $this
-  i32.load
- )
- (func $~lib/array/Array<i32>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/array/Array<i32>#__visit
- )
- (func $~lib/function/Function<%28i32%29=>i32>#get:_env (param $this i32) (result i32)
-  local.get $this
-  i32.load offset=4
- )
- (func $~lib/function/Function<%28i32%29=>i32>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/function/Function<%28i32%29=>i32>#__visit
- )
- (func $~lib/function/Function<%28%29=>%28i32%29=>i32>#get:_env (param $this i32) (result i32)
-  local.get $this
-  i32.load offset=4
- )
- (func $~lib/function/Function<%28%29=>%28i32%29=>i32>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/function/Function<%28%29=>%28i32%29=>i32>#__visit
- )
- (func $~lib/array/Array<%28%29=>void>#get:buffer (param $this i32) (result i32)
-  local.get $this
-  i32.load
- )
- (func $~lib/array/Array<%28%29=>void>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/array/Array<%28%29=>void>#__visit
- )
- (func $~lib/function/Function<%28%29=>bool>#get:_env (param $this i32) (result i32)
-  local.get $this
-  i32.load offset=4
- )
- (func $~lib/function/Function<%28%29=>bool>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/function/Function<%28%29=>bool>#__visit
- )
- (func $~lib/function/Function<%28i32?%29=>i32>#get:_env (param $this i32) (result i32)
-  local.get $this
-  i32.load offset=4
- )
- (func $~lib/function/Function<%28i32?%29=>i32>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/function/Function<%28i32?%29=>i32>#__visit
- )
- (func $~lib/function/Function<%28i32%2Ci32?%29=>i32>#get:_env (param $this i32) (result i32)
-  local.get $this
-  i32.load offset=4
- )
- (func $~lib/function/Function<%28i32%2Ci32?%29=>i32>~visit (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  call $~lib/object/Object~visit
-  local.get $0
-  local.get $1
-  call $~lib/function/Function<%28i32%2Ci32?%29=>i32>#__visit
- )
- (func $~lib/rt/__visit_members (param $0 i32) (param $1 i32)
-  block $invalid
-   block $~lib/function/Function<%28i32%2Ci32?%29=>i32>
-    block $~lib/function/Function<%28i32?%29=>i32>
-     block $~lib/function/Function<%28%29=>bool>
-      block $~lib/array/Array<%28%29=>void>
-       block $~lib/function/Function<%28%29=>%28i32%29=>i32>
-        block $~lib/function/Function<%28i32%29=>i32>
-         block $~lib/array/Array<i32>
-          block $~lib/array/Array<%28%29=>i32>
-           block $~lib/function/Function<%28i32%29=>void>
-            block $~lib/function/Function<%28%29=>void>
-             block $~lib/function/Function<%28%29=>i32>
-              block $~lib/arraybuffer/ArrayBufferView
-               block $~lib/string/String
-                block $~lib/arraybuffer/ArrayBuffer
-                 block $~lib/object/Object
-                  local.get $0
-                  i32.const 8
-                  i32.sub
-                  i32.load
-                  br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $~lib/function/Function<%28%29=>i32> $~lib/function/Function<%28%29=>void> $~lib/function/Function<%28i32%29=>void> $~lib/array/Array<%28%29=>i32> $~lib/array/Array<i32> $~lib/function/Function<%28i32%29=>i32> $~lib/function/Function<%28%29=>%28i32%29=>i32> $~lib/array/Array<%28%29=>void> $~lib/function/Function<%28%29=>bool> $~lib/function/Function<%28i32?%29=>i32> $~lib/function/Function<%28i32%2Ci32?%29=>i32> $invalid
-                 end
-                 return
-                end
-                return
-               end
-               return
-              end
-              local.get $0
-              local.get $1
-              call $~lib/arraybuffer/ArrayBufferView~visit
-              return
-             end
-             local.get $0
-             local.get $1
-             call $~lib/function/Function<%28%29=>i32>~visit
-             return
-            end
-            local.get $0
-            local.get $1
-            call $~lib/function/Function<%28%29=>void>~visit
-            return
-           end
-           local.get $0
-           local.get $1
-           call $~lib/function/Function<%28i32%29=>void>~visit
-           return
-          end
-          local.get $0
-          local.get $1
-          call $~lib/array/Array<%28%29=>i32>~visit
-          return
-         end
-         local.get $0
-         local.get $1
-         call $~lib/array/Array<i32>~visit
-         return
-        end
-        local.get $0
-        local.get $1
-        call $~lib/function/Function<%28i32%29=>i32>~visit
-        return
-       end
-       local.get $0
-       local.get $1
-       call $~lib/function/Function<%28%29=>%28i32%29=>i32>~visit
-       return
-      end
-      local.get $0
-      local.get $1
-      call $~lib/array/Array<%28%29=>void>~visit
-      return
-     end
-     local.get $0
-     local.get $1
-     call $~lib/function/Function<%28%29=>bool>~visit
-     return
-    end
-    local.get $0
-    local.get $1
-    call $~lib/function/Function<%28i32?%29=>i32>~visit
-    return
-   end
-   local.get $0
-   local.get $1
-   call $~lib/function/Function<%28i32%2Ci32?%29=>i32>~visit
-   return
-  end
-  unreachable
- )
  (func $~start
   call $start:closure
  )
@@ -3594,13 +3787,218 @@
   global.get $~lib/memory/__data_end
   i32.lt_s
   if
-   i32.const 34448
-   i32.const 34496
+   i32.const 36416
+   i32.const 36464
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
    unreachable
   end
+ )
+ (func $~lib/string/String#concat (param $this i32) (param $other i32) (result i32)
+  (local $thisSize i32)
+  (local $otherSize i32)
+  (local $outSize i32)
+  (local $out i32)
+  (local $6 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $this
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store
+  local.get $6
+  call $~lib/string/String#get:length
+  i32.const 1
+  i32.shl
+  local.set $thisSize
+  local.get $other
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  local.get $6
+  i32.store
+  local.get $6
+  call $~lib/string/String#get:length
+  i32.const 1
+  i32.shl
+  local.set $otherSize
+  local.get $thisSize
+  local.get $otherSize
+  i32.add
+  local.set $outSize
+  local.get $outSize
+  i32.const 0
+  i32.eq
+  if
+   i32.const 128
+   local.set $6
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $6
+   return
+  end
+  global.get $~lib/memory/__stack_pointer
+  local.get $outSize
+  i32.const 2
+  call $~lib/rt/itcms/__new
+  local.tee $out
+  i32.store offset=4
+  local.get $out
+  local.get $this
+  local.get $thisSize
+  memory.copy
+  local.get $out
+  local.get $thisSize
+  i32.add
+  local.get $other
+  local.get $otherSize
+  memory.copy
+  local.get $out
+  local.set $6
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $6
+  return
+ )
+ (func $~lib/string/String.__concat (param $left i32) (param $right i32) (result i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i64.const 0
+  i64.store
+  local.get $left
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  local.get $right
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store offset=4
+  local.get $2
+  call $~lib/string/String#concat
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $2
+  return
+ )
+ (func $~lib/builtins/abort (param $message i32) (param $fileName i32) (param $lineNumber i32) (param $columnNumber i32)
+  (local $fullMessage i32)
+  (local $5 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 40
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 40
+  memory.fill
+  i32.const 1
+  drop
+  global.get $~lib/memory/__stack_pointer
+  local.get $message
+  if (result i32)
+   local.get $message
+  else
+   i32.const 64
+  end
+  local.tee $fullMessage
+  i32.store
+  local.get $fileName
+  if
+   global.get $~lib/memory/__stack_pointer
+   local.get $fullMessage
+   local.set $5
+   global.get $~lib/memory/__stack_pointer
+   local.get $5
+   i32.store offset=4
+   local.get $5
+   i32.const 96
+   local.get $fileName
+   local.set $5
+   global.get $~lib/memory/__stack_pointer
+   local.get $5
+   i32.store offset=36
+   local.get $5
+   call $~lib/string/String.__concat
+   local.set $5
+   global.get $~lib/memory/__stack_pointer
+   local.get $5
+   i32.store offset=32
+   local.get $5
+   i32.const 160
+   call $~lib/string/String.__concat
+   local.set $5
+   global.get $~lib/memory/__stack_pointer
+   local.get $5
+   i32.store offset=24
+   local.get $5
+   local.get $lineNumber
+   i32.const 10
+   call $~lib/number/U32#toString
+   local.set $5
+   global.get $~lib/memory/__stack_pointer
+   local.get $5
+   i32.store offset=28
+   local.get $5
+   call $~lib/string/String.__concat
+   local.set $5
+   global.get $~lib/memory/__stack_pointer
+   local.get $5
+   i32.store offset=20
+   local.get $5
+   i32.const 160
+   call $~lib/string/String.__concat
+   local.set $5
+   global.get $~lib/memory/__stack_pointer
+   local.get $5
+   i32.store offset=12
+   local.get $5
+   local.get $columnNumber
+   i32.const 10
+   call $~lib/number/U32#toString
+   local.set $5
+   global.get $~lib/memory/__stack_pointer
+   local.get $5
+   i32.store offset=16
+   local.get $5
+   call $~lib/string/String.__concat
+   local.set $5
+   global.get $~lib/memory/__stack_pointer
+   local.get $5
+   i32.store offset=8
+   local.get $5
+   call $~lib/string/String.__concat
+   local.tee $fullMessage
+   i32.store
+  end
+  local.get $fullMessage
+  i32.const 1968
+  i32.const 2626
+  i32.const 5
+  call $~lib/builtins/abort
+  unreachable
  )
  (func $~lib/array/ensureCapacity (param $array i32) (param $newSize i32) (param $alignLog2 i32) (param $canGrow i32)
   (local $oldCapacity i32)
@@ -3642,8 +4040,8 @@
    i32.shr_u
    i32.gt_u
    if
-    i32.const 1072
-    i32.const 1024
+    i32.const 3040
+    i32.const 2992
     i32.const 19
     i32.const 48
     call $~lib/builtins/abort
@@ -3745,8 +4143,8 @@
    i32.const 0
    i32.lt_s
    if
-    i32.const 256
-    i32.const 1024
+    i32.const 2224
+    i32.const 2992
     i32.const 130
     i32.const 22
     call $~lib/builtins/abort
@@ -3815,8 +4213,8 @@
   call $~lib/array/Array<%28%29=>i32>#get:length_
   i32.ge_u
   if
-   i32.const 256
-   i32.const 1024
+   i32.const 2224
+   i32.const 2992
    i32.const 114
    i32.const 42
    call $~lib/builtins/abort
@@ -3845,8 +4243,8 @@
   local.get $value
   i32.eqz
   if
-   i32.const 1120
-   i32.const 1024
+   i32.const 3088
+   i32.const 2992
    i32.const 118
    i32.const 40
    call $~lib/builtins/abort
@@ -4127,8 +4525,8 @@
   call $~lib/array/Array<%28%29=>void>#get:length_
   i32.ge_u
   if
-   i32.const 256
-   i32.const 1024
+   i32.const 2224
+   i32.const 2992
    i32.const 114
    i32.const 42
    call $~lib/builtins/abort
@@ -4157,8 +4555,8 @@
   local.get $value
   i32.eqz
   if
-   i32.const 1120
-   i32.const 1024
+   i32.const 3088
+   i32.const 2992
    i32.const 118
    i32.const 40
    call $~lib/builtins/abort
@@ -4207,7 +4605,7 @@
   i32.const 0
   i32.const 2
   i32.const 11
-  i32.const 1376
+  i32.const 3344
   call $~lib/rt/__newArray
   local.tee $incrementers
   i32.store
@@ -4298,8 +4696,18 @@
   local.get $8
   return
  )
- (func $~lib/function/Function<%28%29=>i32>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
+ (func $~lib/util/number/utoa32 (param $value i32) (param $radix i32) (result i32)
+  (local $out i32)
+  (local $decimals i32)
+  (local $buffer i32)
+  (local $num i32)
+  (local $offset i32)
+  (local $decimals|7 i32)
+  (local $buffer|8 i32)
+  (local $num|9 i32)
+  (local $offset|10 i32)
+  (local $decimals|11 i32)
+  (local $12 i32)
   global.get $~lib/memory/__stack_pointer
   i32.const 4
   i32.sub
@@ -4308,353 +4716,132 @@
   global.get $~lib/memory/__stack_pointer
   i32.const 0
   i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28%29=>i32>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28%29=>void>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28%29=>void>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28i32%29=>void>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28i32%29=>void>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/array/Array<%28%29=>i32>#__visit (param $this i32) (param $cookie i32)
-  (local $cur i32)
-  (local $end i32)
-  (local $val i32)
-  (local $5 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  i32.const 1
-  drop
-  local.get $this
-  local.set $5
-  global.get $~lib/memory/__stack_pointer
-  local.get $5
-  i32.store
-  local.get $5
-  call $~lib/array/Array<%28%29=>i32>#get:dataStart
-  local.set $cur
-  local.get $cur
-  local.get $this
-  local.set $5
-  global.get $~lib/memory/__stack_pointer
-  local.get $5
-  i32.store
-  local.get $5
-  call $~lib/array/Array<%28%29=>i32>#get:length_
+  local.get $radix
   i32.const 2
-  i32.shl
-  i32.add
-  local.set $end
-  loop $while-continue|0
-   local.get $cur
-   local.get $end
-   i32.lt_u
+  i32.lt_s
+  if (result i32)
+   i32.const 1
+  else
+   local.get $radix
+   i32.const 36
+   i32.gt_s
+  end
+  if
+   i32.const 192
+   i32.const 320
+   i32.const 350
+   i32.const 5
+   call $~lib/builtins/abort
+   unreachable
+  end
+  local.get $value
+  i32.eqz
+  if
+   i32.const 384
+   local.set $12
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $12
+   return
+  end
+  local.get $radix
+  i32.const 10
+  i32.eq
+  if
+   local.get $value
+   call $~lib/util/number/decimalCount32
+   local.set $decimals
+   global.get $~lib/memory/__stack_pointer
+   local.get $decimals
+   i32.const 1
+   i32.shl
+   i32.const 2
+   call $~lib/rt/itcms/__new
+   local.tee $out
+   i32.store
+   local.get $out
+   local.set $buffer
+   local.get $value
+   local.set $num
+   local.get $decimals
+   local.set $offset
+   i32.const 0
+   i32.const 1
+   i32.ge_s
+   drop
+   local.get $buffer
+   local.get $num
+   local.get $offset
+   call $~lib/util/number/utoa32_dec_lut
+  else
+   local.get $radix
+   i32.const 16
+   i32.eq
    if
-    local.get $cur
-    i32.load
-    local.set $val
-    local.get $val
-    if
-     local.get $val
-     local.get $cookie
-     call $~lib/rt/itcms/__visit
-    end
-    local.get $cur
-    i32.const 4
+    i32.const 31
+    local.get $value
+    i32.clz
+    i32.sub
+    i32.const 2
+    i32.shr_s
+    i32.const 1
     i32.add
-    local.set $cur
-    br $while-continue|0
+    local.set $decimals|7
+    global.get $~lib/memory/__stack_pointer
+    local.get $decimals|7
+    i32.const 1
+    i32.shl
+    i32.const 2
+    call $~lib/rt/itcms/__new
+    local.tee $out
+    i32.store
+    local.get $out
+    local.set $buffer|8
+    local.get $value
+    local.set $num|9
+    local.get $decimals|7
+    local.set $offset|10
+    i32.const 0
+    i32.const 1
+    i32.ge_s
+    drop
+    local.get $buffer|8
+    local.get $num|9
+    i64.extend_i32_u
+    local.get $offset|10
+    call $~lib/util/number/utoa_hex_lut
+   else
+    local.get $value
+    i64.extend_i32_u
+    local.get $radix
+    call $~lib/util/number/ulog_base
+    local.set $decimals|11
+    global.get $~lib/memory/__stack_pointer
+    local.get $decimals|11
+    i32.const 1
+    i32.shl
+    i32.const 2
+    call $~lib/rt/itcms/__new
+    local.tee $out
+    i32.store
+    local.get $out
+    local.get $value
+    i64.extend_i32_u
+    local.get $decimals|11
+    local.get $radix
+    call $~lib/util/number/utoa64_any_core
    end
   end
-  local.get $this
-  local.set $5
-  global.get $~lib/memory/__stack_pointer
-  local.get $5
-  i32.store
-  local.get $5
-  call $~lib/array/Array<%28%29=>i32>#get:buffer
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
+  local.get $out
+  local.set $12
   global.get $~lib/memory/__stack_pointer
   i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/array/Array<i32>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  i32.const 0
-  drop
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/array/Array<i32>#get:buffer
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28i32%29=>i32>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28i32%29=>i32>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28%29=>%28i32%29=>i32>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28%29=>%28i32%29=>i32>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/array/Array<%28%29=>void>#__visit (param $this i32) (param $cookie i32)
-  (local $cur i32)
-  (local $end i32)
-  (local $val i32)
-  (local $5 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  i32.const 1
-  drop
-  local.get $this
-  local.set $5
-  global.get $~lib/memory/__stack_pointer
-  local.get $5
-  i32.store
-  local.get $5
-  call $~lib/array/Array<%28%29=>void>#get:dataStart
-  local.set $cur
-  local.get $cur
-  local.get $this
-  local.set $5
-  global.get $~lib/memory/__stack_pointer
-  local.get $5
-  i32.store
-  local.get $5
-  call $~lib/array/Array<%28%29=>void>#get:length_
-  i32.const 2
-  i32.shl
-  i32.add
-  local.set $end
-  loop $while-continue|0
-   local.get $cur
-   local.get $end
-   i32.lt_u
-   if
-    local.get $cur
-    i32.load
-    local.set $val
-    local.get $val
-    if
-     local.get $val
-     local.get $cookie
-     call $~lib/rt/itcms/__visit
-    end
-    local.get $cur
-    i32.const 4
-    i32.add
-    local.set $cur
-    br $while-continue|0
-   end
-  end
-  local.get $this
-  local.set $5
-  global.get $~lib/memory/__stack_pointer
-  local.get $5
-  i32.store
-  local.get $5
-  call $~lib/array/Array<%28%29=>void>#get:buffer
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28%29=>bool>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28%29=>bool>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28i32?%29=>i32>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28i32?%29=>i32>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $~lib/function/Function<%28i32%2Ci32?%29=>i32>#__visit (param $this i32) (param $cookie i32)
-  (local $2 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  i32.const 0
-  i32.store
-  local.get $this
-  local.set $2
-  global.get $~lib/memory/__stack_pointer
-  local.get $2
-  i32.store
-  local.get $2
-  call $~lib/function/Function<%28i32%2Ci32?%29=>i32>#get:_env
-  local.get $cookie
-  call $~lib/rt/itcms/__visit
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
+  local.get $12
+  return
  )
  (func $closure/testClosureWrite (result i32)
   (local $$env i32)
@@ -5437,7 +5624,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 170
    i32.const 3
    call $~lib/builtins/abort
@@ -5531,7 +5718,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 464
+   i32.const 2432
    i32.const 182
    i32.const 3
    call $~lib/builtins/abort
@@ -5781,5 +5968,619 @@
   global.set $~lib/memory/__stack_pointer
   local.get $5
   return
+ )
+ (func $~lib/rt/__visit_globals (param $0 i32)
+  (local $1 i32)
+  i32.const 2224
+  local.get $0
+  call $~lib/rt/itcms/__visit
+  i32.const 3040
+  local.get $0
+  call $~lib/rt/itcms/__visit
+  i32.const 3088
+  local.get $0
+  call $~lib/rt/itcms/__visit
+  i32.const 2032
+  local.get $0
+  call $~lib/rt/itcms/__visit
+  i32.const 816
+  local.get $0
+  call $~lib/rt/itcms/__visit
+  i32.const 1872
+  local.get $0
+  call $~lib/rt/itcms/__visit
+ )
+ (func $~lib/arraybuffer/ArrayBufferView~visit (param $0 i32) (param $1 i32)
+  (local $2 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  i32.load
+  local.get $1
+  call $~lib/rt/itcms/__visit
+ )
+ (func $~lib/object/Object~visit (param $0 i32) (param $1 i32)
+ )
+ (func $~lib/function/Function<%28%29=>i32>#get:_env (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
+ (func $~lib/function/Function<%28%29=>i32>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/function/Function<%28%29=>i32>#__visit
+ )
+ (func $~lib/function/Function<%28%29=>void>#get:_env (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
+ (func $~lib/function/Function<%28%29=>void>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/function/Function<%28%29=>void>#__visit
+ )
+ (func $~lib/function/Function<%28i32%29=>void>#get:_env (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
+ (func $~lib/function/Function<%28i32%29=>void>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/function/Function<%28i32%29=>void>#__visit
+ )
+ (func $~lib/array/Array<%28%29=>i32>#get:buffer (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $~lib/array/Array<%28%29=>i32>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/array/Array<%28%29=>i32>#__visit
+ )
+ (func $~lib/array/Array<i32>#get:buffer (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $~lib/array/Array<i32>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/array/Array<i32>#__visit
+ )
+ (func $~lib/function/Function<%28i32%29=>i32>#get:_env (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
+ (func $~lib/function/Function<%28i32%29=>i32>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/function/Function<%28i32%29=>i32>#__visit
+ )
+ (func $~lib/function/Function<%28%29=>%28i32%29=>i32>#get:_env (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
+ (func $~lib/function/Function<%28%29=>%28i32%29=>i32>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/function/Function<%28%29=>%28i32%29=>i32>#__visit
+ )
+ (func $~lib/array/Array<%28%29=>void>#get:buffer (param $this i32) (result i32)
+  local.get $this
+  i32.load
+ )
+ (func $~lib/array/Array<%28%29=>void>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/array/Array<%28%29=>void>#__visit
+ )
+ (func $~lib/function/Function<%28%29=>bool>#get:_env (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
+ (func $~lib/function/Function<%28%29=>bool>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/function/Function<%28%29=>bool>#__visit
+ )
+ (func $~lib/function/Function<%28i32?%29=>i32>#get:_env (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
+ (func $~lib/function/Function<%28i32?%29=>i32>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/function/Function<%28i32?%29=>i32>#__visit
+ )
+ (func $~lib/function/Function<%28i32%2Ci32?%29=>i32>#get:_env (param $this i32) (result i32)
+  local.get $this
+  i32.load offset=4
+ )
+ (func $~lib/function/Function<%28i32%2Ci32?%29=>i32>~visit (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  call $~lib/object/Object~visit
+  local.get $0
+  local.get $1
+  call $~lib/function/Function<%28i32%2Ci32?%29=>i32>#__visit
+ )
+ (func $~lib/rt/__visit_members (param $0 i32) (param $1 i32)
+  block $invalid
+   block $~lib/function/Function<%28i32%2Ci32?%29=>i32>
+    block $~lib/function/Function<%28i32?%29=>i32>
+     block $~lib/function/Function<%28%29=>bool>
+      block $~lib/array/Array<%28%29=>void>
+       block $~lib/function/Function<%28%29=>%28i32%29=>i32>
+        block $~lib/function/Function<%28i32%29=>i32>
+         block $~lib/array/Array<i32>
+          block $~lib/array/Array<%28%29=>i32>
+           block $~lib/function/Function<%28i32%29=>void>
+            block $~lib/function/Function<%28%29=>void>
+             block $~lib/function/Function<%28%29=>i32>
+              block $~lib/arraybuffer/ArrayBufferView
+               block $~lib/string/String
+                block $~lib/arraybuffer/ArrayBuffer
+                 block $~lib/object/Object
+                  local.get $0
+                  i32.const 8
+                  i32.sub
+                  i32.load
+                  br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $~lib/function/Function<%28%29=>i32> $~lib/function/Function<%28%29=>void> $~lib/function/Function<%28i32%29=>void> $~lib/array/Array<%28%29=>i32> $~lib/array/Array<i32> $~lib/function/Function<%28i32%29=>i32> $~lib/function/Function<%28%29=>%28i32%29=>i32> $~lib/array/Array<%28%29=>void> $~lib/function/Function<%28%29=>bool> $~lib/function/Function<%28i32?%29=>i32> $~lib/function/Function<%28i32%2Ci32?%29=>i32> $invalid
+                 end
+                 return
+                end
+                return
+               end
+               return
+              end
+              local.get $0
+              local.get $1
+              call $~lib/arraybuffer/ArrayBufferView~visit
+              return
+             end
+             local.get $0
+             local.get $1
+             call $~lib/function/Function<%28%29=>i32>~visit
+             return
+            end
+            local.get $0
+            local.get $1
+            call $~lib/function/Function<%28%29=>void>~visit
+            return
+           end
+           local.get $0
+           local.get $1
+           call $~lib/function/Function<%28i32%29=>void>~visit
+           return
+          end
+          local.get $0
+          local.get $1
+          call $~lib/array/Array<%28%29=>i32>~visit
+          return
+         end
+         local.get $0
+         local.get $1
+         call $~lib/array/Array<i32>~visit
+         return
+        end
+        local.get $0
+        local.get $1
+        call $~lib/function/Function<%28i32%29=>i32>~visit
+        return
+       end
+       local.get $0
+       local.get $1
+       call $~lib/function/Function<%28%29=>%28i32%29=>i32>~visit
+       return
+      end
+      local.get $0
+      local.get $1
+      call $~lib/array/Array<%28%29=>void>~visit
+      return
+     end
+     local.get $0
+     local.get $1
+     call $~lib/function/Function<%28%29=>bool>~visit
+     return
+    end
+    local.get $0
+    local.get $1
+    call $~lib/function/Function<%28i32?%29=>i32>~visit
+    return
+   end
+   local.get $0
+   local.get $1
+   call $~lib/function/Function<%28i32%2Ci32?%29=>i32>~visit
+   return
+  end
+  unreachable
+ )
+ (func $~lib/function/Function<%28%29=>i32>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28%29=>i32>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/function/Function<%28%29=>void>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28%29=>void>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/function/Function<%28i32%29=>void>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28i32%29=>void>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/array/Array<%28%29=>i32>#__visit (param $this i32) (param $cookie i32)
+  (local $cur i32)
+  (local $end i32)
+  (local $val i32)
+  (local $5 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  i32.const 1
+  drop
+  local.get $this
+  local.set $5
+  global.get $~lib/memory/__stack_pointer
+  local.get $5
+  i32.store
+  local.get $5
+  call $~lib/array/Array<%28%29=>i32>#get:dataStart
+  local.set $cur
+  local.get $cur
+  local.get $this
+  local.set $5
+  global.get $~lib/memory/__stack_pointer
+  local.get $5
+  i32.store
+  local.get $5
+  call $~lib/array/Array<%28%29=>i32>#get:length_
+  i32.const 2
+  i32.shl
+  i32.add
+  local.set $end
+  loop $while-continue|0
+   local.get $cur
+   local.get $end
+   i32.lt_u
+   if
+    local.get $cur
+    i32.load
+    local.set $val
+    local.get $val
+    if
+     local.get $val
+     local.get $cookie
+     call $~lib/rt/itcms/__visit
+    end
+    local.get $cur
+    i32.const 4
+    i32.add
+    local.set $cur
+    br $while-continue|0
+   end
+  end
+  local.get $this
+  local.set $5
+  global.get $~lib/memory/__stack_pointer
+  local.get $5
+  i32.store
+  local.get $5
+  call $~lib/array/Array<%28%29=>i32>#get:buffer
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/array/Array<i32>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  i32.const 0
+  drop
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/array/Array<i32>#get:buffer
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/function/Function<%28i32%29=>i32>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28i32%29=>i32>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/function/Function<%28%29=>%28i32%29=>i32>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28%29=>%28i32%29=>i32>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/array/Array<%28%29=>void>#__visit (param $this i32) (param $cookie i32)
+  (local $cur i32)
+  (local $end i32)
+  (local $val i32)
+  (local $5 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  i32.const 1
+  drop
+  local.get $this
+  local.set $5
+  global.get $~lib/memory/__stack_pointer
+  local.get $5
+  i32.store
+  local.get $5
+  call $~lib/array/Array<%28%29=>void>#get:dataStart
+  local.set $cur
+  local.get $cur
+  local.get $this
+  local.set $5
+  global.get $~lib/memory/__stack_pointer
+  local.get $5
+  i32.store
+  local.get $5
+  call $~lib/array/Array<%28%29=>void>#get:length_
+  i32.const 2
+  i32.shl
+  i32.add
+  local.set $end
+  loop $while-continue|0
+   local.get $cur
+   local.get $end
+   i32.lt_u
+   if
+    local.get $cur
+    i32.load
+    local.set $val
+    local.get $val
+    if
+     local.get $val
+     local.get $cookie
+     call $~lib/rt/itcms/__visit
+    end
+    local.get $cur
+    i32.const 4
+    i32.add
+    local.set $cur
+    br $while-continue|0
+   end
+  end
+  local.get $this
+  local.set $5
+  global.get $~lib/memory/__stack_pointer
+  local.get $5
+  i32.store
+  local.get $5
+  call $~lib/array/Array<%28%29=>void>#get:buffer
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/function/Function<%28%29=>bool>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28%29=>bool>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/function/Function<%28i32?%29=>i32>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28i32?%29=>i32>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $~lib/function/Function<%28i32%2Ci32?%29=>i32>#__visit (param $this i32) (param $cookie i32)
+  (local $2 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  local.get $this
+  local.set $2
+  global.get $~lib/memory/__stack_pointer
+  local.get $2
+  i32.store
+  local.get $2
+  call $~lib/function/Function<%28i32%2Ci32?%29=>i32>#get:_env
+  local.get $cookie
+  call $~lib/rt/itcms/__visit
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
  )
 )

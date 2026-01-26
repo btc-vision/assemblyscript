@@ -651,11 +651,9 @@ export class Compiler extends DiagnosticEmitter {
       }
     }
 
-    // finalize runtime features (RTTI must be compiled here as it affects memory layout)
+    // finalize runtime features (RTTI only - visitGlobals/visitMembers are compiled after shadow stack pass)
     module.removeGlobal(BuiltinNames.rtti_base);
     if (this.runtimeFeatures & RuntimeFeatures.Rtti) compileRTTI(this);
-    // NOTE: compileVisitGlobals and compileVisitMembers are deferred until after
-    // custom passes (like shadow stack) that may trigger additional compilations
 
     let memoryOffset = i64_align(this.memoryOffset, options.usizeType.byteSize);
 
@@ -757,17 +755,23 @@ export class Compiler extends DiagnosticEmitter {
       }
     }
 
-    // Run custom passes
+    // Run shadow stack pass first (may trigger compilation of functions that need visit functions)
     if (hasShadowStack) {
       this.shadowStack.walkModule();
     }
+
+    // Compile visit functions after shadow stack pass (which may have set runtimeFeatures flags)
+    if (this.runtimeFeatures & RuntimeFeatures.visitGlobals) compileVisitGlobals(this);
+    if (this.runtimeFeatures & RuntimeFeatures.visitMembers) compileVisitMembers(this);
+
+    // Run shadow stack pass again with a fresh instance to transform any __tostack calls in visit functions
+    if (hasShadowStack && (this.runtimeFeatures & (RuntimeFeatures.visitGlobals | RuntimeFeatures.visitMembers))) {
+      new ShadowStackPass(this).walkModule();
+    }
+
     if (program.lookup("ASC_RTRACE") != null) {
       new RtraceMemory(this).walkModule();
     }
-
-    // Finalize visit functions after custom passes that may trigger additional compilations
-    if (this.runtimeFeatures & RuntimeFeatures.visitGlobals) compileVisitGlobals(this);
-    if (this.runtimeFeatures & RuntimeFeatures.visitMembers) compileVisitMembers(this);
 
     return module;
   }

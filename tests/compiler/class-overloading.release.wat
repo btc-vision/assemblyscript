@@ -2,12 +2,11 @@
  (type $0 (func (param i32) (result i32)))
  (type $1 (func))
  (type $2 (func (param i32)))
- (type $3 (func (param i32 i32)))
- (type $4 (func (param i32 i32 i32 i32)))
+ (type $3 (func (param i32 i32) (result i32)))
+ (type $4 (func (param i32 i32)))
  (type $5 (func (param i32 i32 i64)))
  (type $6 (func (result i32)))
- (type $7 (func (param i32 i32) (result i32)))
- (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
+ (type $7 (func (param i32 i32 i32 i32)))
  (global $class-overloading/which (mut i32) (i32.const 1056))
  (global $~lib/rt/itcms/total (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/threshold (mut i32) (i32.const 0))
@@ -24,40 +23,257 @@
  (global $class-overloading/ia (mut i32) (i32.const 0))
  (global $class-overloading/ic (mut i32) (i32.const 0))
  (global $class-overloading/b2 (mut i32) (i32.const 0))
- (global $~lib/memory/__stack_pointer (mut i32) (i32.const 34636))
+ (global $~lib/memory/__stack_pointer (mut i32) (i32.const 36572))
  (global $~started (mut i32) (i32.const 0))
  (memory $0 1)
  (data $0 (i32.const 1036) "\1c")
  (data $0.1 (i32.const 1048) "\02")
- (data $1 (i32.const 1068) "<")
- (data $1.1 (i32.const 1080) "\02\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e")
- (data $2 (i32.const 1132) "<")
- (data $2.1 (i32.const 1144) "\02\00\00\00 \00\00\00~\00l\00i\00b\00/\00r\00t\00/\00i\00t\00c\00m\00s\00.\00t\00s")
- (data $5 (i32.const 1260) "<")
- (data $5.1 (i32.const 1272) "\02\00\00\00$\00\00\00I\00n\00d\00e\00x\00 \00o\00u\00t\00 \00o\00f\00 \00r\00a\00n\00g\00e")
- (data $6 (i32.const 1324) ",")
- (data $6.1 (i32.const 1336) "\02\00\00\00\14\00\00\00~\00l\00i\00b\00/\00r\00t\00.\00t\00s")
- (data $8 (i32.const 1404) "<")
- (data $8.1 (i32.const 1416) "\02\00\00\00\1e\00\00\00~\00l\00i\00b\00/\00r\00t\00/\00t\00l\00s\00f\00.\00t\00s")
- (data $9 (i32.const 1468) "\1c")
- (data $9.1 (i32.const 1480) "\02\00\00\00\02\00\00\00A")
- (data $10 (i32.const 1500) "\1c")
- (data $10.1 (i32.const 1512) "\02\00\00\00\02\00\00\00B")
- (data $11 (i32.const 1532) "<")
- (data $11.1 (i32.const 1544) "\02\00\00\00(\00\00\00c\00l\00a\00s\00s\00-\00o\00v\00e\00r\00l\00o\00a\00d\00i\00n\00g\00.\00t\00s")
- (data $12 (i32.const 1596) "\1c")
- (data $12.1 (i32.const 1608) "\02\00\00\00\02\00\00\00C")
- (data $13 (i32.const 1628) "\1c")
- (data $13.1 (i32.const 1640) "\02\00\00\00\02\00\00\00F")
- (data $14 (i32.const 1660) "\1c")
- (data $14.1 (i32.const 1672) "\02\00\00\00\04\00\00\00I\00B")
- (data $15 (i32.const 1692) "\1c")
- (data $15.1 (i32.const 1704) "\02\00\00\00\04\00\00\00I\00C")
- (data $16 (i32.const 1724) "<")
- (data $16.1 (i32.const 1736) "\02\00\00\00\1e\00\00\00n\00o\00t\00 \00i\00m\00p\00l\00e\00m\00e\00n\00t\00e\00d")
- (data $17 (i32.const 1792) "\12\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 ")
+ (data $1 (i32.const 1068) "\1c")
+ (data $1.1 (i32.const 1080) "\02\00\00\00\n\00\00\00a\00b\00o\00r\00t")
+ (data $2 (i32.const 1100) "\1c")
+ (data $2.1 (i32.const 1112) "\02\00\00\00\08\00\00\00 \00i\00n\00 ")
+ (data $3 (i32.const 1132) "\1c")
+ (data $3.1 (i32.const 1144) "\02\00\00\00\02\00\00\00:")
+ (data $4 (i32.const 1164) "|")
+ (data $4.1 (i32.const 1176) "\02\00\00\00d\00\00\00t\00o\00S\00t\00r\00i\00n\00g\00(\00)\00 \00r\00a\00d\00i\00x\00 \00a\00r\00g\00u\00m\00e\00n\00t\00 \00m\00u\00s\00t\00 \00b\00e\00 \00b\00e\00t\00w\00e\00e\00n\00 \002\00 \00a\00n\00d\00 \003\006")
+ (data $5 (i32.const 1292) "<")
+ (data $5.1 (i32.const 1304) "\02\00\00\00&\00\00\00~\00l\00i\00b\00/\00u\00t\00i\00l\00/\00n\00u\00m\00b\00e\00r\00.\00t\00s")
+ (data $6 (i32.const 1356) "\1c")
+ (data $6.1 (i32.const 1368) "\02\00\00\00\02\00\00\000")
+ (data $7 (i32.const 1388) "0\000\000\001\000\002\000\003\000\004\000\005\000\006\000\007\000\008\000\009\001\000\001\001\001\002\001\003\001\004\001\005\001\006\001\007\001\008\001\009\002\000\002\001\002\002\002\003\002\004\002\005\002\006\002\007\002\008\002\009\003\000\003\001\003\002\003\003\003\004\003\005\003\006\003\007\003\008\003\009\004\000\004\001\004\002\004\003\004\004\004\005\004\006\004\007\004\008\004\009\005\000\005\001\005\002\005\003\005\004\005\005\005\006\005\007\005\008\005\009\006\000\006\001\006\002\006\003\006\004\006\005\006\006\006\007\006\008\006\009\007\000\007\001\007\002\007\003\007\004\007\005\007\006\007\007\007\008\007\009\008\000\008\001\008\002\008\003\008\004\008\005\008\006\008\007\008\008\008\009\009\000\009\001\009\002\009\003\009\004\009\005\009\006\009\007\009\008\009\009")
+ (data $8 (i32.const 1788) "\1c\04")
+ (data $8.1 (i32.const 1800) "\02\00\00\00\00\04\00\000\000\000\001\000\002\000\003\000\004\000\005\000\006\000\007\000\008\000\009\000\00a\000\00b\000\00c\000\00d\000\00e\000\00f\001\000\001\001\001\002\001\003\001\004\001\005\001\006\001\007\001\008\001\009\001\00a\001\00b\001\00c\001\00d\001\00e\001\00f\002\000\002\001\002\002\002\003\002\004\002\005\002\006\002\007\002\008\002\009\002\00a\002\00b\002\00c\002\00d\002\00e\002\00f\003\000\003\001\003\002\003\003\003\004\003\005\003\006\003\007\003\008\003\009\003\00a\003\00b\003\00c\003\00d\003\00e\003\00f\004\000\004\001\004\002\004\003\004\004\004\005\004\006\004\007\004\008\004\009\004\00a\004\00b\004\00c\004\00d\004\00e\004\00f\005\000\005\001\005\002\005\003\005\004\005\005\005\006\005\007\005\008\005\009\005\00a\005\00b\005\00c\005\00d\005\00e\005\00f\006\000\006\001\006\002\006\003\006\004\006\005\006\006\006\007\006\008\006\009\006\00a\006\00b\006\00c\006\00d\006\00e\006\00f\007\000\007\001\007\002\007\003\007\004\007\005\007\006\007\007\007\008\007\009\007\00a\007\00b\007\00c\007\00d\007\00e\007\00f\008\000\008\001\008\002\008\003\008\004\008\005\008\006\008\007\008\008\008\009\008\00a\008\00b\008\00c\008\00d\008\00e\008\00f\009\000\009\001\009\002\009\003\009\004\009\005\009\006\009\007\009\008\009\009\009\00a\009\00b\009\00c\009\00d\009\00e\009\00f\00a\000\00a\001\00a\002\00a\003\00a\004\00a\005\00a\006\00a\007\00a\008\00a\009\00a\00a\00a\00b\00a\00c\00a\00d\00a\00e\00a\00f\00b\000\00b\001\00b\002\00b\003\00b\004\00b\005\00b\006\00b\007\00b\008\00b\009\00b\00a\00b\00b\00b\00c\00b\00d\00b\00e\00b\00f\00c\000\00c\001\00c\002\00c\003\00c\004\00c\005\00c\006\00c\007\00c\008\00c\009\00c\00a\00c\00b\00c\00c\00c\00d\00c\00e\00c\00f\00d\000\00d\001\00d\002\00d\003\00d\004\00d\005\00d\006\00d\007\00d\008\00d\009\00d\00a\00d\00b\00d\00c\00d\00d\00d\00e\00d\00f\00e\000\00e\001\00e\002\00e\003\00e\004\00e\005\00e\006\00e\007\00e\008\00e\009\00e\00a\00e\00b\00e\00c\00e\00d\00e\00e\00e\00f\00f\000\00f\001\00f\002\00f\003\00f\004\00f\005\00f\006\00f\007\00f\008\00f\009\00f\00a\00f\00b\00f\00c\00f\00d\00f\00e\00f\00f")
+ (data $9 (i32.const 2844) "\\")
+ (data $9.1 (i32.const 2856) "\02\00\00\00H\00\00\000\001\002\003\004\005\006\007\008\009\00a\00b\00c\00d\00e\00f\00g\00h\00i\00j\00k\00l\00m\00n\00o\00p\00q\00r\00s\00t\00u\00v\00w\00x\00y\00z")
+ (data $10 (i32.const 2940) "<")
+ (data $10.1 (i32.const 2952) "\02\00\00\00 \00\00\00~\00l\00i\00b\00/\00b\00u\00i\00l\00t\00i\00n\00s\00.\00t\00s")
+ (data $11 (i32.const 3004) "<")
+ (data $11.1 (i32.const 3016) "\02\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e")
+ (data $12 (i32.const 3068) "<")
+ (data $12.1 (i32.const 3080) "\02\00\00\00 \00\00\00~\00l\00i\00b\00/\00r\00t\00/\00i\00t\00c\00m\00s\00.\00t\00s")
+ (data $15 (i32.const 3196) "<")
+ (data $15.1 (i32.const 3208) "\02\00\00\00$\00\00\00I\00n\00d\00e\00x\00 \00o\00u\00t\00 \00o\00f\00 \00r\00a\00n\00g\00e")
+ (data $16 (i32.const 3260) ",")
+ (data $16.1 (i32.const 3272) "\02\00\00\00\14\00\00\00~\00l\00i\00b\00/\00r\00t\00.\00t\00s")
+ (data $18 (i32.const 3340) "<")
+ (data $18.1 (i32.const 3352) "\02\00\00\00\1e\00\00\00~\00l\00i\00b\00/\00r\00t\00/\00t\00l\00s\00f\00.\00t\00s")
+ (data $19 (i32.const 3404) "\1c")
+ (data $19.1 (i32.const 3416) "\02\00\00\00\02\00\00\00A")
+ (data $20 (i32.const 3436) "\1c")
+ (data $20.1 (i32.const 3448) "\02\00\00\00\02\00\00\00B")
+ (data $21 (i32.const 3468) "<")
+ (data $21.1 (i32.const 3480) "\02\00\00\00(\00\00\00c\00l\00a\00s\00s\00-\00o\00v\00e\00r\00l\00o\00a\00d\00i\00n\00g\00.\00t\00s")
+ (data $22 (i32.const 3532) "\1c")
+ (data $22.1 (i32.const 3544) "\02\00\00\00\02\00\00\00C")
+ (data $23 (i32.const 3564) "\1c")
+ (data $23.1 (i32.const 3576) "\02\00\00\00\02\00\00\00F")
+ (data $24 (i32.const 3596) "\1c")
+ (data $24.1 (i32.const 3608) "\02\00\00\00\04\00\00\00I\00B")
+ (data $25 (i32.const 3628) "\1c")
+ (data $25.1 (i32.const 3640) "\02\00\00\00\04\00\00\00I\00C")
+ (data $26 (i32.const 3660) "<")
+ (data $26.1 (i32.const 3672) "\02\00\00\00\1e\00\00\00n\00o\00t\00 \00i\00m\00p\00l\00e\00m\00e\00n\00t\00e\00d")
+ (data $27 (i32.const 3728) "\12\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 \00\00\00 ")
  (export "memory" (memory $0))
  (export "_start" (func $~start))
+ (func $~lib/number/U32#toString (param $0 i32) (result i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $3 i32)
+  local.get $0
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  global.get $~lib/memory/__stack_pointer
+  i32.const 3804
+  i32.lt_s
+  if
+   i32.const 36592
+   i32.const 36640
+   i32.const 1
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.store
+  block $__inlined_func$~lib/util/number/utoa32$1
+   local.get $1
+   i32.eqz
+   if
+    global.get $~lib/memory/__stack_pointer
+    i32.const 4
+    i32.add
+    global.set $~lib/memory/__stack_pointer
+    i32.const 1376
+    local.set $0
+    br $__inlined_func$~lib/util/number/utoa32$1
+   end
+   global.get $~lib/memory/__stack_pointer
+   local.get $1
+   i32.const 100000
+   i32.lt_u
+   if (result i32)
+    local.get $1
+    i32.const 100
+    i32.lt_u
+    if (result i32)
+     local.get $1
+     i32.const 10
+     i32.ge_u
+     i32.const 1
+     i32.add
+    else
+     local.get $1
+     i32.const 10000
+     i32.ge_u
+     i32.const 3
+     i32.add
+     local.get $1
+     i32.const 1000
+     i32.ge_u
+     i32.add
+    end
+   else
+    local.get $1
+    i32.const 10000000
+    i32.lt_u
+    if (result i32)
+     local.get $1
+     i32.const 1000000
+     i32.ge_u
+     i32.const 6
+     i32.add
+    else
+     local.get $1
+     i32.const 1000000000
+     i32.ge_u
+     i32.const 8
+     i32.add
+     local.get $1
+     i32.const 100000000
+     i32.ge_u
+     i32.add
+    end
+   end
+   local.tee $2
+   i32.const 1
+   i32.shl
+   i32.const 2
+   call $~lib/rt/itcms/__new
+   local.tee $0
+   i32.store
+   loop $while-continue|0
+    local.get $1
+    i32.const 10000
+    i32.ge_u
+    if
+     local.get $1
+     i32.const 10000
+     i32.rem_u
+     local.set $3
+     local.get $1
+     i32.const 10000
+     i32.div_u
+     local.set $1
+     local.get $0
+     local.get $2
+     i32.const 4
+     i32.sub
+     local.tee $2
+     i32.const 1
+     i32.shl
+     i32.add
+     local.get $3
+     i32.const 100
+     i32.div_u
+     i32.const 2
+     i32.shl
+     i32.const 1388
+     i32.add
+     i64.load32_u
+     local.get $3
+     i32.const 100
+     i32.rem_u
+     i32.const 2
+     i32.shl
+     i32.const 1388
+     i32.add
+     i64.load32_u
+     i64.const 32
+     i64.shl
+     i64.or
+     i64.store
+     br $while-continue|0
+    end
+   end
+   local.get $1
+   i32.const 100
+   i32.ge_u
+   if
+    local.get $0
+    local.get $2
+    i32.const 2
+    i32.sub
+    local.tee $2
+    i32.const 1
+    i32.shl
+    i32.add
+    local.get $1
+    i32.const 100
+    i32.rem_u
+    i32.const 2
+    i32.shl
+    i32.const 1388
+    i32.add
+    i32.load
+    i32.store
+    local.get $1
+    i32.const 100
+    i32.div_u
+    local.set $1
+   end
+   local.get $1
+   i32.const 10
+   i32.ge_u
+   if
+    local.get $0
+    local.get $2
+    i32.const 2
+    i32.sub
+    i32.const 1
+    i32.shl
+    i32.add
+    local.get $1
+    i32.const 2
+    i32.shl
+    i32.const 1388
+    i32.add
+    i32.load
+    i32.store
+   else
+    local.get $0
+    local.get $2
+    i32.const 1
+    i32.sub
+    i32.const 1
+    i32.shl
+    i32.add
+    local.get $1
+    i32.const 48
+    i32.add
+    i32.store16
+   end
+   global.get $~lib/memory/__stack_pointer
+   i32.const 4
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+  end
+  local.get $0
+ )
  (func $~lib/rt/itcms/visitRoots
   (local $0 i32)
   (local $1 i32)
@@ -97,9 +313,13 @@
    local.get $0
    call $~lib/rt/itcms/__visit
   end
-  i32.const 1280
+  i32.const 3216
   call $~lib/rt/itcms/__visit
-  i32.const 1088
+  i32.const 3024
+  call $~lib/rt/itcms/__visit
+  i32.const 1808
+  call $~lib/rt/itcms/__visit
+  i32.const 2864
   call $~lib/rt/itcms/__visit
   global.get $~lib/rt/itcms/pinSpace
   local.tee $1
@@ -120,7 +340,7 @@
     i32.ne
     if
      i32.const 0
-     i32.const 1152
+     i32.const 3088
      i32.const 160
      i32.const 16
      call $~lib/builtins/abort
@@ -168,7 +388,7 @@
     i32.eqz
     if
      i32.const 0
-     i32.const 1152
+     i32.const 3088
      i32.const 148
      i32.const 30
      call $~lib/builtins/abort
@@ -177,7 +397,7 @@
     local.get $0
     global.set $~lib/rt/itcms/iter
    end
-   block $__inlined_func$~lib/rt/itcms/Object#unlink$171
+   block $__inlined_func$~lib/rt/itcms/Object#unlink$183
     local.get $1
     i32.load offset=4
     i32.const -4
@@ -189,19 +409,19 @@
      i32.load offset=8
      i32.eqz
      local.get $1
-     i32.const 34636
+     i32.const 36572
      i32.lt_u
      i32.and
      i32.eqz
      if
       i32.const 0
-      i32.const 1152
+      i32.const 3088
       i32.const 128
       i32.const 18
       call $~lib/builtins/abort
       unreachable
      end
-     br $__inlined_func$~lib/rt/itcms/Object#unlink$171
+     br $__inlined_func$~lib/rt/itcms/Object#unlink$183
     end
     local.get $1
     i32.load offset=8
@@ -209,7 +429,7 @@
     i32.eqz
     if
      i32.const 0
-     i32.const 1152
+     i32.const 3088
      i32.const 132
      i32.const 16
      call $~lib/builtins/abort
@@ -238,12 +458,12 @@
     i32.const 1
    else
     local.get $0
-    i32.const 1792
+    i32.const 3728
     i32.load
     i32.gt_u
     if
-     i32.const 1280
-     i32.const 1344
+     i32.const 3216
+     i32.const 3280
      i32.const 21
      i32.const 28
      call $~lib/builtins/abort
@@ -252,7 +472,7 @@
     local.get $0
     i32.const 2
     i32.shl
-    i32.const 1796
+    i32.const 3732
     i32.add
     i32.load
     i32.const 32
@@ -304,7 +524,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 268
    i32.const 14
    call $~lib/builtins/abort
@@ -318,7 +538,7 @@
   i32.lt_u
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 270
    i32.const 14
    call $~lib/builtins/abort
@@ -364,7 +584,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 284
    i32.const 14
    call $~lib/builtins/abort
@@ -447,7 +667,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 201
    i32.const 14
    call $~lib/builtins/abort
@@ -461,7 +681,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 203
    i32.const 14
    call $~lib/builtins/abort
@@ -522,7 +742,7 @@
    i32.eqz
    if
     i32.const 0
-    i32.const 1424
+    i32.const 3360
     i32.const 221
     i32.const 16
     call $~lib/builtins/abort
@@ -555,7 +775,7 @@
   i32.lt_u
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 233
    i32.const 14
    call $~lib/builtins/abort
@@ -570,7 +790,7 @@
   i32.ne
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 234
    i32.const 14
    call $~lib/builtins/abort
@@ -621,7 +841,7 @@
   i32.eqz
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 251
    i32.const 14
    call $~lib/builtins/abort
@@ -693,7 +913,7 @@
   i64.lt_u
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 382
    i32.const 14
    call $~lib/builtins/abort
@@ -718,7 +938,7 @@
    i32.gt_u
    if
     i32.const 0
-    i32.const 1424
+    i32.const 3360
     i32.const 389
     i32.const 16
     call $~lib/builtins/abort
@@ -745,7 +965,7 @@
    i32.gt_u
    if
     i32.const 0
-    i32.const 1424
+    i32.const 3360
     i32.const 402
     i32.const 5
     call $~lib/builtins/abort
@@ -817,10 +1037,10 @@
   if
    unreachable
   end
-  i32.const 34640
+  i32.const 36576
   i32.const 0
   i32.store
-  i32.const 36208
+  i32.const 38144
   i32.const 0
   i32.store
   loop $for-loop|0
@@ -831,7 +1051,7 @@
     local.get $0
     i32.const 2
     i32.shl
-    i32.const 34640
+    i32.const 36576
     i32.add
     i32.const 0
     i32.store offset=4
@@ -849,7 +1069,7 @@
       i32.add
       i32.const 2
       i32.shl
-      i32.const 34640
+      i32.const 36576
       i32.add
       i32.const 0
       i32.store offset=96
@@ -867,14 +1087,14 @@
     br $for-loop|0
    end
   end
-  i32.const 34640
-  i32.const 36212
+  i32.const 36576
+  i32.const 38148
   memory.size
   i64.extend_i32_s
   i64.const 16
   i64.shl
   call $~lib/rt/tlsf/addMemory
-  i32.const 34640
+  i32.const 36576
   global.set $~lib/rt/tlsf/ROOT
  )
  (func $~lib/rt/itcms/step (result i32)
@@ -959,7 +1179,7 @@
      local.set $0
      loop $while-continue|0
       local.get $0
-      i32.const 34636
+      i32.const 36572
       i32.lt_u
       if
        local.get $0
@@ -1048,14 +1268,14 @@
     i32.ne
     if
      i32.const 0
-     i32.const 1152
+     i32.const 3088
      i32.const 229
      i32.const 20
      call $~lib/builtins/abort
      unreachable
     end
     local.get $0
-    i32.const 34636
+    i32.const 36572
     i32.lt_u
     if
      local.get $0
@@ -1078,7 +1298,7 @@
      i32.const 4
      i32.add
      local.tee $0
-     i32.const 34636
+     i32.const 36572
      i32.ge_u
      if
       global.get $~lib/rt/tlsf/ROOT
@@ -1107,7 +1327,7 @@
       end
       if
        i32.const 0
-       i32.const 1424
+       i32.const 3360
        i32.const 562
        i32.const 3
        call $~lib/builtins/abort
@@ -1137,18 +1357,85 @@
   end
   i32.const 0
  )
- (func $~lib/rt/tlsf/searchBlock (param $0 i32) (result i32)
-  (local $1 i32)
+ (func $~lib/rt/tlsf/searchBlock (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
+  local.get $1
+  i32.const 256
+  i32.lt_u
+  if
+   local.get $1
+   i32.const 4
+   i32.shr_u
+   local.set $1
+  else
+   local.get $1
+   i32.const 536870910
+   i32.lt_u
+   if
+    local.get $1
+    i32.const 1
+    i32.const 27
+    local.get $1
+    i32.clz
+    i32.sub
+    i32.shl
+    i32.add
+    i32.const 1
+    i32.sub
+    local.set $1
+   end
+   local.get $1
+   i32.const 31
+   local.get $1
+   i32.clz
+   i32.sub
+   local.tee $2
+   i32.const 4
+   i32.sub
+   i32.shr_u
+   i32.const 16
+   i32.xor
+   local.set $1
+   local.get $2
+   i32.const 7
+   i32.sub
+   local.set $2
+  end
+  local.get $1
+  i32.const 16
+  i32.lt_u
+  local.get $2
+  i32.const 23
+  i32.lt_u
+  i32.and
+  i32.eqz
+  if
+   i32.const 0
+   i32.const 3360
+   i32.const 334
+   i32.const 14
+   call $~lib/builtins/abort
+   unreachable
+  end
   local.get $0
+  local.get $2
+  i32.const 2
+  i32.shl
+  i32.add
   i32.load offset=4
-  i32.const -2
+  i32.const -1
+  local.get $1
+  i32.shl
   i32.and
   local.tee $1
   if (result i32)
    local.get $0
    local.get $1
    i32.ctz
+   local.get $2
+   i32.const 4
+   i32.shl
+   i32.add
    i32.const 2
    i32.shl
    i32.add
@@ -1156,32 +1443,36 @@
   else
    local.get $0
    i32.load
-   i32.const -2
+   i32.const -1
+   local.get $2
+   i32.const 1
+   i32.add
+   i32.shl
    i32.and
    local.tee $1
    if (result i32)
     local.get $0
     local.get $1
     i32.ctz
-    local.tee $2
+    local.tee $1
     i32.const 2
     i32.shl
     i32.add
     i32.load offset=4
-    local.tee $1
+    local.tee $2
     i32.eqz
     if
      i32.const 0
-     i32.const 1424
+     i32.const 3360
      i32.const 347
      i32.const 18
      call $~lib/builtins/abort
      unreachable
     end
     local.get $0
-    local.get $1
-    i32.ctz
     local.get $2
+    i32.ctz
+    local.get $1
     i32.const 4
     i32.shl
     i32.add
@@ -1194,23 +1485,35 @@
    end
   end
  )
- (func $~lib/rt/itcms/__new (param $0 i32) (result i32)
-  (local $1 i32)
+ (func $~lib/rt/itcms/__new (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
+  (local $5 i32)
+  (local $6 i32)
+  local.get $0
+  i32.const 1073741804
+  i32.ge_u
+  if
+   i32.const 3024
+   i32.const 3088
+   i32.const 261
+   i32.const 31
+   call $~lib/builtins/abort
+   unreachable
+  end
   global.get $~lib/rt/itcms/total
   global.get $~lib/rt/itcms/threshold
   i32.ge_u
   if
-   block $__inlined_func$~lib/rt/itcms/interrupt$69
+   block $__inlined_func$~lib/rt/itcms/interrupt$71
     i32.const 2048
-    local.set $1
+    local.set $2
     loop $do-loop|0
-     local.get $1
+     local.get $2
      call $~lib/rt/itcms/step
      i32.sub
-     local.set $1
+     local.set $2
      global.get $~lib/rt/itcms/state
      i32.eqz
      if
@@ -1224,9 +1527,9 @@
       i32.const 1024
       i32.add
       global.set $~lib/rt/itcms/threshold
-      br $__inlined_func$~lib/rt/itcms/interrupt$69
+      br $__inlined_func$~lib/rt/itcms/interrupt$71
      end
-     local.get $1
+     local.get $2
      i32.const 0
      i32.gt_s
      br_if $do-loop|0
@@ -1249,31 +1552,86 @@
    call $~lib/rt/tlsf/initialize
   end
   global.get $~lib/rt/tlsf/ROOT
+  local.set $4
+  local.get $0
+  i32.const 16
+  i32.add
   local.tee $2
+  i32.const 1073741820
+  i32.gt_u
+  if
+   i32.const 3024
+   i32.const 3360
+   i32.const 461
+   i32.const 29
+   call $~lib/builtins/abort
+   unreachable
+  end
+  local.get $4
+  local.get $2
+  i32.const 12
+  i32.le_u
+  if (result i32)
+   i32.const 12
+  else
+   local.get $2
+   i32.const 19
+   i32.add
+   i32.const -16
+   i32.and
+   i32.const 4
+   i32.sub
+  end
+  local.tee $5
   call $~lib/rt/tlsf/searchBlock
-  local.tee $1
+  local.tee $2
   i32.eqz
   if
    memory.size
-   local.tee $1
+   local.tee $2
+   local.get $5
+   i32.const 256
+   i32.ge_u
+   if (result i32)
+    local.get $5
+    i32.const 536870910
+    i32.lt_u
+    if (result i32)
+     local.get $5
+     i32.const 1
+     i32.const 27
+     local.get $5
+     i32.clz
+     i32.sub
+     i32.shl
+     i32.add
+     i32.const 1
+     i32.sub
+    else
+     local.get $5
+    end
+   else
+    local.get $5
+   end
    i32.const 4
-   local.get $2
+   local.get $4
    i32.load offset=1568
-   local.get $1
+   local.get $2
    i32.const 16
    i32.shl
    i32.const 4
    i32.sub
    i32.ne
    i32.shl
-   i32.const 65563
+   i32.add
+   i32.const 65535
    i32.add
    i32.const -65536
    i32.and
    i32.const 16
    i32.shr_u
    local.tee $3
-   local.get $1
+   local.get $2
    local.get $3
    i32.gt_s
    select
@@ -1289,8 +1647,8 @@
      unreachable
     end
    end
+   local.get $4
    local.get $2
-   local.get $1
    i32.const 16
    i32.shl
    memory.size
@@ -1298,119 +1656,136 @@
    i64.const 16
    i64.shl
    call $~lib/rt/tlsf/addMemory
-   local.get $2
+   local.get $4
+   local.get $5
    call $~lib/rt/tlsf/searchBlock
-   local.tee $1
+   local.tee $2
    i32.eqz
    if
     i32.const 0
-    i32.const 1424
+    i32.const 3360
     i32.const 499
     i32.const 16
     call $~lib/builtins/abort
     unreachable
    end
   end
-  local.get $1
+  local.get $5
+  local.get $2
   i32.load
   i32.const -4
   i32.and
-  i32.const 28
-  i32.lt_u
+  i32.gt_u
   if
    i32.const 0
-   i32.const 1424
+   i32.const 3360
    i32.const 501
    i32.const 14
    call $~lib/builtins/abort
    unreachable
   end
+  local.get $4
   local.get $2
-  local.get $1
   call $~lib/rt/tlsf/removeBlock
-  local.get $1
+  local.get $2
   i32.load
-  local.tee $3
+  local.set $6
+  local.get $5
+  i32.const 4
+  i32.add
+  i32.const 15
+  i32.and
+  if
+   i32.const 0
+   i32.const 3360
+   i32.const 361
+   i32.const 14
+   call $~lib/builtins/abort
+   unreachable
+  end
+  local.get $6
   i32.const -4
   i32.and
-  i32.const 28
+  local.get $5
   i32.sub
-  local.tee $4
+  local.tee $3
   i32.const 16
   i32.ge_u
   if
-   local.get $1
-   local.get $3
+   local.get $2
+   local.get $5
+   local.get $6
    i32.const 2
    i32.and
-   i32.const 28
    i32.or
    i32.store
-   local.get $1
-   i32.const 32
+   local.get $2
+   i32.const 4
    i32.add
-   local.tee $3
-   local.get $4
+   local.get $5
+   i32.add
+   local.tee $5
+   local.get $3
    i32.const 4
    i32.sub
    i32.const 1
    i32.or
    i32.store
-   local.get $2
-   local.get $3
+   local.get $4
+   local.get $5
    call $~lib/rt/tlsf/insertBlock
   else
-   local.get $1
-   local.get $3
+   local.get $2
+   local.get $6
    i32.const -2
    i32.and
    i32.store
-   local.get $1
+   local.get $2
    i32.const 4
    i32.add
-   local.get $1
+   local.get $2
    i32.load
    i32.const -4
    i32.and
    i32.add
-   local.tee $2
-   local.get $2
+   local.tee $3
+   local.get $3
    i32.load
    i32.const -3
    i32.and
    i32.store
   end
+  local.get $2
   local.get $1
-  local.get $0
   i32.store offset=12
-  local.get $1
-  i32.const 0
+  local.get $2
+  local.get $0
   i32.store offset=16
   global.get $~lib/rt/itcms/fromSpace
-  local.tee $0
+  local.tee $1
   i32.load offset=8
-  local.set $2
+  local.set $3
+  local.get $2
   local.get $1
-  local.get $0
   global.get $~lib/rt/itcms/white
   i32.or
   i32.store offset=4
-  local.get $1
   local.get $2
+  local.get $3
   i32.store offset=8
+  local.get $3
   local.get $2
-  local.get $1
-  local.get $2
+  local.get $3
   i32.load offset=4
   i32.const 3
   i32.and
   i32.or
   i32.store offset=4
-  local.get $0
   local.get $1
+  local.get $2
   i32.store offset=8
   global.get $~lib/rt/itcms/total
-  local.get $1
+  local.get $2
   i32.load
   i32.const -4
   i32.and
@@ -1418,14 +1793,14 @@
   i32.add
   i32.add
   global.set $~lib/rt/itcms/total
-  local.get $1
+  local.get $2
   i32.const 20
   i32.add
-  local.tee $0
+  local.tee $1
   i32.const 0
-  i32.const 0
-  memory.fill
   local.get $0
+  memory.fill
+  local.get $1
  )
  (func $class-overloading/A#a<i32>@override (param $0 i32)
   block $default
@@ -1440,7 +1815,7 @@
       i32.sub
       br_table $case0 $case1 $case0 $case0 $case2 $default
      end
-     i32.const 1520
+     i32.const 3456
      global.set $class-overloading/which
      return
     end
@@ -1448,79 +1823,12 @@
     call $class-overloading/C#a<i32>
     return
    end
-   i32.const 1648
+   i32.const 3584
    global.set $class-overloading/which
    return
   end
-  i32.const 1488
+  i32.const 3424
   global.set $class-overloading/which
- )
- (func $~lib/rt/__visit_members (param $0 i32)
-  block $invalid
-   block $class-overloading/A1
-    block $class-overloading/B1
-     block $class-overloading/B2
-      block $class-overloading/A2
-       block $class-overloading/CC
-        block $class-overloading/IC
-         block $class-overloading/CA
-          block $class-overloading/IA
-           block $class-overloading/F
-            block $class-overloading/E
-             block $class-overloading/D
-              block $class-overloading/C
-               block $class-overloading/B
-                block $class-overloading/A
-                 block $~lib/arraybuffer/ArrayBufferView
-                  block $~lib/string/String
-                   block $~lib/arraybuffer/ArrayBuffer
-                    block $~lib/object/Object
-                     local.get $0
-                     i32.const 8
-                     i32.sub
-                     i32.load
-                     br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $class-overloading/A $class-overloading/B $class-overloading/C $class-overloading/D $class-overloading/E $class-overloading/F $class-overloading/IA $class-overloading/CA $class-overloading/IC $class-overloading/CC $class-overloading/A2 $class-overloading/B2 $class-overloading/B1 $class-overloading/A1 $invalid
-                    end
-                    return
-                   end
-                   return
-                  end
-                  return
-                 end
-                 local.get $0
-                 i32.load
-                 call $~lib/rt/itcms/__visit
-                 return
-                end
-                return
-               end
-               return
-              end
-              return
-             end
-             return
-            end
-            return
-           end
-           return
-          end
-          return
-         end
-         return
-        end
-        return
-       end
-       return
-      end
-      return
-     end
-     return
-    end
-    return
-   end
-   return
-  end
-  unreachable
  )
  (func $~start
   global.get $~started
@@ -1531,6 +1839,206 @@
   global.set $~started
   call $start:class-overloading
  )
+ (func $~lib/string/String.__concat (param $0 i32) (param $1 i32) (result i32)
+  (local $2 i32)
+  (local $3 i32)
+  (local $4 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  block $folding-inner0
+   global.get $~lib/memory/__stack_pointer
+   i32.const 3804
+   i32.lt_s
+   br_if $folding-inner0
+   global.get $~lib/memory/__stack_pointer
+   i64.const 0
+   i64.store
+   global.get $~lib/memory/__stack_pointer
+   local.get $0
+   i32.store
+   global.get $~lib/memory/__stack_pointer
+   local.get $1
+   i32.store offset=4
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.sub
+   global.set $~lib/memory/__stack_pointer
+   global.get $~lib/memory/__stack_pointer
+   i32.const 3804
+   i32.lt_s
+   br_if $folding-inner0
+   global.get $~lib/memory/__stack_pointer
+   i64.const 0
+   i64.store
+   global.get $~lib/memory/__stack_pointer
+   local.get $0
+   local.tee $2
+   i32.store
+   local.get $0
+   i32.const 20
+   i32.sub
+   i32.load offset=16
+   i32.const -2
+   i32.and
+   local.set $3
+   global.get $~lib/memory/__stack_pointer
+   local.get $1
+   i32.store
+   block $__inlined_func$~lib/string/String#concat$190
+    local.get $1
+    i32.const 20
+    i32.sub
+    i32.load offset=16
+    i32.const -2
+    i32.and
+    local.tee $4
+    local.get $3
+    i32.add
+    local.tee $0
+    i32.eqz
+    if
+     global.get $~lib/memory/__stack_pointer
+     i32.const 8
+     i32.add
+     global.set $~lib/memory/__stack_pointer
+     i32.const 1056
+     local.set $0
+     br $__inlined_func$~lib/string/String#concat$190
+    end
+    global.get $~lib/memory/__stack_pointer
+    local.get $0
+    i32.const 2
+    call $~lib/rt/itcms/__new
+    local.tee $0
+    i32.store offset=4
+    local.get $0
+    local.get $2
+    local.get $3
+    memory.copy
+    local.get $0
+    local.get $3
+    i32.add
+    local.get $1
+    local.get $4
+    memory.copy
+    global.get $~lib/memory/__stack_pointer
+    i32.const 8
+    i32.add
+    global.set $~lib/memory/__stack_pointer
+   end
+   global.get $~lib/memory/__stack_pointer
+   i32.const 8
+   i32.add
+   global.set $~lib/memory/__stack_pointer
+   local.get $0
+   return
+  end
+  i32.const 36592
+  i32.const 36640
+  i32.const 1
+  i32.const 1
+  call $~lib/builtins/abort
+  unreachable
+ )
+ (func $~lib/builtins/abort (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
+  (local $4 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 40
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  global.get $~lib/memory/__stack_pointer
+  i32.const 3804
+  i32.lt_s
+  if
+   i32.const 36592
+   i32.const 36640
+   i32.const 1
+   i32.const 1
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $~lib/memory/__stack_pointer
+  i32.const 0
+  i32.const 40
+  memory.fill
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.const 1088
+  local.get $0
+  select
+  local.tee $0
+  i32.store
+  local.get $1
+  if
+   global.get $~lib/memory/__stack_pointer
+   local.get $0
+   i32.store offset=4
+   global.get $~lib/memory/__stack_pointer
+   global.get $~lib/memory/__stack_pointer
+   local.get $1
+   i32.store offset=36
+   i32.const 1120
+   local.get $1
+   call $~lib/string/String.__concat
+   local.set $1
+   global.get $~lib/memory/__stack_pointer
+   local.get $1
+   i32.store offset=32
+   local.get $1
+   i32.const 1152
+   call $~lib/string/String.__concat
+   local.set $1
+   global.get $~lib/memory/__stack_pointer
+   local.get $1
+   i32.store offset=24
+   local.get $2
+   call $~lib/number/U32#toString
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store offset=28
+   local.get $1
+   local.get $2
+   call $~lib/string/String.__concat
+   local.set $1
+   global.get $~lib/memory/__stack_pointer
+   local.get $1
+   i32.store offset=20
+   local.get $1
+   i32.const 1152
+   call $~lib/string/String.__concat
+   local.set $1
+   global.get $~lib/memory/__stack_pointer
+   local.get $1
+   i32.store offset=12
+   local.get $3
+   call $~lib/number/U32#toString
+   local.set $2
+   global.get $~lib/memory/__stack_pointer
+   local.get $2
+   i32.store offset=16
+   local.get $1
+   local.get $2
+   call $~lib/string/String.__concat
+   local.set $1
+   global.get $~lib/memory/__stack_pointer
+   local.get $1
+   i32.store offset=8
+   local.get $0
+   local.get $1
+   call $~lib/string/String.__concat
+   local.tee $0
+   i32.store
+  end
+  local.get $0
+  i32.const 2960
+  i32.const 2626
+  i32.const 5
+  call $~lib/builtins/abort
+  unreachable
+ )
  (func $class-overloading/B#constructor (param $0 i32) (result i32)
   (local $1 i32)
   global.get $~lib/memory/__stack_pointer
@@ -1539,7 +2047,7 @@
   global.set $~lib/memory/__stack_pointer
   block $folding-inner0
    global.get $~lib/memory/__stack_pointer
-   i32.const 1868
+   i32.const 3804
    i32.lt_s
    br_if $folding-inner0
    global.get $~lib/memory/__stack_pointer
@@ -1549,6 +2057,7 @@
    i32.eqz
    if
     global.get $~lib/memory/__stack_pointer
+    i32.const 0
     i32.const 5
     call $~lib/rt/itcms/__new
     local.tee $0
@@ -1563,7 +2072,7 @@
    i32.sub
    global.set $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
-   i32.const 1868
+   i32.const 3804
    i32.lt_s
    br_if $folding-inner0
    global.get $~lib/memory/__stack_pointer
@@ -1573,6 +2082,7 @@
    i32.eqz
    if
     global.get $~lib/memory/__stack_pointer
+    i32.const 0
     i32.const 4
     call $~lib/rt/itcms/__new
     local.tee $0
@@ -1599,8 +2109,8 @@
    local.get $0
    return
   end
-  i32.const 34656
-  i32.const 34704
+  i32.const 36592
+  i32.const 36640
   i32.const 1
   i32.const 1
   call $~lib/builtins/abort
@@ -1616,11 +2126,11 @@
   i32.sub
   global.set $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
-  i32.const 1868
+  i32.const 3804
   i32.lt_s
   if
-   i32.const 34656
-   i32.const 34704
+   i32.const 36592
+   i32.const 36640
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -1719,7 +2229,7 @@
      end
     end
    end
-   block $__inlined_func$~lib/util/string/compareImpl$95
+   block $__inlined_func$~lib/util/string/compareImpl$98
     loop $while-continue|1
      local.get $0
      local.tee $3
@@ -1739,7 +2249,7 @@
       local.get $4
       local.get $5
       i32.ne
-      br_if $__inlined_func$~lib/util/string/compareImpl$95
+      br_if $__inlined_func$~lib/util/string/compareImpl$98
       local.get $2
       i32.const 2
       i32.add
@@ -1774,11 +2284,11 @@
   i32.sub
   global.set $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
-  i32.const 1868
+  i32.const 3804
   i32.lt_s
   if
-   i32.const 34656
-   i32.const 34704
+   i32.const 36592
+   i32.const 36640
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -1790,24 +2300,24 @@
   global.get $~lib/memory/__stack_pointer
   local.get $0
   i32.store
-  i32.const 1520
+  i32.const 3456
   global.set $class-overloading/which
   global.get $~lib/memory/__stack_pointer
-  i32.const 1520
+  i32.const 3456
   i32.store
-  i32.const 1520
-  i32.const 1520
+  i32.const 3456
+  i32.const 3456
   call $~lib/string/String.__eq
   i32.eqz
   if
    i32.const 0
-   i32.const 1552
+   i32.const 3488
    i32.const 52
    i32.const 5
    call $~lib/builtins/abort
    unreachable
   end
-  i32.const 1616
+  i32.const 3552
   global.set $class-overloading/which
   global.get $~lib/memory/__stack_pointer
   i32.const 4
@@ -1820,11 +2330,11 @@
   i32.sub
   global.set $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
-  i32.const 1868
+  i32.const 3804
   i32.lt_s
   if
-   i32.const 34656
-   i32.const 34704
+   i32.const 36592
+   i32.const 36640
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -1837,6 +2347,7 @@
   i32.eqz
   if
    global.get $~lib/memory/__stack_pointer
+   i32.const 0
    i32.const 7
    call $~lib/rt/itcms/__new
    local.tee $0
@@ -1862,11 +2373,11 @@
   i32.sub
   global.set $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
-  i32.const 1868
+  i32.const 3804
   i32.lt_s
   if
-   i32.const 34656
-   i32.const 34704
+   i32.const 36592
+   i32.const 36640
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -1879,6 +2390,7 @@
   i32.eqz
   if
    global.get $~lib/memory/__stack_pointer
+   i32.const 0
    i32.const 8
    call $~lib/rt/itcms/__new
    local.tee $0
@@ -1907,7 +2419,7 @@
   global.set $~lib/memory/__stack_pointer
   block $folding-inner1
    global.get $~lib/memory/__stack_pointer
-   i32.const 1868
+   i32.const 3804
    i32.lt_s
    br_if $folding-inner1
    global.get $~lib/memory/__stack_pointer
@@ -1916,34 +2428,34 @@
    memory.size
    i32.const 16
    i32.shl
-   i32.const 34636
+   i32.const 36572
    i32.sub
    i32.const 1
    i32.shr_u
    global.set $~lib/rt/itcms/threshold
-   i32.const 1204
-   i32.const 1200
+   i32.const 3140
+   i32.const 3136
    i32.store
-   i32.const 1208
-   i32.const 1200
+   i32.const 3144
+   i32.const 3136
    i32.store
-   i32.const 1200
+   i32.const 3136
    global.set $~lib/rt/itcms/pinSpace
-   i32.const 1236
-   i32.const 1232
+   i32.const 3172
+   i32.const 3168
    i32.store
-   i32.const 1240
-   i32.const 1232
+   i32.const 3176
+   i32.const 3168
    i32.store
-   i32.const 1232
+   i32.const 3168
    global.set $~lib/rt/itcms/toSpace
-   i32.const 1380
-   i32.const 1376
+   i32.const 3316
+   i32.const 3312
    i32.store
-   i32.const 1384
-   i32.const 1376
+   i32.const 3320
+   i32.const 3312
    i32.store
-   i32.const 1376
+   i32.const 3312
    global.set $~lib/rt/itcms/fromSpace
    i32.const 0
    call $class-overloading/B#constructor
@@ -1959,12 +2471,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 38
     i32.const 1
     call $~lib/builtins/abort
@@ -1976,7 +2488,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#b@override$153
+   block $__inlined_func$class-overloading/A#b@override$164
     block $default
      block $case2
       block $case1
@@ -1989,19 +2501,19 @@
         i32.sub
         br_table $case0 $case1 $case0 $case0 $case2 $default
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#b@override$153
+       br $__inlined_func$class-overloading/A#b@override$164
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#b@override$153
+      br $__inlined_func$class-overloading/A#b@override$164
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#b@override$153
+     br $__inlined_func$class-overloading/A#b@override$164
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2009,12 +2521,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 41
     i32.const 1
     call $~lib/builtins/abort
@@ -2026,7 +2538,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#get:c@override$154
+   block $__inlined_func$class-overloading/A#get:c@override$165
     block $default4
      block $case25
       block $case16
@@ -2039,19 +2551,19 @@
         i32.sub
         br_table $case07 $case16 $case07 $case07 $case25 $default4
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#get:c@override$154
+       br $__inlined_func$class-overloading/A#get:c@override$165
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#get:c@override$154
+      br $__inlined_func$class-overloading/A#get:c@override$165
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#get:c@override$154
+     br $__inlined_func$class-overloading/A#get:c@override$165
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2059,12 +2571,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 44
     i32.const 1
     call $~lib/builtins/abort
@@ -2076,7 +2588,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#b@override$155
+   block $__inlined_func$class-overloading/A#b@override$166
     block $default8
      block $case29
       block $case110
@@ -2089,19 +2601,19 @@
         i32.sub
         br_table $case011 $case110 $case011 $case011 $case29 $default8
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#b@override$155
+       br $__inlined_func$class-overloading/A#b@override$166
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#b@override$155
+      br $__inlined_func$class-overloading/A#b@override$166
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#b@override$155
+     br $__inlined_func$class-overloading/A#b@override$166
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2109,12 +2621,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 47
     i32.const 1
     call $~lib/builtins/abort
@@ -2125,13 +2637,14 @@
    i32.sub
    global.set $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
-   i32.const 1868
+   i32.const 3804
    i32.lt_s
    br_if $folding-inner1
    global.get $~lib/memory/__stack_pointer
    i64.const 0
    i64.store
    global.get $~lib/memory/__stack_pointer
+   i32.const 0
    i32.const 6
    call $~lib/rt/itcms/__new
    local.tee $0
@@ -2163,12 +2676,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1616
+   i32.const 3552
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 71
     i32.const 1
     call $~lib/builtins/abort
@@ -2179,18 +2692,18 @@
    global.get $~lib/memory/__stack_pointer
    global.get $class-overloading/c
    i32.store
-   i32.const 1616
+   i32.const 3552
    global.set $class-overloading/which
    global.get $~lib/memory/__stack_pointer
-   i32.const 1616
+   i32.const 3552
    i32.store
-   i32.const 1616
-   i32.const 1616
+   i32.const 3552
+   i32.const 3552
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 74
     i32.const 1
     call $~lib/builtins/abort
@@ -2201,18 +2714,18 @@
    global.get $~lib/memory/__stack_pointer
    global.get $class-overloading/c
    i32.store
-   i32.const 1616
+   i32.const 3552
    global.set $class-overloading/which
    global.get $~lib/memory/__stack_pointer
-   i32.const 1616
+   i32.const 3552
    i32.store
-   i32.const 1616
-   i32.const 1616
+   i32.const 3552
+   i32.const 3552
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 77
     i32.const 1
     call $~lib/builtins/abort
@@ -2221,18 +2734,18 @@
    global.get $~lib/memory/__stack_pointer
    global.get $class-overloading/c
    i32.store
-   i32.const 1616
+   i32.const 3552
    global.set $class-overloading/which
    global.get $~lib/memory/__stack_pointer
-   i32.const 1616
+   i32.const 3552
    i32.store
-   i32.const 1616
-   i32.const 1616
+   i32.const 3552
+   i32.const 3552
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 79
     i32.const 1
     call $~lib/builtins/abort
@@ -2254,12 +2767,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 89
     i32.const 1
     call $~lib/builtins/abort
@@ -2271,7 +2784,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#b@override$157
+   block $__inlined_func$class-overloading/A#b@override$168
     block $default16
      block $case217
       block $case118
@@ -2284,19 +2797,19 @@
         i32.sub
         br_table $case019 $case118 $case019 $case019 $case217 $default16
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#b@override$157
+       br $__inlined_func$class-overloading/A#b@override$168
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#b@override$157
+      br $__inlined_func$class-overloading/A#b@override$168
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#b@override$157
+     br $__inlined_func$class-overloading/A#b@override$168
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2304,12 +2817,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 92
     i32.const 1
     call $~lib/builtins/abort
@@ -2321,7 +2834,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#get:c@override$158
+   block $__inlined_func$class-overloading/A#get:c@override$169
     block $default24
      block $case225
       block $case126
@@ -2334,19 +2847,19 @@
         i32.sub
         br_table $case027 $case126 $case027 $case027 $case225 $default24
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#get:c@override$158
+       br $__inlined_func$class-overloading/A#get:c@override$169
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#get:c@override$158
+      br $__inlined_func$class-overloading/A#get:c@override$169
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#get:c@override$158
+     br $__inlined_func$class-overloading/A#get:c@override$169
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2354,12 +2867,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 95
     i32.const 1
     call $~lib/builtins/abort
@@ -2369,7 +2882,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#b@override$159
+   block $__inlined_func$class-overloading/A#b@override$170
     block $default32
      block $case233
       block $case134
@@ -2382,19 +2895,19 @@
         i32.sub
         br_table $case035 $case134 $case035 $case035 $case233 $default32
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#b@override$159
+       br $__inlined_func$class-overloading/A#b@override$170
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#b@override$159
+      br $__inlined_func$class-overloading/A#b@override$170
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#b@override$159
+     br $__inlined_func$class-overloading/A#b@override$170
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2402,12 +2915,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 97
     i32.const 1
     call $~lib/builtins/abort
@@ -2429,12 +2942,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 107
     i32.const 1
     call $~lib/builtins/abort
@@ -2446,7 +2959,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#b@override$160
+   block $__inlined_func$class-overloading/A#b@override$171
     block $default40
      block $case241
       block $case142
@@ -2459,19 +2972,19 @@
         i32.sub
         br_table $case043 $case142 $case043 $case043 $case241 $default40
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#b@override$160
+       br $__inlined_func$class-overloading/A#b@override$171
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#b@override$160
+      br $__inlined_func$class-overloading/A#b@override$171
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#b@override$160
+     br $__inlined_func$class-overloading/A#b@override$171
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2479,12 +2992,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 110
     i32.const 1
     call $~lib/builtins/abort
@@ -2496,7 +3009,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#get:c@override$161
+   block $__inlined_func$class-overloading/A#get:c@override$172
     block $default48
      block $case249
       block $case150
@@ -2509,19 +3022,19 @@
         i32.sub
         br_table $case051 $case150 $case051 $case051 $case249 $default48
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#get:c@override$161
+       br $__inlined_func$class-overloading/A#get:c@override$172
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#get:c@override$161
+      br $__inlined_func$class-overloading/A#get:c@override$172
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#get:c@override$161
+     br $__inlined_func$class-overloading/A#get:c@override$172
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2529,12 +3042,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 113
     i32.const 1
     call $~lib/builtins/abort
@@ -2544,7 +3057,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#b@override$162
+   block $__inlined_func$class-overloading/A#b@override$173
     block $default56
      block $case257
       block $case158
@@ -2557,19 +3070,19 @@
         i32.sub
         br_table $case059 $case158 $case059 $case059 $case257 $default56
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#b@override$162
+       br $__inlined_func$class-overloading/A#b@override$173
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#b@override$162
+      br $__inlined_func$class-overloading/A#b@override$173
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#b@override$162
+     br $__inlined_func$class-overloading/A#b@override$173
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2577,12 +3090,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1520
+   i32.const 3456
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 115
     i32.const 1
     call $~lib/builtins/abort
@@ -2593,13 +3106,14 @@
    i32.sub
    global.set $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
-   i32.const 1868
+   i32.const 3804
    i32.lt_s
    br_if $folding-inner1
    global.get $~lib/memory/__stack_pointer
    i64.const 0
    i64.store
    global.get $~lib/memory/__stack_pointer
+   i32.const 0
    i32.const 9
    call $~lib/rt/itcms/__new
    local.tee $0
@@ -2631,12 +3145,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1648
+   i32.const 3584
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 137
     i32.const 1
     call $~lib/builtins/abort
@@ -2648,7 +3162,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#b@override$164
+   block $__inlined_func$class-overloading/A#b@override$175
     block $default64
      block $case265
       block $case166
@@ -2661,19 +3175,19 @@
         i32.sub
         br_table $case067 $case166 $case067 $case067 $case265 $default64
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#b@override$164
+       br $__inlined_func$class-overloading/A#b@override$175
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#b@override$164
+      br $__inlined_func$class-overloading/A#b@override$175
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#b@override$164
+     br $__inlined_func$class-overloading/A#b@override$175
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2681,12 +3195,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1648
+   i32.const 3584
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 140
     i32.const 1
     call $~lib/builtins/abort
@@ -2698,7 +3212,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#get:c@override$165
+   block $__inlined_func$class-overloading/A#get:c@override$176
     block $default72
      block $case273
       block $case174
@@ -2711,19 +3225,19 @@
         i32.sub
         br_table $case075 $case174 $case075 $case075 $case273 $default72
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#get:c@override$165
+       br $__inlined_func$class-overloading/A#get:c@override$176
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#get:c@override$165
+      br $__inlined_func$class-overloading/A#get:c@override$176
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#get:c@override$165
+     br $__inlined_func$class-overloading/A#get:c@override$176
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2731,12 +3245,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1648
+   i32.const 3584
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 143
     i32.const 1
     call $~lib/builtins/abort
@@ -2748,7 +3262,7 @@
    global.get $class-overloading/a
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A#b@override$166
+   block $__inlined_func$class-overloading/A#b@override$177
     block $default80
      block $case281
       block $case182
@@ -2761,19 +3275,19 @@
         i32.sub
         br_table $case083 $case182 $case083 $case083 $case281 $default80
        end
-       i32.const 1520
+       i32.const 3456
        global.set $class-overloading/which
-       br $__inlined_func$class-overloading/A#b@override$166
+       br $__inlined_func$class-overloading/A#b@override$177
       end
-      i32.const 1616
+      i32.const 3552
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/A#b@override$166
+      br $__inlined_func$class-overloading/A#b@override$177
      end
-     i32.const 1648
+     i32.const 3584
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/A#b@override$166
+     br $__inlined_func$class-overloading/A#b@override$177
     end
-    i32.const 1488
+    i32.const 3424
     global.set $class-overloading/which
    end
    global.get $~lib/memory/__stack_pointer
@@ -2781,12 +3295,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1648
+   i32.const 3584
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 146
     i32.const 1
     call $~lib/builtins/abort
@@ -2797,13 +3311,14 @@
    i32.sub
    global.set $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
-   i32.const 1868
+   i32.const 3804
    i32.lt_s
    br_if $folding-inner1
    global.get $~lib/memory/__stack_pointer
    i64.const 0
    i64.store
    global.get $~lib/memory/__stack_pointer
+   i32.const 0
    i32.const 11
    call $~lib/rt/itcms/__new
    local.tee $0
@@ -2828,7 +3343,7 @@
    global.get $class-overloading/ia
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/IA#foo@override$168
+   block $__inlined_func$class-overloading/IA#foo@override$179
     block $default88
      block $case189
       local.get $0
@@ -2845,13 +3360,13 @@
        br_if $case189
        br $default88
       end
-      i32.const 1680
+      i32.const 3616
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/IA#foo@override$168
+      br $__inlined_func$class-overloading/IA#foo@override$179
      end
-     i32.const 1712
+     i32.const 3648
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/IA#foo@override$168
+     br $__inlined_func$class-overloading/IA#foo@override$179
     end
     unreachable
    end
@@ -2860,12 +3375,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1680
+   i32.const 3616
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 162
     i32.const 1
     call $~lib/builtins/abort
@@ -2876,13 +3391,14 @@
    i32.sub
    global.set $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
-   i32.const 1868
+   i32.const 3804
    i32.lt_s
    br_if $folding-inner1
    global.get $~lib/memory/__stack_pointer
    i64.const 0
    i64.store
    global.get $~lib/memory/__stack_pointer
+   i32.const 0
    i32.const 13
    call $~lib/rt/itcms/__new
    local.tee $0
@@ -2907,7 +3423,7 @@
    global.get $class-overloading/ic
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/IA#foo@override$170
+   block $__inlined_func$class-overloading/IA#foo@override$181
     block $default91
      block $case192
       local.get $0
@@ -2924,13 +3440,13 @@
        br_if $case192
        br $default91
       end
-      i32.const 1680
+      i32.const 3616
       global.set $class-overloading/which
-      br $__inlined_func$class-overloading/IA#foo@override$170
+      br $__inlined_func$class-overloading/IA#foo@override$181
      end
-     i32.const 1712
+     i32.const 3648
      global.set $class-overloading/which
-     br $__inlined_func$class-overloading/IA#foo@override$170
+     br $__inlined_func$class-overloading/IA#foo@override$181
     end
     unreachable
    end
@@ -2939,12 +3455,12 @@
    local.tee $0
    i32.store
    local.get $0
-   i32.const 1712
+   i32.const 3648
    call $~lib/string/String.__eq
    i32.eqz
    if
     i32.const 0
-    i32.const 1552
+    i32.const 3488
     i32.const 177
     i32.const 1
     call $~lib/builtins/abort
@@ -2955,13 +3471,14 @@
    i32.sub
    global.set $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
-   i32.const 1868
+   i32.const 3804
    i32.lt_s
    br_if $folding-inner1
    global.get $~lib/memory/__stack_pointer
    i64.const 0
    i64.store
    global.get $~lib/memory/__stack_pointer
+   i32.const 0
    i32.const 15
    call $~lib/rt/itcms/__new
    local.tee $0
@@ -2975,7 +3492,7 @@
    i32.sub
    global.set $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
-   i32.const 1868
+   i32.const 3804
    i32.lt_s
    br_if $folding-inner1
    global.get $~lib/memory/__stack_pointer
@@ -2985,6 +3502,7 @@
    i32.eqz
    if
     global.get $~lib/memory/__stack_pointer
+    i32.const 0
     i32.const 14
     call $~lib/rt/itcms/__new
     local.tee $0
@@ -3014,7 +3532,7 @@
    global.get $class-overloading/b2
    local.tee $0
    i32.store
-   block $__inlined_func$class-overloading/A2#foo@override$1
+   block $__inlined_func$class-overloading/A2#foo@override
     local.get $0
     i32.const 8
     i32.sub
@@ -3027,7 +3545,7 @@
      i32.sub
      global.set $~lib/memory/__stack_pointer
      global.get $~lib/memory/__stack_pointer
-     i32.const 1868
+     i32.const 3804
      i32.lt_s
      br_if $folding-inner1
      global.get $~lib/memory/__stack_pointer
@@ -3038,13 +3556,14 @@
      i32.sub
      global.set $~lib/memory/__stack_pointer
      global.get $~lib/memory/__stack_pointer
-     i32.const 1868
+     i32.const 3804
      i32.lt_s
      br_if $folding-inner1
      global.get $~lib/memory/__stack_pointer
      i64.const 0
      i64.store
      global.get $~lib/memory/__stack_pointer
+     i32.const 0
      i32.const 16
      call $~lib/rt/itcms/__new
      local.tee $0
@@ -3058,7 +3577,7 @@
      i32.sub
      global.set $~lib/memory/__stack_pointer
      global.get $~lib/memory/__stack_pointer
-     i32.const 1868
+     i32.const 3804
      i32.lt_s
      br_if $folding-inner1
      global.get $~lib/memory/__stack_pointer
@@ -3068,6 +3587,7 @@
      i32.eqz
      if
       global.get $~lib/memory/__stack_pointer
+      i32.const 0
       i32.const 17
       call $~lib/rt/itcms/__new
       local.tee $0
@@ -3099,7 +3619,7 @@
      i32.sub
      global.set $~lib/memory/__stack_pointer
      global.get $~lib/memory/__stack_pointer
-     i32.const 1868
+     i32.const 3804
      i32.lt_s
      br_if $folding-inner1
      global.get $~lib/memory/__stack_pointer
@@ -3115,8 +3635,8 @@
      i32.const 16
      i32.ne
      if
-      i32.const 1744
-      i32.const 1552
+      i32.const 3680
+      i32.const 3488
       i32.const 186
       i32.const 5
       call $~lib/builtins/abort
@@ -3130,10 +3650,10 @@
      i32.const 4
      i32.add
      global.set $~lib/memory/__stack_pointer
-     br $__inlined_func$class-overloading/A2#foo@override$1
+     br $__inlined_func$class-overloading/A2#foo@override
     end
-    i32.const 1744
-    i32.const 1552
+    i32.const 3680
+    i32.const 3488
     i32.const 198
     i32.const 5
     call $~lib/builtins/abort
@@ -3145,8 +3665,8 @@
    global.set $~lib/memory/__stack_pointer
    return
   end
-  i32.const 34656
-  i32.const 34704
+  i32.const 36592
+  i32.const 36640
   i32.const 1
   i32.const 1
   call $~lib/builtins/abort
@@ -3158,11 +3678,11 @@
   i32.sub
   global.set $~lib/memory/__stack_pointer
   global.get $~lib/memory/__stack_pointer
-  i32.const 1868
+  i32.const 3804
   i32.lt_s
   if
-   i32.const 34656
-   i32.const 34704
+   i32.const 36592
+   i32.const 36640
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -3176,6 +3696,7 @@
   if
    global.get $~lib/memory/__stack_pointer
    i32.const 0
+   i32.const 0
    call $~lib/rt/itcms/__new
    local.tee $0
    i32.store
@@ -3185,5 +3706,72 @@
   i32.add
   global.set $~lib/memory/__stack_pointer
   local.get $0
+ )
+ (func $~lib/rt/__visit_members (param $0 i32)
+  block $invalid
+   block $class-overloading/A1
+    block $class-overloading/B1
+     block $class-overloading/B2
+      block $class-overloading/A2
+       block $class-overloading/CC
+        block $class-overloading/IC
+         block $class-overloading/CA
+          block $class-overloading/IA
+           block $class-overloading/F
+            block $class-overloading/E
+             block $class-overloading/D
+              block $class-overloading/C
+               block $class-overloading/B
+                block $class-overloading/A
+                 block $~lib/arraybuffer/ArrayBufferView
+                  block $~lib/string/String
+                   block $~lib/arraybuffer/ArrayBuffer
+                    block $~lib/object/Object
+                     local.get $0
+                     i32.const 8
+                     i32.sub
+                     i32.load
+                     br_table $~lib/object/Object $~lib/arraybuffer/ArrayBuffer $~lib/string/String $~lib/arraybuffer/ArrayBufferView $class-overloading/A $class-overloading/B $class-overloading/C $class-overloading/D $class-overloading/E $class-overloading/F $class-overloading/IA $class-overloading/CA $class-overloading/IC $class-overloading/CC $class-overloading/A2 $class-overloading/B2 $class-overloading/B1 $class-overloading/A1 $invalid
+                    end
+                    return
+                   end
+                   return
+                  end
+                  return
+                 end
+                 local.get $0
+                 i32.load
+                 call $~lib/rt/itcms/__visit
+                 return
+                end
+                return
+               end
+               return
+              end
+              return
+             end
+             return
+            end
+            return
+           end
+           return
+          end
+          return
+         end
+         return
+        end
+        return
+       end
+       return
+      end
+      return
+     end
+     return
+    end
+    return
+   end
+   return
+  end
+  unreachable
  )
 )

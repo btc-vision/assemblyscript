@@ -109,6 +109,8 @@ import {
   _BinaryenFunctionSetBody,
   _BinaryenGetExport,
   _BinaryenGetFunction,
+  _BinaryenGetFunctionByIndex,
+  _BinaryenGetNumFunctions,
   _BinaryenLocalSetGetIndex,
   _BinaryenLocalSetGetValue,
   _BinaryenLocalSetIsTee,
@@ -322,7 +324,7 @@ export class ShadowStackPass extends Pass {
   /** Makes a check that the current stack pointer is valid. */
   makeStackCheck(): ExpressionRef {
     let module = this.module;
-    if (!this.hasStackCheckFunction) {
+    if (!this.hasStackCheckFunction && !module.hasFunction("~stack_check")) {
       this.hasStackCheckFunction = true;
       module.addFunction("~stack_check", TypeRef.None, TypeRef.None, null,
         module.if(
@@ -573,64 +575,95 @@ export class ShadowStackPass extends Pass {
 
   /** @override */
   walkModule(): void {
-    // Run the pass normally
-    super.walkModule();
-
-    // Instrument returns in functions utilizing stack slots
+    // Walk functions in a loop until no new functions are added.
+    // This is necessary because transforming __tostack calls and instrumenting
+    // functions may trigger compilation of new functions (e.g., via makeStackCheck -> makeStaticAbort).
+    let moduleRef = this.module.ref;
     let module = this.module;
-    let instrumentReturns = new InstrumentReturns(this);
-    for (let _keys = Map_keys(this.slotMaps), i = 0, k = _keys.length; i < k; ++i) {
-      let func = _keys[i];
-      let slotMap = changetype<SlotMap>(this.slotMaps.get(func));
-      let frameSize = slotMap.size * this.ptrSize;
+    let lastNumFunctions: Index = 0;
+    let iteration = 0;
 
-      // Instrument function returns
-      instrumentReturns.frameSize = frameSize;
-      instrumentReturns.walkFunction(func);
+    // Set of functions that have already been instrumented
+    let instrumentedFunctions = new Set<FunctionRef>();
 
-      // Instrument function entry
-      let stmts = new Array<ExpressionRef>();
-      // __stack_pointer -= frameSize
-      stmts.push(
-        this.makeStackOffset(-frameSize)
-      );
-      // memory.fill(__stack_pointer, 0, frameSize)
-      this.makeStackFill(frameSize, stmts);
+    while (true) {
+      let currentNumFunctions = _BinaryenGetNumFunctions(moduleRef);
+      if (currentNumFunctions == lastNumFunctions) break;
 
-      // Handle implicit return
-      let body = _BinaryenFunctionGetBody(func);
-      let bodyType = _BinaryenExpressionGetType(body);
-      if (bodyType == TypeRef.Unreachable) {
-        // body
-        stmts.push(
-          body
-        );
-      } else if (bodyType == TypeRef.None) {
-        // body
-        stmts.push(
-          body
-        );
-        // __stack_pointer += frameSize
-        stmts.push(
-          this.makeStackOffset(+frameSize)
-        );
-      } else {
-        let temp = this.getSharedTemp(func, bodyType);
-        // t = body
-        stmts.push(
-          module.local_set(temp, body, false)
-        );
-        // __stack_pointer += frameSize
-        stmts.push(
-          this.makeStackOffset(+frameSize)
-        );
-        // -> t
-        stmts.push(
-          module.local_get(temp, bodyType)
-        );
+      // Walk only the newly added functions (from lastNumFunctions to currentNumFunctions)
+      for (let i = lastNumFunctions; i < currentNumFunctions; ++i) {
+        this.walkFunction(_BinaryenGetFunctionByIndex(moduleRef, i));
       }
-      _BinaryenFunctionSetBody(func, module.flatten(stmts, bodyType));
+
+      // Instrument returns and entries for functions with slots that haven't been instrumented yet
+      let instrumentReturns = new InstrumentReturns(this);
+      for (let _keys = Map_keys(this.slotMaps), i = 0, k = _keys.length; i < k; ++i) {
+        let func = _keys[i];
+        if (instrumentedFunctions.has(func)) continue;
+        instrumentedFunctions.add(func);
+
+        let slotMap = changetype<SlotMap>(this.slotMaps.get(func));
+        let frameSize = slotMap.size * this.ptrSize;
+
+        // Instrument function returns
+        instrumentReturns.frameSize = frameSize;
+        instrumentReturns.walkFunction(func);
+
+        // Instrument function entry
+        let stmts = new Array<ExpressionRef>();
+        // __stack_pointer -= frameSize
+        stmts.push(
+          this.makeStackOffset(-frameSize)
+        );
+        // memory.fill(__stack_pointer, 0, frameSize)
+        this.makeStackFill(frameSize, stmts);
+
+        // Handle implicit return
+        let body = _BinaryenFunctionGetBody(func);
+        let bodyType = _BinaryenExpressionGetType(body);
+        if (bodyType == TypeRef.Unreachable) {
+          // body
+          stmts.push(
+            body
+          );
+        } else if (bodyType == TypeRef.None) {
+          // body
+          stmts.push(
+            body
+          );
+          // __stack_pointer += frameSize
+          stmts.push(
+            this.makeStackOffset(+frameSize)
+          );
+        } else {
+          let temp = this.getSharedTemp(func, bodyType);
+          // t = body
+          stmts.push(
+            module.local_set(temp, body, false)
+          );
+          // __stack_pointer += frameSize
+          stmts.push(
+            this.makeStackOffset(+frameSize)
+          );
+          // -> t
+          stmts.push(
+            module.local_get(temp, bodyType)
+          );
+        }
+        _BinaryenFunctionSetBody(func, module.flatten(stmts, bodyType));
+      }
+
+      lastNumFunctions = currentNumFunctions;
+      iteration++;
+
+      // Safety limit to prevent infinite loops
+      if (iteration > 100) {
+        throw new Error("ShadowStackPass: too many iterations, possible infinite loop");
+      }
     }
+
+    // Walk globals (only once, since they don't trigger new function compilation)
+    this.walkGlobals();
 
     // Update functions we added more locals to
     // TODO: _BinaryenFunctionAddVar ?
