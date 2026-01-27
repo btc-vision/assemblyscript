@@ -10,13 +10,7 @@ export default tseslint.config(
       "build/**",
       "out/**",
       ".github/**",
-      "src/glue/wasm/**",
-      "std/assembly/**",
-      "std/portable/**",
-      "tests/compiler/**",
-      "tests/parser/**",
-      "tests/asconfig/**/assembly/**",
-      "lib/loader/tests/assembly/**"
+      "tests/parser/**"
     ]
   },
 
@@ -131,6 +125,7 @@ export default tseslint.config(
         ecmaVersion: "latest",
         sourceType: "module",
         experimentalDecorators: true,
+        allowInvalidAST: true,
         ecmaFeatures: {}
       }
     },
@@ -309,6 +304,13 @@ export default tseslint.config(
       "no-compare-neg-zero": "off",
       "no-inner-declarations": "off",
       "no-constant-condition": "off",
+      "no-constant-binary-expression": "off",
+      "no-const-assign": "off",
+      "no-this-before-super": "off",
+      "no-unreachable": "off",
+      "no-dupe-class-members": "off",
+      "no-dupe-args": "off",
+      "constructor-super": "off",
       "use-isnan": "off",
       "@typescript-eslint/no-namespace": "off",
       "@typescript-eslint/no-unused-vars": "off",
