@@ -9,7 +9,6 @@ export function buildWeb() {
 
   const mainVersion = pkg.version;
   // lockfileVersion 3 stores deps in packages["node_modules/..."]
-  const binaryenVersion = pkg.packages["node_modules/binaryen"].version;
   const binaryenVersion = pkg.packages["node_modules/binaryen"].version || pkg.dependencies.binaryen.version;
   const longVersion = pkg.packages["node_modules/long"].version || pkg.dependencies.long.version;
 
