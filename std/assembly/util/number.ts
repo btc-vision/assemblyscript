@@ -83,7 +83,7 @@ f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff";
 @lazy @inline const ANY_DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz";
 
 // @ts-ignore: decorator
-@lazy @inline const EXP_POWERS = memory.data<i16>([/* eslint-disable indent */
+@lazy @inline const EXP_POWERS = memory.data<i16>([
   -1220, -1193, -1166, -1140, -1113, -1087, -1060, -1034, -1007,  -980,
    -954,  -927,  -901,  -874,  -847,  -821,  -794,  -768,  -741,  -715,
    -688,  -661,  -635,  -608,  -582,  -555,  -529,  -502,  -475,  -449,
@@ -93,7 +93,7 @@ f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff";
     375,   402,   428,   455,   481,   508,   534,   561,   588,   614,
     641,   667,   694,   720,   747,   774,   800,   827,   853,   880,
     907,   933,   960,   986,  1013,  1039,  1066
-/* eslint-enable indent */]);
+]);
 
 // 1e-348, 1e-340, ..., 1e340
 // @ts-ignore: decorator

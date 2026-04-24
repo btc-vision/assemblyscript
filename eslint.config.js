@@ -39,19 +39,6 @@ export default tseslint.config(
         // sense to be better safe than sorry.
         "semi": "error",
 
-        // Our code bases uses 2 spaces for indentation, and we enforce it here so
-        // files don't mix spaces, tabs or different indentation levels.
-        "indent": ["error", 2, {
-          "SwitchCase": 1,
-          "VariableDeclarator": "first",
-          "offsetTernaryExpressions": true,
-          "ignoredNodes": [ // FIXME: something's odd here
-            "ConditionalExpression > *",
-            "ConditionalExpression > * > *",
-            "ConditionalExpression > * > * > *"
-          ]
-        }],
-
         // This is mostly visual style, making comments look uniform.
         "spaced-comment": ["error", "always", {
           "markers": ["/"],   // triple-slash
