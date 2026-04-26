@@ -217,7 +217,10 @@ export const enum FeatureFlags {
   FP16 = 262144 /* _BinaryenFeatureFP16 */,
   BulkMemoryOpt = 524288 /* _BinaryenFeatureBulkMemoryOpt */,
   CallIndirectOverlong = 1048576 /* _BinaryenFeatureCallIndirectOverlong */,
-  All = 4194303 /* _BinaryenFeatureAll */
+  RelaxedAtomics = 4194304 /* _BinaryenFeatureRelaxedAtomics */,
+  CustomPageSizes = 8388608 /* _BinaryenFeatureCustomPageSizes */,
+  Multibyte = 16777216 /* _BinaryenFeatureMultibyte */,
+  All = 33554431 /* _BinaryenFeatureAll */
 }
 
 /** Binaryen expression id constants. See wasm-delegations.def in Binaryen. */
@@ -299,26 +302,31 @@ export const enum ExpressionId {
   ArrayNewFixed = 76 /* _BinaryenArrayNewFixedId */,
   ArrayGet = 77 /* _BinaryenArrayGetId */,
   ArraySet = 78 /* _BinaryenArraySetId */,
-  ArrayLen = 79 /* _BinaryenArrayLenId */,
-  ArrayCopy = 80 /* _BinaryenArrayCopyId */,
-  ArrayFill = 81 /* _BinaryenArrayFillId */,
-  ArrayInitData = 82 /* _BinaryenArrayInitDataId */,
-  ArrayInitElem = 83 /* _BinaryenArrayInitElemId */,
-  RefAs = 86 /* _BinaryenRefAsId */,
-  StringNew = 87 /* _BinaryenStringNewId */,
-  StringConst = 88 /* _BinaryenStringConstId */,
-  StringMeasure = 89 /* _BinaryenStringMeasureId */,
-  StringEncode = 90 /* _BinaryenStringEncodeId */,
-  StringConcat = 91 /* _BinaryenStringConcatId */,
-  StringEq = 92 /* _BinaryenStringEqId */,
-  StringWTF16Get = 94 /* _BinaryenStringWTF16GetId */,
-  StringSliceWTF = 95 /* _BinaryenStringSliceWTFId */,
-  ContNew = 96 /* _BinaryenContNewId */,
-  ContBind = 97 /* _BinaryenContBindId */,
-  Suspend = 98 /* _BinaryenSuspendId */,
-  Resume = 99 /* _BinaryenResumeId */,
-  ResumeThrow = 100 /* _BinaryenResumeThrowId */,
-  StackSwitch = 101 /* _BinaryenStackSwitchId */
+  ArrayLoad = 79 /* _BinaryenArrayLoadId */,
+  ArrayStore = 80 /* _BinaryenArrayStoreId */,
+  ArrayLen = 81 /* _BinaryenArrayLenId */,
+  ArrayCopy = 82 /* _BinaryenArrayCopyId */,
+  ArrayFill = 83 /* _BinaryenArrayFillId */,
+  ArrayInitData = 84 /* _BinaryenArrayInitDataId */,
+  ArrayInitElem = 85 /* _BinaryenArrayInitElemId */,
+  ArrayRMW = 86 /* _BinaryenArrayRMWId */,
+  ArrayCmpxchg = 87 /* _BinaryenArrayCmpxchgId */,
+  RefAs = 88 /* _BinaryenRefAsId */,
+  StringNew = 89 /* _BinaryenStringNewId */,
+  StringConst = 90 /* _BinaryenStringConstId */,
+  StringMeasure = 91 /* _BinaryenStringMeasureId */,
+  StringEncode = 92 /* _BinaryenStringEncodeId */,
+  StringConcat = 93 /* _BinaryenStringConcatId */,
+  StringEq = 94 /* _BinaryenStringEqId */,
+  StringTest = 95 /* _BinaryenStringTestId */,
+  StringWTF16Get = 96 /* _BinaryenStringWTF16GetId */,
+  StringSliceWTF = 97 /* _BinaryenStringSliceWTFId */,
+  ContNew = 98 /* _BinaryenContNewId */,
+  ContBind = 99 /* _BinaryenContBindId */,
+  Suspend = 100 /* _BinaryenSuspendId */,
+  Resume = 101 /* _BinaryenResumeId */,
+  ResumeThrow = 102 /* _BinaryenResumeThrowId */,
+  StackSwitch = 103 /* _BinaryenStackSwitchId */
 }
 
 /** Binaryen external kind constants. */
@@ -1083,6 +1091,13 @@ export const enum BinaryOp {
   GeUSize
 }
 
+/** Binaryen atomic memory order constants. */
+export const enum MemoryOrder {
+  Unordered = 0 /* _BinaryenMemoryOrderUnordered */,
+  SeqCst = 1 /* _BinaryenMemoryOrderSeqCst */,
+  AcqRel = 2 /* _BinaryenMemoryOrderAcqRel */
+}
+
 /** Binaryen atomic read-modify-write operation constants. */
 export const enum AtomicRMWOp {
   /** i32.atomic.rmw.add, i32.atomic.rmw8.add_u, i32.atomic.rmw16.add_u, i64.atomic.rmw.add, i64.atomic.rmw8.add_u, i64.atomic.rmw16.add_u, i64.atomic.rmw32.add_u */
@@ -1215,31 +1230,24 @@ export const enum SIMDLoadStoreLaneOp {
 export const enum SIMDTernaryOp {
   /** v128.bitselect */
   Bitselect = 0 /* _BinaryenBitselectVec128 */,
-
-  // Relaxed SIMD for F16
-  /** f16x8.relaxed_madd */
-  RelaxedMaddVecF16x8 = 1 /* TODO_BinaryenRelaxedMaddVecF16x8 */,
-  /** f16x8.relaxed_nmadd */
-  RelaxedNmaddVecF16x8 = 2 /* TODO_BinaryenRelaxedNmaddVecF16x8 */,
-
   /** f32x4.relaxed_madd */
-  RelaxedMaddF32x4 = 3 /* _BinaryenRelaxedMaddVecF32x4 */,
+  RelaxedMaddF32x4 = 1 /* _BinaryenRelaxedMaddVecF32x4 */,
   /** f32x4.relaxed_nmadd */
-  RelaxedNmaddF32x4 = 4 /* _BinaryenRelaxedNmaddVecF32x4 */,
+  RelaxedNmaddF32x4 = 2 /* _BinaryenRelaxedNmaddVecF32x4 */,
   /** f64x2.relaxed_madd */
-  RelaxedMaddF64x2 = 5 /* _BinaryenRelaxedMaddVecF64x2 */,
+  RelaxedMaddF64x2 = 3 /* _BinaryenRelaxedMaddVecF64x2 */,
   /** f64x2.relaxed_nmadd */
-  RelaxedNmaddF64x2 = 6 /* _BinaryenRelaxedNmaddVecF64x2 */,
+  RelaxedNmaddF64x2 = 4 /* _BinaryenRelaxedNmaddVecF64x2 */,
   /** i8x16.relaxed_laneselect */
-  RelaxedLaneselectI8x16 = 7 /* _BinaryenLaneselectI8x16 */,
+  RelaxedLaneselectI8x16 = 5 /* _BinaryenLaneselectI8x16 */,
   /** i16x8.relaxed_laneselect */
-  RelaxedLaneselectI16x8 = 8 /* _BinaryenLaneselectI16x8 */,
+  RelaxedLaneselectI16x8 = 6 /* _BinaryenLaneselectI16x8 */,
   /** i32x4.relaxed_laneselect */
-  RelaxedLaneselectI32x4 = 9 /* _BinaryenLaneselectI32x4 */,
+  RelaxedLaneselectI32x4 = 7 /* _BinaryenLaneselectI32x4 */,
   /** i64x2.relaxed_laneselect */
-  RelaxedLaneselectI64x2 = 10 /* _BinaryenLaneselectI64x2 */,
+  RelaxedLaneselectI64x2 = 8 /* _BinaryenLaneselectI64x2 */,
   /** i32x4.relaxed_dot_i8x16_i7x16_add_s */
-  RelaxedDotI8x16I7x16AddToI32x4 = 11 /* _BinaryenDotI8x16I7x16AddSToVecI32x4 */,
+  RelaxedDotI8x16I7x16AddToI32x4 = 9 /* _BinaryenDotI8x16I7x16AddSToVecI32x4 */,
 }
 
 /** Binaryen RefAs operation constants. */
@@ -1349,7 +1357,7 @@ export class Module {
 
   i64(valueLow: i32, valueHigh: i32 = 0): ExpressionRef {
     let out = this.lit;
-    binaryen._BinaryenLiteralInt64(out, valueLow, valueHigh);
+    binaryen._BinaryenLiteralInt64(out, (BigInt(valueHigh) << 32n) | BigInt(valueLow >>> 0));
     return binaryen._BinaryenConst(this.ref, out);
   }
 
@@ -1583,7 +1591,7 @@ export class Module {
     name: string = CommonNames.DefaultMemory
   ): ExpressionRef {
     let cStr = this.allocStringCached(name);
-    return binaryen._BinaryenAtomicLoad(this.ref, bytes, offset, type, ptr, cStr);
+    return binaryen._BinaryenAtomicLoad(this.ref, bytes, offset, type, ptr, cStr, MemoryOrder.SeqCst);
   }
 
   atomic_store(
@@ -1595,7 +1603,7 @@ export class Module {
     name: string = CommonNames.DefaultMemory
   ): ExpressionRef {
     let cStr = this.allocStringCached(name);
-    return binaryen._BinaryenAtomicStore(this.ref, bytes, offset, ptr, value, type, cStr);
+    return binaryen._BinaryenAtomicStore(this.ref, bytes, offset, ptr, value, type, cStr, MemoryOrder.SeqCst);
   }
 
   atomic_rmw(
@@ -1608,7 +1616,7 @@ export class Module {
     name: string = CommonNames.DefaultMemory
   ): ExpressionRef {
     let cStr = this.allocStringCached(name);
-    return binaryen._BinaryenAtomicRMW(this.ref, op, bytes, offset, ptr, value, type, cStr);
+    return binaryen._BinaryenAtomicRMW(this.ref, op, bytes, offset, ptr, value, type, cStr, MemoryOrder.SeqCst);
   }
 
   atomic_cmpxchg(
@@ -1621,7 +1629,7 @@ export class Module {
     name: string = CommonNames.DefaultMemory
   ): ExpressionRef {
     let cStr = this.allocStringCached(name);
-    return binaryen._BinaryenAtomicCmpxchg(this.ref, bytes, offset, ptr, expected, replacement, type, cStr);
+    return binaryen._BinaryenAtomicCmpxchg(this.ref, bytes, offset, ptr, expected, replacement, type, cStr, MemoryOrder.SeqCst);
   }
 
   atomic_wait(
@@ -1645,8 +1653,7 @@ export class Module {
   }
 
   atomic_fence(name: string | null = null): ExpressionRef {
-    let cStr = this.allocStringCached(name);
-    return binaryen._BinaryenAtomicFence(this.ref, cStr);
+    return binaryen._BinaryenAtomicFence(this.ref);
   }
 
   // statements
@@ -2393,6 +2400,22 @@ export class Module {
   /** Unlimited table constant. */
   static readonly UNLIMITED_TABLE: Index = <Index>-1;
 
+  addTable(
+    name: string,
+    initial: Index,
+    maximum: Index,
+    type: TypeRef
+  ): void {
+    let cStr = this.allocStringCached(name);
+    let tableRef = binaryen._BinaryenGetTable(this.ref, cStr);
+    if (!tableRef) {
+      binaryen._BinaryenAddTable(this.ref, cStr, initial, maximum, type, 0);
+    } else {
+      binaryen._BinaryenTableSetInitial(tableRef, initial);
+      binaryen._BinaryenTableSetMax(tableRef, maximum);
+    }
+  }
+
   addFunctionTable(
     name: string,
     initial: Index,
@@ -2409,7 +2432,7 @@ export class Module {
     let cArr = allocPtrArray(names);
     let tableRef = binaryen._BinaryenGetTable(this.ref, cStr);
     if (!tableRef) {
-      tableRef = binaryen._BinaryenAddTable(this.ref, cStr, initial, maximum, TypeRef.Funcref);
+      tableRef = binaryen._BinaryenAddTable(this.ref, cStr, initial, maximum, TypeRef.Funcref, 0);
     } else {
       binaryen._BinaryenTableSetInitial(tableRef, initial);
       binaryen._BinaryenTableSetMax(tableRef, maximum);
@@ -3031,11 +3054,11 @@ export function getConstValueI32(expr: ExpressionRef): i32 {
 }
 
 export function getConstValueI64Low(expr: ExpressionRef): i32 {
-  return binaryen._BinaryenConstGetValueI64Low(expr);
+  return Number(BigInt.asIntN(32, binaryen._BinaryenConstGetValueI64(expr)));
 }
 
 export function getConstValueI64High(expr: ExpressionRef): i32 {
-  return binaryen._BinaryenConstGetValueI64High(expr);
+  return Number(BigInt.asIntN(32, binaryen._BinaryenConstGetValueI64(expr) >> 32n));
 }
 
 export function getConstValueInteger(expr: ExpressionRef, isWasm64: bool): i64 {

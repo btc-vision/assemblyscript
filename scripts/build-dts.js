@@ -268,6 +268,13 @@ const generate = (() => {
         output.push(`declare module '${resolvedModuleId}' {\n\t`);
         const content = processTree(declarationFile, node => {
           if (node.kind === ts.SyntaxKind.DeclareKeyword) return "";
+          // Drop side-effect-only imports (`import "x";`). They are only
+          // meaningful at runtime; in a declaration file they would require
+          // the referenced module to be declared (TS2882 in TS >= 6 with
+          // nodenext module resolution).
+          if (isNodeKindImportDeclaration(node) && !node.importClause) {
+            return "";
+          }
           if (
             isNodeKindStringLiteral(node) &&
             (isNodeKindExportDeclaration(node.parent) || isNodeKindImportDeclaration(node.parent))

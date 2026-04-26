@@ -178,7 +178,6 @@ export const {
 
   _BinaryenLoad,
   _BinaryenLoadIsAtomic,
-  _BinaryenLoadSetAtomic,
   _BinaryenLoadIsSigned,
   _BinaryenLoadSetSigned,
   _BinaryenLoadGetOffset,
@@ -193,7 +192,6 @@ export const {
 
   _BinaryenStore,
   _BinaryenStoreIsAtomic,
-  _BinaryenStoreSetAtomic,
   _BinaryenStoreGetBytes,
   _BinaryenStoreSetBytes,
   _BinaryenStoreGetOffset,
@@ -211,10 +209,8 @@ export const {
   _BinaryenConst,
   _BinaryenConstGetValueI32,
   _BinaryenConstSetValueI32,
-  _BinaryenConstGetValueI64Low,
-  _BinaryenConstSetValueI64Low,
-  _BinaryenConstGetValueI64High,
-  _BinaryenConstSetValueI64High,
+  _BinaryenConstGetValueI64,
+  _BinaryenConstSetValueI64,
   _BinaryenConstGetValueF32,
   _BinaryenConstSetValueF32,
   _BinaryenConstGetValueF64,
@@ -481,7 +477,7 @@ export const {
 
   _BinaryenRethrow,
   _BinaryenRethrowGetTarget,
-  _BinaryenRethrowSetDepth,
+  _BinaryenRethrowSetTarget,
 
   _BinaryenTupleMake,
   _BinaryenTupleMakeGetNumOperands,

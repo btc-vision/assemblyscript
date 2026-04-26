@@ -2448,58 +2448,52 @@
    f64.sub
    return
   end
-  block $break|0
-   block $case4|0
-    block $case3|0
-     block $case2|0
-      block $case1|0
-       block $case0|0
+  block $break|0 (result f64)
+   block $case3|0
+    block $case2|0
+     block $case1|0
+      block $case0|0
+       block $tablify|0
         local.get $3
-        br_table $case0|0 $case1|0 $case2|0 $case3|0 $case4|0
+        br_table $case0|0 $case1|0 $case2|0 $case3|0 $tablify|0
        end
-       f64.const 0.4636476090008061
-       local.get $4
-       f64.const -2.2698777452961687e-17
-       f64.add
-       local.get $0
-       f64.sub
-       f64.sub
-       local.set $0
-       br $break|0
+       unreachable
       end
-      f64.const 0.7853981633974483
+      f64.const 0.4636476090008061
       local.get $4
-      f64.const -3.061616997868383e-17
+      f64.const -2.2698777452961687e-17
       f64.add
       local.get $0
       f64.sub
       f64.sub
-      local.set $0
       br $break|0
      end
-     f64.const 0.982793723247329
+     f64.const 0.7853981633974483
      local.get $4
-     f64.const -1.3903311031230998e-17
+     f64.const -3.061616997868383e-17
      f64.add
      local.get $0
      f64.sub
      f64.sub
-     local.set $0
      br $break|0
     end
-    f64.const 1.5707963267948966
+    f64.const 0.982793723247329
     local.get $4
-    f64.const -6.123233995736766e-17
+    f64.const -1.3903311031230998e-17
     f64.add
     local.get $0
     f64.sub
     f64.sub
-    local.set $0
     br $break|0
    end
-   unreachable
+   f64.const 1.5707963267948966
+   local.get $4
+   f64.const -6.123233995736766e-17
+   f64.add
+   local.get $0
+   f64.sub
+   f64.sub
   end
-  local.get $0
   local.get $1
   f64.copysign
  )
@@ -2640,58 +2634,52 @@
    f32.sub
    return
   end
-  block $break|0
-   block $case4|0
-    block $case3|0
-     block $case2|0
-      block $case1|0
-       block $case0|0
+  block $break|0 (result f32)
+   block $case3|0
+    block $case2|0
+     block $case1|0
+      block $case0|0
+       block $tablify|0
         local.get $3
-        br_table $case0|0 $case1|0 $case2|0 $case3|0 $case4|0
+        br_table $case0|0 $case1|0 $case2|0 $case3|0 $tablify|0
        end
-       f32.const 0.46364760398864746
-       local.get $4
-       f32.const -5.01215824399992e-09
-       f32.add
-       local.get $0
-       f32.sub
-       f32.sub
-       local.set $0
-       br $break|0
+       unreachable
       end
-      f32.const 0.7853981256484985
+      f32.const 0.46364760398864746
       local.get $4
-      f32.const -3.774894707930798e-08
+      f32.const -5.01215824399992e-09
       f32.add
       local.get $0
       f32.sub
       f32.sub
-      local.set $0
       br $break|0
      end
-     f32.const 0.9827936887741089
+     f32.const 0.7853981256484985
      local.get $4
-     f32.const -3.447321716976148e-08
+     f32.const -3.774894707930798e-08
      f32.add
      local.get $0
      f32.sub
      f32.sub
-     local.set $0
      br $break|0
     end
-    f32.const 1.570796251296997
+    f32.const 0.9827936887741089
     local.get $4
-    f32.const -7.549789415861596e-08
+    f32.const -3.447321716976148e-08
     f32.add
     local.get $0
     f32.sub
     f32.sub
-    local.set $0
     br $break|0
    end
-   unreachable
+   f32.const 1.570796251296997
+   local.get $4
+   f32.const -7.549789415861596e-08
+   f32.add
+   local.get $0
+   f32.sub
+   f32.sub
   end
-  local.get $0
   local.get $1
   f32.copysign
  )
@@ -49890,7 +49878,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f64.const -nan:0x8000000000000
+  f64.const nan:0x8000000000000
   f64.const nan:0x8000000000000
   f64.const 0
   call $std/math/check<f64>
@@ -49934,7 +49922,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f64.const -nan:0x8000000000000
+  f64.const nan:0x8000000000000
   f64.const nan:0x8000000000000
   f64.const 0
   call $std/math/check<f64>
@@ -49956,7 +49944,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f64.const -nan:0x8000000000000
+  f64.const nan:0x8000000000000
   f64.const nan:0x8000000000000
   f64.const 0
   call $std/math/check<f64>
@@ -50022,7 +50010,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f64.const -nan:0x8000000000000
+  f64.const nan:0x8000000000000
   f64.const nan:0x8000000000000
   f64.const 0
   call $std/math/check<f64>
@@ -50088,7 +50076,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f64.const -nan:0x8000000000000
+  f64.const nan:0x8000000000000
   f64.const nan:0x8000000000000
   f64.const 0
   call $std/math/check<f64>
@@ -50154,7 +50142,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f64.const -nan:0x8000000000000
+  f64.const nan:0x8000000000000
   f64.const nan:0x8000000000000
   f64.const 0
   call $std/math/check<f64>
@@ -50242,7 +50230,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f64.const -nan:0x8000000000000
+  f64.const nan:0x8000000000000
   f64.const nan:0x8000000000000
   f64.const 0
   call $std/math/check<f64>
@@ -50352,7 +50340,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f64.const -nan:0x8000000000000
+  f64.const nan:0x8000000000000
   f64.const nan:0x8000000000000
   f64.const 0
   call $std/math/check<f64>
@@ -50506,7 +50494,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f64.const -nan:0x8000000000000
+  f64.const nan:0x8000000000000
   f64.const nan:0x8000000000000
   f64.const 0
   call $std/math/check<f64>
@@ -51738,7 +51726,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f32.const -nan:0x400000
+  f32.const nan:0x400000
   f32.const nan:0x400000
   f32.const 0
   call $std/math/check<f32>
@@ -51764,7 +51752,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f32.const -nan:0x400000
+  f32.const nan:0x400000
   f32.const nan:0x400000
   f32.const 0
   call $std/math/check<f32>
@@ -51777,7 +51765,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f32.const -nan:0x400000
+  f32.const nan:0x400000
   f32.const nan:0x400000
   f32.const 0
   call $std/math/check<f32>
@@ -51816,7 +51804,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f32.const -nan:0x400000
+  f32.const nan:0x400000
   f32.const nan:0x400000
   f32.const 0
   call $std/math/check<f32>
@@ -51855,7 +51843,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f32.const -nan:0x400000
+  f32.const nan:0x400000
   f32.const nan:0x400000
   f32.const 0
   call $std/math/check<f32>
@@ -51894,7 +51882,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f32.const -nan:0x400000
+  f32.const nan:0x400000
   f32.const nan:0x400000
   f32.const 0
   call $std/math/check<f32>
@@ -51946,7 +51934,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f32.const -nan:0x400000
+  f32.const nan:0x400000
   f32.const nan:0x400000
   f32.const 0
   call $std/math/check<f32>
@@ -52011,7 +51999,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f32.const -nan:0x400000
+  f32.const nan:0x400000
   f32.const nan:0x400000
   f32.const 0
   call $std/math/check<f32>
@@ -52037,7 +52025,7 @@
    call $~lib/builtins/abort
    unreachable
   end
-  f32.const -nan:0x400000
+  f32.const nan:0x400000
   f32.const nan:0x400000
   f32.const 0
   call $std/math/check<f32>

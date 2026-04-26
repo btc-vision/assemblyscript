@@ -549,6 +549,12 @@ export class Compiler extends DiagnosticEmitter {
     // we should mark the module as closed-world when we're definitely sure it is.
     module.setClosedWorld(true);
 
+    // Pre-create the default memory so that binaryen helpers like
+    // _BinaryenExpressionGetSideEffects can resolve memory references that
+    // appear in compiled IR. The real configuration (page counts, segments
+    // and imports/exports) is finalized later via initDefaultMemory.
+    module.setMemory(0, Module.UNLIMITED_MEMORY, [], options.target, null, CommonNames.DefaultMemory, false);
+
     // obtain the main start function
     let startFunctionInstance = this.currentFlow.targetFunction;
     assert(startFunctionInstance.internalName == BuiltinNames.start);
