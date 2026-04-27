@@ -7833,6 +7833,7 @@ export class Compiler extends DiagnosticEmitter {
     contextualType: Type,
     constraints: Constraints
   ): ExpressionRef {
+    let module = this.module;
     let declaration = expression.declaration.clone(); // generic contexts can have multiple
     assert(!declaration.typeParameters); // function expression cannot be generic
     let flow = this.currentFlow;
@@ -7853,6 +7854,21 @@ export class Compiler extends DiagnosticEmitter {
       : null;
     if (existingInstance && existingInstance.kind == ElementKind.Function) {
       let existingFunc = <Function>existingInstance;
+      // For semantically named function declarations sharing the same scope-qualified
+      // name, distinguish a recompilation pass (same source declaration) from an actual
+      // duplicate declaration (different source location).
+      if (!isSemanticallyAnonymous) {
+        let existingDecl = existingFunc.prototype.declaration;
+        let existingRange = existingDecl.range;
+        let currentRange = expression.declaration.range;
+        if (existingRange.source !== currentRange.source || existingRange.start !== currentRange.start) {
+          this.error(
+            DiagnosticCode.Duplicate_function_implementation,
+            expression.declaration.name.range
+          );
+          return module.unreachable();
+        }
+      }
       if (existingFunc.is(CommonFlags.Compiled)) {
         // Already compiled - just return a reference to it
         let offset = this.ensureRuntimeFunction(existingFunc);
@@ -7882,7 +7898,6 @@ export class Compiler extends DiagnosticEmitter {
     }
     let instance: Function | null;
     let contextualTypeArguments = cloneMap(flow.contextualTypeArguments);
-    let module = this.module;
 
     // compile according to context. this differs from a normal function in that omitted parameter
     // and return types can be inferred and omitted arguments can be replaced with dummies.

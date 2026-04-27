@@ -35,6 +35,7 @@ export type GlobalRef = Ref;
 export type TagRef = Ref;
 export type TableRef = Ref;
 export type ElementSegmentRef = Ref;
+export type DataSegmentRef = Ref;
 export type RelooperRef = Ref;
 export type RelooperBlockRef = Ref;
 export type ExpressionRunnerRef = Ref;
@@ -842,9 +843,9 @@ export declare function _BinaryenGetElementSegmentByIndex(module: ModuleRef, ind
 
 export declare function _BinaryenSetMemory(module: ModuleRef, initial: Index, maximum: Index, exportName: StringRef, segmentNames: ArrayRef<StringRef>, segmentDatas: ArrayRef<ArrayRef<u8>>, segmentPassive: ArrayRef<bool>, segmentOffsets: ArrayRef<usize>, segmentSizes: ArrayRef<u32>, numSegments: Index, shared: bool, memory64: bool, name: StringRef): void;
 export declare function _BinaryenGetNumMemorySegments(module: ModuleRef): Index;
-export declare function _BinaryenGetMemorySegmentByteOffset(module: ModuleRef, segmentName: StringRef): u32;
-export declare function _BinaryenGetMemorySegmentByteLength(segmentRef: Ref): usize;
-export declare function _BinaryenCopyMemorySegmentData(segmentRef: Ref, buffer: ArrayRef<u8>): void;
+export declare function _BinaryenGetMemorySegmentByteOffset(module: ModuleRef, segmentRef: DataSegmentRef): u32;
+export declare function _BinaryenGetMemorySegmentByteLength(segmentRef: DataSegmentRef): usize;
+export declare function _BinaryenCopyMemorySegmentData(segmentRef: DataSegmentRef, buffer: ArrayRef<u8>): void;
 export declare function _BinaryenAddDataSegment(module: ModuleRef, segmentName: StringRef, memoryName: StringRef, segmentPassive: bool, segmentOffset: ExpressionRef, segmentData: ArrayRef<u8>, segmentSize: Index): void;
 
 export declare function _BinaryenSetStart(module: ModuleRef, start: FunctionRef): void;

@@ -268,13 +268,6 @@ const generate = (() => {
         output.push(`declare module '${resolvedModuleId}' {\n\t`);
         const content = processTree(declarationFile, node => {
           if (node.kind === ts.SyntaxKind.DeclareKeyword) return "";
-          // Drop side-effect-only imports (`import "x";`). They are only
-          // meaningful at runtime; in a declaration file they would require
-          // the referenced module to be declared (TS2882 in TS >= 6 with
-          // nodenext module resolution).
-          if (isNodeKindImportDeclaration(node) && !node.importClause) {
-            return "";
-          }
           if (
             isNodeKindStringLiteral(node) &&
             (isNodeKindExportDeclaration(node.parent) || isNodeKindImportDeclaration(node.parent))
@@ -356,6 +349,16 @@ export function generateSrc() {
     ],
     stdout
   });
+
+  // src/glue/js/index.ts is intentionally excluded from generation above (it is
+  // a side-effect-only loader for the JS glue and would emit a chain of imports
+  // referencing other excluded files). However, src/index-js.ts contains
+  // `import "./glue/js/index"`, which under TS >= 6 nodenext module resolution
+  // raises TS2882 unless the referenced module is declared. Emit an empty
+  // module stub so the side-effect import resolves; the ambient declarations
+  // it would have brought in (i64, float, collections shims) are already
+  // emitted at the top level by the third generator pass above.
+  stdout.push("\ndeclare module '" + prefix + "/src/glue/js/index' {}\n");
 
   const source = stdout.join("").replace(/\/\/\/ <reference[^>]*>\r?\n/g, "");
   const sourceFile = ts.createSourceFile("assemblyscript.d.ts", source, ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS);
