@@ -1357,7 +1357,7 @@ export class Module {
 
   i64(valueLow: i32, valueHigh: i32 = 0): ExpressionRef {
     let out = this.lit;
-    binaryen._BinaryenLiteralInt64(out, (BigInt(valueHigh) << 32n) | BigInt(valueLow >>> 0));
+    binaryen._BinaryenLiteralInt64(out, valueLow, valueHigh);
     return binaryen._BinaryenConst(this.ref, out);
   }
 
@@ -1591,7 +1591,7 @@ export class Module {
     name: string = CommonNames.DefaultMemory
   ): ExpressionRef {
     let cStr = this.allocStringCached(name);
-    return binaryen._BinaryenAtomicLoad(this.ref, bytes, offset, type, ptr, cStr, MemoryOrder.SeqCst);
+    return binaryen._BinaryenAtomicLoad(this.ref, bytes, offset, type, ptr, cStr, <u8>MemoryOrder.SeqCst);
   }
 
   atomic_store(
@@ -1603,7 +1603,7 @@ export class Module {
     name: string = CommonNames.DefaultMemory
   ): ExpressionRef {
     let cStr = this.allocStringCached(name);
-    return binaryen._BinaryenAtomicStore(this.ref, bytes, offset, ptr, value, type, cStr, MemoryOrder.SeqCst);
+    return binaryen._BinaryenAtomicStore(this.ref, bytes, offset, ptr, value, type, cStr, <u8>MemoryOrder.SeqCst);
   }
 
   atomic_rmw(
@@ -1616,7 +1616,7 @@ export class Module {
     name: string = CommonNames.DefaultMemory
   ): ExpressionRef {
     let cStr = this.allocStringCached(name);
-    return binaryen._BinaryenAtomicRMW(this.ref, op, bytes, offset, ptr, value, type, cStr, MemoryOrder.SeqCst);
+    return binaryen._BinaryenAtomicRMW(this.ref, op, bytes, offset, ptr, value, type, cStr, <u8>MemoryOrder.SeqCst);
   }
 
   atomic_cmpxchg(
@@ -1629,7 +1629,7 @@ export class Module {
     name: string = CommonNames.DefaultMemory
   ): ExpressionRef {
     let cStr = this.allocStringCached(name);
-    return binaryen._BinaryenAtomicCmpxchg(this.ref, bytes, offset, ptr, expected, replacement, type, cStr, MemoryOrder.SeqCst);
+    return binaryen._BinaryenAtomicCmpxchg(this.ref, bytes, offset, ptr, expected, replacement, type, cStr, <u8>MemoryOrder.SeqCst);
   }
 
   atomic_wait(
@@ -3054,11 +3054,11 @@ export function getConstValueI32(expr: ExpressionRef): i32 {
 }
 
 export function getConstValueI64Low(expr: ExpressionRef): i32 {
-  return Number(BigInt.asIntN(32, binaryen._BinaryenConstGetValueI64(expr)));
+  return binaryen._BinaryenConstGetValueI64Low(expr);
 }
 
 export function getConstValueI64High(expr: ExpressionRef): i32 {
-  return Number(BigInt.asIntN(32, binaryen._BinaryenConstGetValueI64(expr) >> 32n));
+  return binaryen._BinaryenConstGetValueI64High(expr);
 }
 
 export function getConstValueInteger(expr: ExpressionRef, isWasm64: bool): i64 {

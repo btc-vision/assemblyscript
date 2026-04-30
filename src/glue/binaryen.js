@@ -209,8 +209,10 @@ export const {
   _BinaryenConst,
   _BinaryenConstGetValueI32,
   _BinaryenConstSetValueI32,
-  _BinaryenConstGetValueI64,
-  _BinaryenConstSetValueI64,
+  _BinaryenConstGetValueI64Low,
+  _BinaryenConstGetValueI64High,
+  _BinaryenConstSetValueI64Low,
+  _BinaryenConstSetValueI64High,
   _BinaryenConstGetValueF32,
   _BinaryenConstSetValueF32,
   _BinaryenConstGetValueF64,
@@ -913,5 +915,11 @@ export const {
   __f64_load
 
 } = binaryen;
+
+// Note: the i64 literal/const accessors above (LiteralInt64, LiteralFloat64Bits,
+// ConstGetValueI64Low/High, ConstSetValueI64Low/High) are sourced from
+// lib/binaryen.js, which patches binaryen 129's BigInt-based i64 C-ABI back
+// into the (low, high) split convention used by callers here and by the
+// bootstrapped wasm build (which imports "binaryen" directly).
 
 export default binaryen;
